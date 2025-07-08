@@ -1,0 +1,6 @@
+Provider Name,Provider Website,Provider Base URL,Model Name,Name in Provider,Developer,System Complexity,Context Window,Token IN Price ($),Token OUT Price ($),Active,Created At,Updated At
+FIREWORKS,https://fireworks.ai/,https://api.fireworks.ai/inference/v1,Llama 3.1 405B,accounts/fireworks/models/llama-v3p1-405b-instruct,Meta,NONE,"131,072 tokens",3,3,Yes,2024-11-13T10:53:09.640Z,2024-11-13T10:53:09.640Z
+OPENAI,https://openai.com,https://api.openai.com/v1,gpt-4o,gpt-4o,OpenAI,COMPLEX,128k tokens,2.5,10,Yes,2024-11-13T10:53:09.714Z,2024-11-13T10:53:09.714Z
+ANTHROPIC,https://anthropic.com,https://api.anthropic.com/v1/messages,claude-3-opus-latest,claude-3-opus-latest,Anthropic,NONE,200k tokens,15,75,Yes,2024-11-13T10:53:09.735Z,2024-11-13T10:53:09.735Z
+MISTRAL,https://mistral.ai/,https://api.mistral.ai/v1,open-mixtral-8x22b,open-mixtral-8x22b,Apache,COMPLEX,32k tokens,0.0375,0.15,Yes,2024-11-13T10:53:09.771Z,2024-11-13T10:53:09.771Z
+GEMINI,https://ai.google.com,https://api.google.com/v1/messages,gemini-2.5-flash-preview,gemini-2.5-flash-preview-04-17,Google,COMPLEX,"1,000,000 tokens",0.15,3.5,Yes,2025-05-15T23:17:28.110227Z,2025-05-15T23:17:28.110227Z
