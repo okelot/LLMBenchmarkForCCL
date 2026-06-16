@@ -113,7 +113,7 @@ class EmbeddingEvaluator:
         sim = util.cos_sim(e1.unsqueeze(0), e2.unsqueeze(0)).item()
         return float(sim)
 
-    def evaluate_results(self, input_file: str) -> str:
+    def evaluate_results(self, input_file: str, output_file: Optional[str] = None) -> str:
         """Evaluate section-wise similarity from a CSV file."""
         df = pd.read_csv(input_file)
 
@@ -139,7 +139,8 @@ class EmbeddingEvaluator:
 
         # Save results
         Path("results").mkdir(exist_ok=True)
-        output_file = "results/evaluated_case_model_results_with_section_similarity.csv"
+        if output_file is None:
+            output_file = "results/evaluated_case_model_results_with_section_similarity.csv"
         df.to_csv(output_file, index=False)
         print(f"Evaluation complete. Results saved to {output_file}")
         return output_file
@@ -160,6 +161,6 @@ def main(input_file: str):
 if __name__ == "__main__":
     import sys
     if len(sys.argv) != 2:
-        print("Usage: python rate_llm.py <input_csv_file>")
+        print("Usage: python rate_embedding.py <input_csv_file>")
         sys.exit(1)
     main(sys.argv[1])

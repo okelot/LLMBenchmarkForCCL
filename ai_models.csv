@@ -1,0 +1,9 @@
+model_id,display_name,developer,context_window,input_price_per_million,output_price_per_million
+anthropic/claude-opus-4.8,Claude Opus 4.8,Anthropic,1000000,5.00,25.00
+anthropic/claude-sonnet-4.6,Claude Sonnet 4.6,Anthropic,1000000,3.00,15.00
+openai/gpt-5.5,GPT-5.5,OpenAI,1050000,5.00,30.00
+openai/gpt-5.4,GPT-5.4,OpenAI,1050000,2.50,15.00
+google/gemini-2.5-pro,Gemini 2.5 Pro,Google,1048576,1.25,10.00
+x-ai/grok-4.20,Grok 4.20,xAI,2000000,1.25,2.50
+deepseek/deepseek-chat-v3.1,DeepSeek Chat v3.1,DeepSeek,163840,0.21,0.79
+meta-llama/llama-4-maverick,Llama 4 Maverick,Meta,1048576,0.15,0.60

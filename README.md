@@ -1,6 +1,8 @@
 # LLM Benchmark for Canadian Case Law (CCL)
 
-A comprehensive benchmarking tool for evaluating Large Language Models (LLMs) on their ability to analyze and understand Canadian case law. This project tests various LLMs against human-annotated case briefs to measure their accuracy and performance across multiple dimensions.
+A comprehensive benchmarking tool for evaluating frontier Large Language Models (LLMs) on their ability to analyze and understand Canadian case law. This project tests models against human-annotated case briefs to measure their accuracy and performance across multiple dimensions.
+
+All models are accessed through a single [OpenRouter](https://openrouter.ai/) API key, so adding or swapping a frontier model only means editing one row in `ai_models.csv`.
 
 ![Sample Benchmark Results](charts/model_similarity_chart_2025-07-04_10-28-08.png)
 
@@ -15,7 +17,18 @@ The above chart shows a sample benchmark comparing different models' performance
 
 ## Supported Models
 
-Basically all LLM models.
+Any model available on OpenRouter. The default `ai_models.csv` ships with a
+curated frontier set spanning the major labs:
+
+- Anthropic — Claude Opus 4.8, Claude Sonnet 4.6
+- OpenAI — GPT-5.5, GPT-5.4
+- Google — Gemini 2.5 Pro
+- xAI — Grok 4.20
+- DeepSeek — DeepSeek Chat v3.1
+- Meta — Llama 4 Maverick
+
+Run `python -m llm.openrouter_models <filter>` to browse current ids and pricing,
+or `python -m llm.openrouter_models --csv <filter>` to regenerate the catalogue.
 
 ## Evaluation Categories
 
@@ -38,11 +51,11 @@ Models are evaluated on their ability to analyze Canadian case law across these 
    ```bash
    cp .env.example .env
    ```
-   Edit `.env` and add your API keys:
-   - `CLOD_API_KEY`: Your Clod.io API key (or any other LLM provider API key and implement it using llm_wrapper interface)
+   Edit `.env` and add your API key:
+   - `OPENROUTER_API_KEY`: Your OpenRouter API key (get one at https://openrouter.ai/keys). To use a different provider, implement the `LLM_Wrapper` interface (see `llm/openrouter.py`).
 
 3. Prepare your test cases:
-   - Place your test cases in `random_cases.csv` or use app_get_random_cases_from_fandom.py to scrape random cases from fandom.
+   - Place your test cases in `random_cases.csv` or use `app_get_random_cases_from_fandom.py` to scrape random cases from Fandom.
 
 ## Usage
 
@@ -54,9 +67,11 @@ Models are evaluated on their ability to analyze Canadian case law across these 
 
 2. Run the benchmark:
    ```bash
-   python benchmark_lod.py
+   python benchmark.py
    ```
-   This generates raw comparison results between AI and human annotations.
+   This queries every model in `ai_models.csv` for a brief of every case in
+   `random_cases.csv` and writes raw AI-vs-human comparisons to `results/`.
+   (Run benchmarking and scoring in one step with `python benchmark_and_rate.py`.)
 
 3. Evaluate results:
    ```bash
@@ -86,17 +101,19 @@ The benchmark generates a CSV file with the following columns:
 ## Project Structure
 
 ```
-├── benchmark_lod.py                    # Main benchmarking script
+├── benchmark.py                        # Main benchmarking script
+├── benchmark_and_rate.py               # Benchmark + scoring in one pass
 ├── rate_embedding.py                   # Semantic similarity evaluation
-├── chart.py                           # Visualization generation
+├── chart.py                            # Visualization generation
 ├── app_get_random_cases_from_fandom.py # Test case scraper
 ├── llm/
-│   ├── llm_wrapper.py                 # Base wrapper for LLM interactions
-│   ├── llm_lod.py                     # Clod.io specific implementation
-│   └── test_lod.py                    # Test utilities
-├── ai_models_lod.csv                  # Model configurations
-├── random_cases.json                  # Test cases
-└── charts/                           # Generated benchmark visualizations
+│   ├── llm_wrapper.py                  # Base wrapper interface
+│   ├── openrouter.py                   # OpenRouter implementation
+│   ├── openrouter_models.py            # Catalogue browser / CSV refresher
+│   └── test_openrouter.py              # Smoke test
+├── ai_models.csv                       # Frontier model configurations
+├── random_cases.csv                    # Test cases (human-annotated briefs)
+└── charts/                             # Generated benchmark visualizations
 ```
 
 ## Contributing
