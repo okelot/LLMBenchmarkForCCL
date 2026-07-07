@@ -4,6 +4,7 @@
     python benchmark_and_rate.py
 """
 
+import lexbench
 import report
 from benchmark import run_benchmark
 from rate_embedding import EmbeddingEvaluator
@@ -29,10 +30,14 @@ def run_benchmark_and_rate(
     print("\nBuilding HTML report...")
     report_file = report.main([rated_file, "results/report.html"])
 
+    print("Refreshing LexBench landing page...")
+    site_file = lexbench.generate(rated_file)
+
     print("\nComplete pipeline results:")
     print(f"1. Benchmark results: {benchmark_file}")
     print(f"2. Evaluation results: {rated_file}")
-    print(f"3. HTML report: {report_file}")
+    print(f"3. HTML report:       {report_file}")
+    print(f"4. LexBench site:     {site_file}")
 
 
 if __name__ == "__main__":

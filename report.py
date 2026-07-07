@@ -7,7 +7,9 @@ The page shows, per model, the section-by-section similarity scores plus the
 AI brief side-by-side with the human-authored brief.
 """
 
+import base64
 import html
+import io
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -15,6 +17,53 @@ from pathlib import Path
 import pandas as pd
 
 SECTIONS = ["facts", "issue", "decision", "reasons", "ratio"]
+
+
+def _build_chart(df: pd.DataFrame, sim_cols: list) -> str:
+    """Render a grouped bar chart of mean section similarity per model.
+
+    Returns a base64 PNG data URI so the report stays self-contained, or "" if
+    charting is unavailable or there is nothing to plot.
+    """
+    if not sim_cols:
+        return ""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import numpy as np
+    except Exception:
+        return ""
+
+    agg = df.groupby("Model_ID")[sim_cols].mean()
+    models = list(agg.index)
+    sections = [c.replace("_similarity", "").title() for c in sim_cols]
+    x = np.arange(len(models))
+    width = 0.8 / max(1, len(sim_cols))
+
+    fig, ax = plt.subplots(figsize=(max(7, len(models) * 1.7), 4.6), dpi=130)
+    cmap = plt.get_cmap("viridis")
+    for i, col in enumerate(sim_cols):
+        ax.bar(
+            x + i * width - 0.4 + width / 2,
+            agg[col].values,
+            width,
+            label=sections[i],
+            color=cmap(i / max(1, len(sim_cols) - 1)),
+        )
+    ax.set_xticks(x)
+    ax.set_xticklabels(models, rotation=15, ha="right")
+    ax.set_ylim(0, 1)
+    ax.set_ylabel("Avg cosine similarity")
+    ax.set_title("Average section similarity by model (AI vs human brief)")
+    ax.legend(ncol=len(sim_cols), fontsize=8, loc="lower right")
+    ax.grid(axis="y", alpha=0.3)
+    fig.tight_layout()
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", bbox_inches="tight")
+    plt.close(fig)
+    return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
 
 def _score_color(score: float) -> str:
@@ -36,6 +85,14 @@ def _cell(value: str) -> str:
 def build_html(df: pd.DataFrame, source: str) -> str:
     sim_cols = [f"{s}_similarity" for s in SECTIONS if f"{s}_similarity" in df.columns]
     overall = df[sim_cols].mean(axis=1) if sim_cols else None
+
+    chart_uri = _build_chart(df, sim_cols)
+    chart_section = (
+        f'<h2>Section similarity chart</h2><img class="chart" src="{chart_uri}" '
+        f'alt="Average section similarity by model">'
+        if chart_uri
+        else ""
+    )
 
     # Summary: average similarity per model.
     summary_rows = ""
@@ -104,6 +161,8 @@ def build_html(df: pd.DataFrame, source: str) -> str:
   .summary td {{ text-align: center; font-variant-numeric: tabular-nums; }}
   .summary td.model {{ text-align: left; font-weight: 600; }}
   .summary td.overall {{ font-weight: 700; }}
+  img.chart {{ max-width: 100%; background: #fff; border-radius: 8px; padding: 8px;
+               box-shadow: 0 1px 3px rgba(0,0,0,.08); }}
   .card {{ margin-top: 18px; }}
   .card h3 {{ font-size: 15px; margin: 0 0 8px; }}
   .card .case {{ color: #2563eb; }}
@@ -119,6 +178,7 @@ def build_html(df: pd.DataFrame, source: str) -> str:
   <p>{len(df)} result row(s) &middot; source: {html.escape(source)} &middot; generated {generated}</p>
 </header>
 <main>
+  {chart_section}
   <h2>Average section similarity by model</h2>
   <table class="summary">
     <thead><tr><th>Model</th>{summary_head}<th>Overall</th></tr></thead>

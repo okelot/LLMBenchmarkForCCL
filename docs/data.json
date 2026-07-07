@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "updated": "17 Jun 2026",
+    "generated": "07 Jul 2026, 11:39",
+    "models": 3,
+    "cases": 50,
+    "rows": 110
+  },
+  "leaderboard": [
+    {
+      "model": "Claude Opus 4.8",
+      "developer": "Anthropic",
+      "n": 50,
+      "errors": 0,
+      "sections": {
+        "facts": 0.7443,
+        "issue": 0.5341,
+        "decision": 0.4577,
+        "reasons": 0.7401,
+        "ratio": 0.593
+      },
+      "overall": 0.6138
+    },
+    {
+      "model": "Claude Sonnet 4.6",
+      "developer": "Anthropic",
+      "n": 50,
+      "errors": 0,
+      "sections": {
+        "facts": 0.7241,
+        "issue": 0.5118,
+        "decision": 0.4325,
+        "reasons": 0.6846,
+        "ratio": 0.5603
+      },
+      "overall": 0.5827
+    },
+    {
+      "model": "GPT-5.5",
+      "developer": "OpenAI",
+      "n": 10,
+      "errors": 5,
+      "sections": {
+        "facts": 0.3839,
+        "issue": 0.3502,
+        "decision": 0.3725,
+        "reasons": 0.4138,
+        "ratio": 0.3365
+      },
+      "overall": 0.3714
+    }
+  ]
+}

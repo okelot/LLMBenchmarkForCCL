@@ -81,14 +81,44 @@ Models are evaluated on their ability to analyze Canadian case law across these 
 
 4. Generate visualizations:
    ```bash
-   python chart.py
+   python chart.py       # standalone PNG bar chart in charts/
+   python report.py results/evaluated_case_model_results_with_section_similarity.csv
    ```
-   This creates comparative charts in the `charts` directory.
+   `report.py` builds a self-contained HTML report (embedded chart + side-by-side
+   AI/human briefs) at `results/report.html`.
 
-5. View results:
+5. Refresh the LexBench site:
+   ```bash
+   python lexbench.py
+   ```
+   This regenerates the published landing page at `docs/index.html` from the
+   latest evaluated results (see **Publishing** below).
+
+6. View results:
    - Raw results: `results/case_model_results_YYYY-MM-DD_HH-MM-SS.csv`
    - Evaluated results: `results/evaluated_case_model_results_with_section_similarity.csv`
-   - Visualizations: `charts/model_similarity_chart_YYYY-MM-DD_HH-MM-SS.png`
+   - HTML report: `results/report.html`
+   - Public site: `docs/index.html`
+
+> `python benchmark_and_rate.py` runs steps 2–5 end to end: benchmark → score →
+> report → refresh the LexBench site.
+
+## Publishing (LexBench)
+
+**LexBench** is the public landing page for the benchmark — a self-contained
+static site (`docs/index.html`) with the current leaderboard, a section-by-section
+chart, and methodology. It is regenerated from the latest evaluated results on
+every run, so publishing stays as simple as committing `docs/` and pushing.
+
+To publish it for free with **GitHub Pages**:
+
+1. Commit and push the `docs/` folder.
+2. On GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a
+   branch**, then choose **Branch: `main`, Folder: `/docs`** and save.
+3. The site goes live at `https://okelot.github.io/LLMBenchmarkForCCL/`.
+
+Each subsequent run overwrites `docs/index.html`; commit and push to update the
+live site (`docs/.nojekyll` is included so Pages serves the files as-is).
 
 ## Output Format
 
@@ -102,9 +132,11 @@ The benchmark generates a CSV file with the following columns:
 
 ```
 ├── benchmark.py                        # Main benchmarking script
-├── benchmark_and_rate.py               # Benchmark + scoring in one pass
+├── benchmark_and_rate.py               # Benchmark -> score -> report -> site
 ├── rate_embedding.py                   # Semantic similarity evaluation
-├── chart.py                            # Visualization generation
+├── report.py                           # Per-run HTML report (briefs + chart)
+├── lexbench.py                         # LexBench landing-page generator
+├── chart.py                            # Standalone PNG chart
 ├── app_get_random_cases_from_fandom.py # Test case scraper
 ├── llm/
 │   ├── llm_wrapper.py                  # Base wrapper interface
@@ -113,6 +145,7 @@ The benchmark generates a CSV file with the following columns:
 │   └── test_openrouter.py              # Smoke test
 ├── ai_models.csv                       # Frontier model configurations
 ├── random_cases.csv                    # Test cases (human-annotated briefs)
+├── docs/                               # Published LexBench site (GitHub Pages)
 └── charts/                             # Generated benchmark visualizations
 ```
 
