@@ -1,53 +1,209 @@
 {
   "meta": {
-    "updated": "17 Jun 2026",
-    "generated": "07 Jul 2026, 11:39",
+    "updated": "09 Jul 2026",
+    "generated": "09 Jul 2026, 21:18",
     "models": 3,
-    "cases": 50,
-    "rows": 110
+    "tracks": 2,
+    "judge_model": "openai/gpt-5.4-mini"
   },
-  "leaderboard": [
+  "tracks": [
     {
-      "model": "Claude Opus 4.8",
-      "developer": "Anthropic",
-      "n": 50,
-      "errors": 0,
-      "sections": {
-        "facts": 0.7443,
-        "issue": 0.5341,
-        "decision": 0.4577,
-        "reasons": 0.7401,
-        "ratio": 0.593
-      },
-      "overall": 0.6138
+      "key": "closed",
+      "label": "Closed-book (recall from case name)",
+      "leaderboard": [
+        {
+          "model": "Claude Opus 4.8",
+          "developer": "Anthropic",
+          "n": 6,
+          "cosine": {
+            "facts": 0.7471451858679453,
+            "issue": 0.47586962580680847,
+            "decision": 0.46428507566452026,
+            "reasons": 0.7753620147705078,
+            "ratio": 0.5398099273443222
+          },
+          "judge": {
+            "facts": 0.4722166666666667,
+            "issue": 0.5972000000000001,
+            "decision": 0.3750166666666666,
+            "reasons": 0.4027833333333333,
+            "ratio": 0.4444333333333333
+          },
+          "cosine_overall": 0.6005,
+          "judge_overall": 0.4583,
+          "primary_overall": 0.4583,
+          "ci_lo": 0.2222,
+          "ci_hi": 0.6834,
+          "groundedness": 0.5,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.027052500000000004,
+          "avg_latency": 15.928333333333335,
+          "tied_above": false
+        },
+        {
+          "model": "DeepSeek Chat v3.1",
+          "developer": "DeepSeek",
+          "n": 6,
+          "cosine": {
+            "facts": 0.5752545446157455,
+            "issue": 0.3676682033886512,
+            "decision": 0.44310714801152545,
+            "reasons": 0.6021066208680471,
+            "ratio": 0.4596449375152588
+          },
+          "judge": {
+            "facts": 0.13888333333333333,
+            "issue": 0.26389999999999997,
+            "decision": 0.15278333333333335,
+            "reasons": 0.11109999999999999,
+            "ratio": 0.1527666666666667
+          },
+          "cosine_overall": 0.4896,
+          "judge_overall": 0.1639,
+          "primary_overall": 0.1639,
+          "ci_lo": 0.0,
+          "ci_hi": 0.3555,
+          "groundedness": 0.2167,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.00033999999999999997,
+          "avg_latency": 20.527833333333334,
+          "tied_above": true
+        },
+        {
+          "model": "Gemini 2.5 Pro",
+          "developer": "Google",
+          "n": 6,
+          "cosine": {
+            "facts": 0.7364253302415212,
+            "issue": 0.45277418692906696,
+            "decision": 0.5542742212613424,
+            "reasons": 0.6351371357838312,
+            "ratio": 0.48813470005989074
+          },
+          "judge": {
+            "facts": 0.15278333333333333,
+            "issue": 0.16666666666666666,
+            "decision": 0.12499999999999999,
+            "reasons": 0.11111666666666666,
+            "ratio": 0.11111666666666666
+          },
+          "cosine_overall": 0.5733,
+          "judge_overall": 0.1333,
+          "primary_overall": 0.1333,
+          "ci_lo": 0.0444,
+          "ci_hi": 0.2222,
+          "groundedness": 0.1667,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.020688833333333333,
+          "avg_latency": 20.894666666666666,
+          "tied_above": true
+        }
+      ]
     },
     {
-      "model": "Claude Sonnet 4.6",
-      "developer": "Anthropic",
-      "n": 50,
-      "errors": 0,
-      "sections": {
-        "facts": 0.7241,
-        "issue": 0.5118,
-        "decision": 0.4325,
-        "reasons": 0.6846,
-        "ratio": 0.5603
-      },
-      "overall": 0.5827
-    },
-    {
-      "model": "GPT-5.5",
-      "developer": "OpenAI",
-      "n": 10,
-      "errors": 5,
-      "sections": {
-        "facts": 0.3839,
-        "issue": 0.3502,
-        "decision": 0.3725,
-        "reasons": 0.4138,
-        "ratio": 0.3365
-      },
-      "overall": 0.3714
+      "key": "open",
+      "label": "Open-book (brief from decision text)",
+      "leaderboard": [
+        {
+          "model": "Claude Opus 4.8",
+          "developer": "Anthropic",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.96668,
+            "issue": 0.96668,
+            "decision": 0.9833400000000001,
+            "reasons": 0.96668,
+            "ratio": 0.96668
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.97,
+          "primary_overall": 0.97,
+          "ci_lo": 0.9467,
+          "ci_hi": 0.9933,
+          "groundedness": 1.0,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.13807399999999997,
+          "avg_latency": 26.8936,
+          "tied_above": false
+        },
+        {
+          "model": "DeepSeek Chat v3.1",
+          "developer": "DeepSeek",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.9,
+            "issue": 0.91668,
+            "decision": 0.96668,
+            "reasons": 0.8833400000000001,
+            "ratio": 0.8833400000000001
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.91,
+          "primary_overall": 0.91,
+          "ci_lo": 0.8633,
+          "ci_hi": 0.9568,
+          "groundedness": 0.98,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.0028049999999999998,
+          "avg_latency": 18.4818,
+          "tied_above": true
+        },
+        {
+          "model": "Gemini 2.5 Pro",
+          "developer": "Google",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.8,
+            "issue": 0.88336,
+            "decision": 0.95002,
+            "reasons": 0.8166800000000001,
+            "ratio": 0.83334
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.8567,
+          "primary_overall": 0.8567,
+          "ci_lo": 0.7967,
+          "ci_hi": 0.9234,
+          "groundedness": 0.89,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.043186199999999994,
+          "avg_latency": 25.932,
+          "tied_above": true
+        }
+      ]
     }
   ]
 }

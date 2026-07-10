@@ -6,6 +6,7 @@ Google, xAI, Meta, DeepSeek, ...) by changing only the model id.
 """
 
 import os
+import time
 from typing import Dict, Optional
 
 from openai import OpenAI
@@ -81,14 +82,19 @@ class OpenRouterWrapper(LLM_Wrapper):
         messages.append({"role": "user", "content": query})
         return messages
 
-    def invoke(self, query: str, context: Optional[str] = None) -> str:
-        """Send a chat completion and return the assistant message content."""
+    def complete(self, query: str, context: Optional[str] = None) -> Dict:
+        """Send a chat completion and return the text plus call metadata.
+
+        Returns a dict: text, prompt_tokens, completion_tokens, finish_reason,
+        latency_s. Token counts are 0 when the provider omits usage.
+        """
         messages = self._build_messages(query, context)
 
         kwargs: Dict = {"model": self.model_id, "messages": messages}
         if self.max_tokens is not None:
             kwargs["max_tokens"] = self.max_tokens
 
+        start = time.perf_counter()
         try:
             if self.temperature is not None:
                 try:
@@ -103,9 +109,24 @@ class OpenRouterWrapper(LLM_Wrapper):
         except APIError as e:
             raise Exception(f"OpenRouter request failed for {self.model_id}: {e}") from e
 
-        if not response.choices:
-            return ""
-        return response.choices[0].message.content or ""
+        latency = time.perf_counter() - start
+        usage = getattr(response, "usage", None)
+        text = ""
+        finish = None
+        if response.choices:
+            text = response.choices[0].message.content or ""
+            finish = response.choices[0].finish_reason
+        return {
+            "text": text,
+            "prompt_tokens": getattr(usage, "prompt_tokens", 0) or 0,
+            "completion_tokens": getattr(usage, "completion_tokens", 0) or 0,
+            "finish_reason": finish,
+            "latency_s": round(latency, 3),
+        }
+
+    def invoke(self, query: str, context: Optional[str] = None) -> str:
+        """Send a chat completion and return the assistant message content."""
+        return self.complete(query, context)["text"]
 
     def get_model_info(self) -> Dict:
         """Return descriptive metadata about the configured model."""

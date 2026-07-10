@@ -1,0 +1,215 @@
+"""LLM-as-judge scorer for Canadian case-law briefs.
+
+A strong judge model grades each generated brief section on a 1-5 rubric —
+accuracy, completeness, and groundedness (the inverse of hallucination) — with a
+short rationale, returning structured JSON. This complements the embedding
+cosine score in rate_embedding.py: cosine measures topical closeness, the judge
+measures whether the brief is actually correct and free of invented content.
+
+Two modes:
+  * reference : grade the brief against the human-authored reference brief
+                (columns human_facts ... human_ratio). Used for the closed-book
+                dataset that ships with human briefs.
+  * source    : grade the brief for faithfulness to the full decision text
+                (a `case_text` column). Reference-free and contamination-
+                resistant, so it works on recent / open-book cases that have no
+                curated human brief.
+
+Usage:
+    python judge.py results/evaluated_case_model_results_with_section_similarity.csv
+    python judge.py <input.csv> <output.csv> --mode source --judge google/gemini-2.5-pro
+
+Caveats (documented on purpose): LLM judges carry self-preference bias and cost.
+Use a judge from a different family than the leading contestants, keep the judge
+model + prompt pinned for comparability, and validate against a small
+human-labelled sample before trusting absolute numbers.
+"""
+
+import os
+import sys
+from pathlib import Path
+from time import sleep
+from typing import Dict, List, Optional
+
+import pandas as pd
+from dotenv import load_dotenv
+
+from benchmark import SECTIONS, make_valid_json
+from llm.openrouter import OpenRouterWrapper
+
+load_dotenv()
+
+# A capable judge from a family other than the current leaders (Anthropic /
+# OpenAI), to blunt self-preference bias. Override with --judge or JUDGE_MODEL.
+DEFAULT_JUDGE = os.environ.get("JUDGE_MODEL", "google/gemini-2.5-pro")
+
+CRITERIA = ["accuracy", "completeness", "groundedness"]
+
+# Max characters of decision text handed to the judge in source mode. Large
+# enough for most decisions; long judgments are truncated with a marker.
+SOURCE_CHAR_BUDGET = 120_000
+
+_RUBRIC = (
+    "Score each of accuracy, completeness, and groundedness from 1 to 5:\n"
+    "  accuracy      1 = wrong/contradicts the source, 5 = fully correct.\n"
+    "  completeness  1 = misses the key points, 5 = captures all key points.\n"
+    "  groundedness  1 = contains invented facts, parties, holdings or citations,\n"
+    "                5 = every claim is supported by the source (no hallucination).\n"
+    "If a candidate section is empty, 'ERROR', or 'I don't know', score all three 1."
+)
+
+SYSTEM_PROMPT = (
+    "You are a meticulous Canadian legal evaluator grading AI-generated case "
+    "briefs. Be strict, calibrated, and consistent. Judge only against the "
+    "material provided — do not reward fluent writing that is not supported. "
+    "Respond with a single JSON object and nothing else."
+)
+
+
+def _norm(x) -> Optional[float]:
+    """Map a 1-5 rubric score to 0-1; None if unparseable."""
+    try:
+        v = float(x)
+    except (TypeError, ValueError):
+        return None
+    v = max(1.0, min(5.0, v))
+    return round((v - 1.0) / 4.0, 4)
+
+
+class LLMJudge:
+    def __init__(self, judge_model: str = DEFAULT_JUDGE, **wrapper_kwargs):
+        self.judge_model = judge_model
+        cfg = {
+            "model_id": judge_model,
+            "display_name": judge_model,
+            "temperature": 0,
+            "max_tokens": 1600,
+            "api_key": os.environ.get("OPENROUTER_API_KEY"),
+        }
+        cfg.update(wrapper_kwargs)
+        self.llm = OpenRouterWrapper(cfg)
+
+    def _prompt(self, case_name: str, ai: Dict[str, str], reference: Optional[Dict[str, str]],
+                source_text: Optional[str]) -> str:
+        keys = ", ".join(f'"{s}"' for s in SECTIONS)
+        schema = (
+            "{" + ", ".join(
+                f'"{s}": {{"accuracy": 1-5, "completeness": 1-5, "groundedness": 1-5}}'
+                for s in SECTIONS
+            ) + "}"
+        )
+        parts = [f'Case: "{case_name}".', "", _RUBRIC, ""]
+
+        if source_text is not None:
+            text = source_text[:SOURCE_CHAR_BUDGET]
+            if len(source_text) > SOURCE_CHAR_BUDGET:
+                text += "\n[...decision text truncated...]"
+            parts += [
+                "Grade the candidate brief for faithfulness to this decision text:",
+                "=== DECISION TEXT ===", text, "=== END DECISION TEXT ===", "",
+            ]
+        elif reference is not None:
+            ref = "\n".join(f"[{s}] {reference.get(s,'')}" for s in SECTIONS)
+            parts += [
+                "Grade the candidate brief against this reference brief:",
+                "=== REFERENCE BRIEF ===", ref, "=== END REFERENCE BRIEF ===", "",
+            ]
+
+        cand = "\n".join(f"[{s}] {ai.get(f'ai_{s}','')}" for s in SECTIONS)
+        parts += [
+            "=== CANDIDATE BRIEF ===", cand, "=== END CANDIDATE BRIEF ===", "",
+            f"Return JSON with exactly these keys {{{keys}}}, each an object of the "
+            f"three integer scores. Shape: {schema}. Output only the JSON.",
+        ]
+        return "\n".join(parts)
+
+    def judge_row(self, case_name: str, ai: Dict[str, str],
+                  reference: Optional[Dict[str, str]] = None,
+                  source_text: Optional[str] = None) -> Dict[str, Optional[float]]:
+        prompt = self._prompt(case_name, ai, reference, source_text)
+        raw = self.llm.invoke(prompt, context=SYSTEM_PROMPT)
+        import json
+        try:
+            parsed = json.loads(make_valid_json(raw))
+        except (ValueError, json.JSONDecodeError):
+            parsed = {}
+
+        out: Dict[str, Optional[float]] = {}
+        sec_composites = []
+        for s in SECTIONS:
+            block = parsed.get(s, {}) if isinstance(parsed.get(s), dict) else {}
+            crit_vals = []
+            for c in CRITERIA:
+                v = _norm(block.get(c))
+                out[f"judge_{s}_{c}"] = v
+                if v is not None:
+                    crit_vals.append(v)
+            comp = round(sum(crit_vals) / len(crit_vals), 4) if crit_vals else None
+            out[f"judge_{s}"] = comp
+            if comp is not None:
+                sec_composites.append(comp)
+        out["judge_overall"] = (
+            round(sum(sec_composites) / len(sec_composites), 4) if sec_composites else None
+        )
+        return out
+
+    def evaluate_results(self, input_file: str, output_file: Optional[str] = None,
+                         mode: str = "reference", text_column: str = "case_text",
+                         sleep_seconds: float = 0.4) -> str:
+        df = pd.read_csv(input_file)
+        for col in [f"ai_{s}" for s in SECTIONS]:
+            if col not in df.columns:
+                raise ValueError(f"Missing required column: {col}")
+        if mode == "source" and text_column not in df.columns:
+            raise ValueError(
+                f"source mode needs a '{text_column}' column of decision text"
+            )
+
+        records: List[Dict] = []
+        for i, row in df.iterrows():
+            ai = {f"ai_{s}": row.get(f"ai_{s}", "") for s in SECTIONS}
+            ref = {s: row.get(f"human_{s}", "") for s in SECTIONS} if mode == "reference" else None
+            src = str(row.get(text_column, "")) if mode == "source" else None
+            try:
+                scores = self.judge_row(str(row.get("Case_Name", "")), ai, ref, src)
+            except Exception as e:
+                print(f"  judge error on row {i} ({row.get('Model_ID','?')}): {e}")
+                scores = {}
+            records.append(scores)
+            if (i + 1) % 10 == 0:
+                print(f"  judged {i+1}/{len(df)} rows")
+            if sleep_seconds:
+                sleep(sleep_seconds)
+
+        judge_df = pd.DataFrame(records)
+        for c in judge_df.columns:
+            df[c] = judge_df[c].values
+        df["judge_model"] = self.judge_model
+
+        Path("results").mkdir(exist_ok=True)
+        if output_file is None:
+            output_file = "results/judged_case_model_results.csv"
+        df.to_csv(output_file, index=False)
+        print(f"Judge evaluation complete ({self.judge_model}). Saved to {output_file}")
+        return output_file
+
+
+def main(argv: List[str]) -> str:
+    if not argv:
+        print("Usage: python judge.py <input_csv> [output_csv] [--mode reference|source] [--judge <model_id>]")
+        sys.exit(1)
+    input_file = argv[0]
+    output_file = argv[1] if len(argv) > 1 and not argv[1].startswith("--") else None
+    mode = "reference"
+    judge_model = DEFAULT_JUDGE
+    for i, a in enumerate(argv):
+        if a == "--mode" and i + 1 < len(argv):
+            mode = argv[i + 1]
+        if a == "--judge" and i + 1 < len(argv):
+            judge_model = argv[i + 1]
+    judge = LLMJudge(judge_model=judge_model)
+    return judge.evaluate_results(input_file, output_file, mode=mode)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

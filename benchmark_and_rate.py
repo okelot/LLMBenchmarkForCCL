@@ -1,44 +1,86 @@
 #!/usr/bin/env python3
-"""End-to-end pipeline: benchmark frontier models, score, and build the report.
+"""End-to-end LexBench pipeline.
 
-    python benchmark_and_rate.py
+Closed-book track : recall brief from case name -> cosine + LLM-judge (reference)
+Open-book  track  : brief from A2AJ decision text -> LLM-judge (source-grounded)
+Then combine, build the report and refresh the published site.
+
+    python benchmark_and_rate.py                          # closed-book only
+    python benchmark_and_rate.py --holdout random_cases_holdout.csv   # both tracks
+    python benchmark_and_rate.py --no-judge               # skip the LLM judge
 """
+
+import argparse
+from typing import Optional
+
+import pandas as pd
 
 import lexbench
 import report
 from benchmark import run_benchmark
+from judge import DEFAULT_JUDGE, LLMJudge
 from rate_embedding import EmbeddingEvaluator
 
+COMBINED = "results/evaluated_case_model_results_with_section_similarity.csv"
 
-def run_benchmark_and_rate(
-    models_csv: str = "ai_models.csv",
-    cases_csv: str = "random_cases.csv",
-    sleep_seconds: float = 0.5,
-    max_cases: int = None,
-) -> None:
-    benchmark_file = run_benchmark(
-        models_csv=models_csv,
-        cases_csv=cases_csv,
-        sleep_seconds=sleep_seconds,
-        max_cases=max_cases,
-    )
 
-    print("\nStarting semantic-similarity evaluation...")
-    evaluator = EmbeddingEvaluator()
-    rated_file = evaluator.evaluate_results(benchmark_file)
+def _score_track(results_csv: str, mode: str, judge_model: Optional[str]) -> str:
+    """Add cosine (closed-book only) and judge columns to a results CSV."""
+    out = results_csv
+    if mode == "closed":
+        out = EmbeddingEvaluator().evaluate_results(
+            out, output_file=results_csv.replace(".csv", "_scored.csv"))
+    if judge_model:
+        judge = LLMJudge(judge_model=judge_model)
+        out = judge.evaluate_results(
+            out, output_file=results_csv.replace(".csv", "_judged.csv"),
+            mode="reference" if mode == "closed" else "source")
+    return out
 
-    print("\nBuilding HTML report...")
-    report_file = report.main([rated_file, "results/report.html"])
 
-    print("Refreshing LexBench landing page...")
-    site_file = lexbench.generate(rated_file)
+def run_pipeline(models_csv="ai_models.csv", cases_csv="random_cases.csv",
+                 holdout_csv: Optional[str] = None, judge_model: Optional[str] = DEFAULT_JUDGE,
+                 max_cases: Optional[int] = None, sleep_seconds: float = 0.5) -> None:
+    frames = []
 
-    print("\nComplete pipeline results:")
-    print(f"1. Benchmark results: {benchmark_file}")
-    print(f"2. Evaluation results: {rated_file}")
-    print(f"3. HTML report:       {report_file}")
-    print(f"4. LexBench site:     {site_file}")
+    print("\n### Closed-book track ###")
+    closed_raw = run_benchmark(models_csv=models_csv, cases_csv=cases_csv,
+                               sleep_seconds=sleep_seconds, max_cases=max_cases, mode="closed")
+    frames.append(_score_track(closed_raw, "closed", judge_model))
+
+    if holdout_csv:
+        print("\n### Open-book track (temporal holdout) ###")
+        open_raw = run_benchmark(models_csv=models_csv, cases_csv=holdout_csv,
+                                 sleep_seconds=sleep_seconds, max_cases=max_cases, mode="open")
+        frames.append(_score_track(open_raw, "open", judge_model))
+
+    # combine tracks (union of columns; ensure a mode column)
+    dfs = []
+    for path in frames:
+        d = pd.read_csv(path)
+        if "mode" not in d.columns:
+            d["mode"] = "closed"
+        dfs.append(d)
+    combined = pd.concat(dfs, ignore_index=True)
+    combined.to_csv(COMBINED, index=False)
+    print(f"\nCombined evaluated results -> {COMBINED}")
+
+    report_file = report.main([COMBINED, "results/report.html"])
+    site_file = lexbench.generate(COMBINED)
+    print("\nPipeline complete:")
+    print(f"  evaluated: {COMBINED}")
+    print(f"  report:    {report_file}")
+    print(f"  site:      {site_file}")
 
 
 if __name__ == "__main__":
-    run_benchmark_and_rate()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--models", default="ai_models.csv")
+    ap.add_argument("--cases", default="random_cases.csv")
+    ap.add_argument("--holdout", default=None, help="open-book holdout CSV (A2AJ)")
+    ap.add_argument("--judge", default=DEFAULT_JUDGE, help="judge model id")
+    ap.add_argument("--no-judge", action="store_true")
+    ap.add_argument("--max-cases", type=int, default=None)
+    a = ap.parse_args()
+    run_pipeline(models_csv=a.models, cases_csv=a.cases, holdout_csv=a.holdout,
+                 judge_model=None if a.no_judge else a.judge, max_cases=a.max_cases)
