@@ -100,8 +100,42 @@ def _row_overall(sub, cols):
 
 
 # ---------------------------------------------------------------- aggregation
+def _repair_missing_references(df: pd.DataFrame) -> pd.DataFrame:
+    """Mask scores for sections that have no human reference (reference mode).
+
+    Older judge runs scored every section even when the reference was missing
+    (e.g. Innisfil's empty Ratio) — grading a candidate against nothing. This
+    masks those scores and recomputes judge_overall from the remaining sections,
+    so the fix applies retroactively to existing result files. Open-book rows
+    are untouched: they are graded against the decision text, not references.
+    """
+    df = df.copy()
+    is_ref = (df["mode"] == "closed") if "mode" in df.columns else pd.Series(True, index=df.index)
+    judge_cols_touched = False
+    for s in SECTIONS:
+        href = f"human_{s}"
+        if href not in df.columns:
+            continue
+        missing = is_ref & (df[href].isna() | (df[href].astype(str).str.strip()
+                                               .isin(["", "nan"])))
+        if not missing.any():
+            continue
+        for col in ([f"judge_{s}"] + [f"judge_{s}_{c}" for c in
+                                      ["accuracy", "completeness", "groundedness"]]
+                    + [f"{s}_similarity"]):
+            if col in df.columns:
+                df.loc[missing, col] = pd.NA
+                judge_cols_touched = True
+    if judge_cols_touched and "judge_overall" in df.columns:
+        jcols = [f"judge_{s}" for s in SECTIONS if f"judge_{s}" in df.columns]
+        recomputed = df[jcols].apply(pd.to_numeric, errors="coerce").mean(axis=1, skipna=True)
+        df.loc[is_ref, "judge_overall"] = recomputed[is_ref].round(4)
+    return df
+
+
 def aggregate(df: pd.DataFrame):
     dev = _developer_map()
+    df = _repair_missing_references(df)
     present = [s for s in SECTIONS if f"{s}_similarity" in df.columns or f"judge_{s}" in df.columns]
     has_judge = any(f"judge_{s}" in df.columns for s in SECTIONS) or "judge_overall" in df.columns
     primary = "judge" if has_judge else "cosine"
@@ -111,37 +145,62 @@ def aggregate(df: pd.DataFrame):
     ground_cols = [f"judge_{s}_groundedness" for s in SECTIONS
                    if f"judge_{s}_groundedness" in df.columns]
     ai_cols = [f"ai_{s}" for s in SECTIONS if f"ai_{s}" in df.columns]
+    has_format = "format_ok" in df.columns
 
     rows = []
     for model, sub in df.groupby("Model_ID"):
-        cosine = {s: _col_mean(sub, f"{s}_similarity") for s in SECTIONS}
-        judge = {s: _col_mean(sub, f"judge_{s}") for s in SECTIONS}
-        cosine_overall = _col_mean(sub, None) if False else (
+        # Quality is measured over VALID responses only; execution failures
+        # (invalid JSON, truncation, exceptions) are reported as their own
+        # metrics rather than entering the quality mean as zeros. A strict
+        # all-rows mean is kept alongside for anyone who prefers that policy.
+        valid = sub[sub["format_ok"] == 1] if has_format else sub
+        scored = valid if len(valid) else sub
+
+        cosine = {s: _col_mean(scored, f"{s}_similarity") for s in SECTIONS}
+        judge = {s: _col_mean(scored, f"judge_{s}") for s in SECTIONS}
+        cosine_overall = (
             float(pd.Series([v for v in cosine.values() if v is not None]).mean())
             if any(v is not None for v in cosine.values()) else None)
         judge_overall = (float(pd.Series([v for v in judge.values() if v is not None]).mean())
                          if any(v is not None for v in judge.values()) else None)
 
-        # primary per-row values -> bootstrap CI
+        # primary per-row values (valid rows) -> bootstrap CI; keep per-case
+        # scores so ranking gaps can be tested with a PAIRED bootstrap.
         if primary == "judge":
-            per_row = (sub["judge_overall"].dropna().tolist()
-                       if "judge_overall" in sub else _row_overall(sub, judge_cols))
+            src = scored["judge_overall"] if "judge_overall" in scored else None
+            per_row = (src.dropna().tolist() if src is not None
+                       else _row_overall(scored, judge_cols))
+            per_case = (dict(zip(scored["Case_Name"], pd.to_numeric(src, errors="coerce")))
+                        if src is not None and "Case_Name" in scored else {})
         else:
-            per_row = _row_overall(sub, sim_cols)
+            per_row = _row_overall(scored, sim_cols)
+            per_case = {}
         mean, lo, hi = stats.bootstrap_ci(per_row)
+
+        # strict mean over ALL rows (failures counted as scored, usually 0)
+        strict_src = sub["judge_overall"] if "judge_overall" in sub else None
+        strict = (round(float(pd.to_numeric(strict_src, errors="coerce").mean()), 4)
+                  if strict_src is not None and strict_src.notna().any() else None)
+
+        trunc_rate = (float((sub["finish_reason"] == "length").mean())
+                      if "finish_reason" in sub.columns else None)
 
         rows.append({
             "model": str(model),
             "developer": str(dev.get(model, "")),
             "n": int(len(sub)),
+            "n_valid": int(len(valid)) if has_format else int(len(sub)),
             "cosine": cosine, "judge": judge,
             "cosine_overall": None if cosine_overall is None else round(cosine_overall, 4),
             "judge_overall": None if judge_overall is None else round(judge_overall, 4),
             "primary_overall": mean, "ci_lo": lo, "ci_hi": hi,
-            "groundedness": (round(float(sub[ground_cols].mean(axis=1).mean()), 4)
-                             if ground_cols else None),
+            "strict_overall": strict,
+            "_per_case": per_case,
+            "groundedness": (round(float(scored[ground_cols].mean(axis=1).mean()), 4)
+                             if ground_cols and len(scored) else None),
             "format_rate": _col_mean(sub, "format_ok"),
             "refusal_rate": _col_mean(sub, "refused"),
+            "truncation_rate": trunc_rate,
             "error_rate": (int((sub[ai_cols] == "ERROR").all(axis=1).sum()) / len(sub)
                            if ai_cols else None),
             "avg_cost": _col_mean(sub, "cost_usd"),
@@ -151,13 +210,26 @@ def aggregate(df: pd.DataFrame):
     rows.sort(key=lambda r: (r["primary_overall"] is not None, r["primary_overall"] or 0),
               reverse=True)
 
-    # flag ties: CI of a model overlapping the model ranked above it
+    # Tie flags via PAIRED bootstrap on shared cases (every model sees the same
+    # cases, so the paired design is the correct comparison). Falls back to
+    # marginal CI overlap when per-case scores are unavailable.
     for i in range(1, len(rows)):
         a, b = rows[i], rows[i - 1]
-        rows[i]["tied_above"] = (a["ci_hi"] is not None and b["ci_lo"] is not None
-                                 and a["ci_hi"] >= b["ci_lo"])
+        pa, pb = a.get("_per_case") or {}, b.get("_per_case") or {}
+        shared = [c for c in pa if c in pb]
+        if shared:
+            res = stats.paired_bootstrap_diff([(pb[c], pa[c]) for c in shared])
+            a["tied_above"] = not res["significant"]
+            a["gap_above"] = res
+        else:
+            a["tied_above"] = (a["ci_hi"] is not None and b["ci_lo"] is not None
+                               and a["ci_hi"] >= b["ci_lo"])
+            a["gap_above"] = None
     if rows:
         rows[0]["tied_above"] = False
+        rows[0]["gap_above"] = None
+    for r in rows:
+        r.pop("_per_case", None)
 
     return {"rows": rows, "sections": present, "primary": primary,
             "primary_label": "Judge score" if primary == "judge" else "Cosine similarity"}
@@ -216,9 +288,16 @@ def build_leaderboard(agg, track_label=""):
             hi = max(0.0, min(1.0, r["ci_hi"])) * 100
             whisker = f'<span class="wh" style="left:{lo:.1f}%;width:{max(hi-lo,1):.1f}%"></span>'
             bar_title = f' title="95% CI {r["ci_lo"]:.2f}–{r["ci_hi"]:.2f}"'
-        tie = '<span class="tie" title="CI overlaps the model above — gap not significant">≈</span>' if r.get("tied_above") else ""
+        gap = r.get("gap_above")
+        tie_title = (f"Paired bootstrap vs model above: diff {gap['diff']:+.3f}, "
+                     f"95% CI [{gap['lo']:+.3f}, {gap['hi']:+.3f}] over {gap['n']} shared cases — "
+                     "not significant" if gap else
+                     "CI overlaps the model above — gap not significant")
+        tie = f'<span class="tie" title="{tie_title}">≈</span>' if r.get("tied_above") else ""
         partial = f'<span class="tag">partial · {r["n"]}/{max_n}</span>' if r["n"] < max_n else ""
         lat = f'{r["avg_latency"]:.1f}s' if r["avg_latency"] is not None else "—"
+        n_valid = r.get("n_valid", r["n"])
+        cases_txt = f'{n_valid}/{r["n"]}' if n_valid != r["n"] else f'{r["n"]}'
         body.append(f"""<tr>
   <td class="rank" data-v="{i}">{i}</td>
   <td class="model" data-v="{html.escape(r["model"])}"><span class="mname">{html.escape(r["model"])}{tie}</span>
@@ -229,24 +308,26 @@ def build_leaderboard(agg, track_label=""):
   <td class="num" data-v="{_dv(r["cosine_overall"])}">{_fmt(r["cosine_overall"], 2)}</td>
   <td class="num" data-v="{_dv(r["groundedness"])}">{_fmt(r["groundedness"], 2)}</td>
   <td class="num" data-v="{_dv(r["format_rate"])}">{_pct(r["format_rate"])}</td>
+  <td class="num" data-v="{_dv(r.get("truncation_rate"))}">{_pct(r.get("truncation_rate"))}</td>
   <td class="num" data-v="{_dv(r["refusal_rate"])}">{_pct(r["refusal_rate"])}</td>
   <td class="num" data-v="{_dv(r["avg_cost"])}">{('$'+format(r["avg_cost"],'.4f')) if r["avg_cost"] is not None else '—'}</td>
   <td class="num" data-v="{_dv(r["avg_latency"])}">{lat}</td>
-  <td class="cases" data-v="{r["n"]}">{r["n"]}{partial}</td>
+  <td class="cases" data-v="{n_valid}">{cases_txt}{partial}</td>
 </tr>""")
     caption = f'<caption class="sr-only">Leaderboard — {html.escape(track_label)}</caption>' if track_label else ""
     return f"""<div class="table-wrap"><table class="board">{caption}
   <thead><tr>
     <th class="rank" scope="col" data-sort="num" title="Rank by primary metric">#</th>
     <th class="model" scope="col" data-sort="text">Model</th>
-    <th class="overall" scope="col" data-sort="num" title="Primary metric — click to sort">{primary_label} <span class="cih">95% CI</span></th>
+    <th class="overall" scope="col" data-sort="num" title="Primary metric over VALID responses — execution failures are reported separately, not folded in as zeros">{primary_label} <span class="cih">valid · 95% CI</span></th>
     <th class="num" scope="col" data-sort="num" title="Embedding cosine similarity">Cosine</th>
     <th class="num" scope="col" data-sort="num" title="Judge groundedness — higher = fewer hallucinated facts, holdings, citations">Grounded</th>
     <th class="num" scope="col" data-sort="num" title="Valid-JSON rate">Format</th>
+    <th class="num" scope="col" data-sort="num" title="Share of responses cut off by the token cap (finish_reason=length)">Trunc</th>
     <th class="num" scope="col" data-sort="num" title="Share answered 'I don't know'">Refuse</th>
     <th class="num" scope="col" data-sort="num" title="Mean cost per case (USD)">$/case</th>
     <th class="num" scope="col" data-sort="num" title="Mean wall-clock seconds per case">Latency</th>
-    <th class="cases" scope="col" data-sort="num" title="Number of cases evaluated">Cases</th>
+    <th class="cases" scope="col" data-sort="num" title="Valid responses / cases attempted">Cases</th>
   </tr></thead>
   <tbody>{''.join(body)}</tbody></table></div>
 <p class="hint">Click a column header to sort · hover headers for metric definitions.</p>"""
@@ -411,15 +492,23 @@ def _methodology_section(has_judge):
         '<li><span class="k">grounded</span> — mean judge groundedness; higher means '
         'fewer fabricated facts, parties, holdings, or citations.</li>'
         '<li><span class="k">format</span> — share of responses that returned valid JSON.</li>'
+        '<li><span class="k">trunc</span> — share cut off by the completion-token cap. '
+        'Truncated and malformed responses are execution failures: they are excluded from '
+        'the quality mean and reported here instead, so the headline score never mixes '
+        'legal quality with infrastructure policy. (A strict all-rows mean is kept in '
+        'data.json for anyone who prefers failures counted as zero.)</li>'
         '<li><span class="k">refuse</span> — share where the model declined ("I don\'t know"), '
         'reported separately so calibrated abstention is not confused with a wrong answer.</li>'
         '<li><span class="k">$/case</span> — mean cost per case from token usage × list price.</li>'
         '<li><span class="k">latency</span> — mean wall-clock seconds per case.</li>'
         '</ul>'
         '<p class="note">95% confidence intervals are percentile bootstraps over cases '
-        '(fixed seed); the thin line beneath each score bar spans the interval. A ≈ marks '
-        'a model whose interval overlaps the one above it — that gap is not statistically '
-        'distinguishable. Sample sizes are small, so treat rankings as provisional.</p>'
+        '(fixed seed); the thin line beneath each score bar spans the interval. Because '
+        'every model sees the same cases, ranking gaps are tested with a <b>paired</b> '
+        'bootstrap on per-case differences; a ≈ marks a gap whose paired 95% CI includes '
+        'zero (hover it for the interval). Sections lacking a human reference are excluded '
+        'from reference-mode judging rather than scored against nothing. Sample sizes are '
+        'small, so treat rankings as provisional.</p>'
         '</div></section>'
     )
 
@@ -468,7 +557,17 @@ def _repro_section(meta):
         'reading task, not recall), and the holdout uses decisions issued after model '
         'cutoffs, which cannot have been memorised.</p>'
         '<p class="note">Provider routing on OpenRouter may vary backend/quantization '
-        'run to run; pin a provider for byte-exact reproducibility.</p>'
+        'run to run (served model/provider are recorded per row in newer runs); pin a '
+        'provider for byte-exact reproducibility. Some reasoning models ignore the '
+        'requested temperature — the decoding config actually applied is recorded, not '
+        'assumed.</p>'
+        '<p class="note"><b>Judge caveats.</b> The judge shares a family with some '
+        'contestants (current data: an OpenAI judge grading OpenAI models among others), '
+        'so self-preference bias cannot be excluded; briefs are graded blind to model '
+        'identity, but style bias survives blinding. Open-book judge scores also show a '
+        'ceiling effect (most ratings perfect), limiting discrimination at the top. '
+        'Planned mitigations: cross-family judge, harsher rubric (shipped for future '
+        'runs), second judge, and a human-graded calibration sample.</p>'
         '</div></div></div></section>'
     )
 

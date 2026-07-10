@@ -26,9 +26,12 @@ SECTIONS = ["facts", "issue", "decision", "reasons", "ratio"]
 
 # Cap on completion tokens per request. Keeps briefs bounded and avoids
 # OpenRouter reserving each model's full output window (which can exceed an
-# account's credit balance and fail the affordability pre-check). Raise this if
-# you benchmark heavy reasoning models that need more room.
-MAX_TOKENS = 4096
+# account's credit balance and fail the affordability pre-check). Reasoning
+# models spend heavily from this budget before emitting the brief — 4096 caused
+# real truncations (finish_reason=length) for GPT-5.5, so keep this generous.
+# Truncations are recorded per-row and reported as their own leaderboard metric,
+# never silently folded into the quality score.
+MAX_TOKENS = 8192
 
 # Mapping from `random_cases.csv` columns to brief sections.
 HUMAN_COLUMNS = {
@@ -186,6 +189,9 @@ def generate_brief(llm: OpenRouterWrapper, prompt: str) -> tuple:
         "finish_reason": call["finish_reason"],
         "format_ok": int(format_ok),
         "refused": int(refused),
+        "temperature_used": call.get("temperature_used", ""),
+        "served_model": call.get("served_model", ""),
+        "provider": call.get("provider", ""),
     }
     return ai, meta
 
@@ -206,6 +212,7 @@ def _price(config: Dict, key: str) -> float:
 META_COLUMNS = [
     "mode", "Citation", "latency_s", "tokens_in", "tokens_out", "cost_usd",
     "finish_reason", "format_ok", "refused",
+    "temperature_used", "served_model", "provider", "error",
 ]
 
 
@@ -267,20 +274,29 @@ def run_benchmark(
                     if mode == "open"
                     else build_prompt(case_name, case["citation"])
                 )
+                error_msg = ""
                 try:
                     ai_output, meta = generate_brief(llm, prompt)
                 except Exception as e:
+                    # Retain the failure as an explicit execution record so every
+                    # model is evaluated over the same case population.
                     print(f"    Error on {case_name} with {model_id}: {e}")
-                    continue
+                    error_msg = str(e)[:300]
+                    ai_output = {f"ai_{s}": "ERROR" for s in SECTIONS}
+                    meta = {"latency_s": None, "tokens_in": 0, "tokens_out": 0,
+                            "finish_reason": "exception", "format_ok": 0, "refused": 0,
+                            "temperature_used": "", "served_model": "", "provider": ""}
 
                 cost = meta["tokens_in"] / 1e6 * in_price + meta["tokens_out"] / 1e6 * out_price
                 row = {"Model_ID": model_id, "Case_Name": case_name, "mode": mode,
-                       "Citation": case["citation"], "cost_usd": round(cost, 6)}
+                       "Citation": case["citation"], "cost_usd": round(cost, 6),
+                       "error": error_msg}
                 row.update(ai_output)
                 row.update({f"human_{s}": case["human"][s] for s in SECTIONS})
                 row.update({k: meta[k] for k in
                             ["latency_s", "tokens_in", "tokens_out", "finish_reason",
-                             "format_ok", "refused"]})
+                             "format_ok", "refused", "temperature_used",
+                             "served_model", "provider"]})
                 if mode == "open":
                     row["case_text"] = case["case_text"]
                 writer.writerow(row)

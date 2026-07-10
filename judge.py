@@ -55,6 +55,11 @@ _RUBRIC = (
     "  completeness  1 = misses the key points, 5 = captures all key points.\n"
     "  groundedness  1 = contains invented facts, parties, holdings or citations,\n"
     "                5 = every claim is supported by the source (no hallucination).\n"
+    "Grade like a demanding law professor. Before scoring, silently enumerate every "
+    "error, omission, or unsupported claim you can find; base scores on that list. "
+    "Reserve 5 for flawless work — any identified omission or imprecision caps the "
+    "criterion at 4, and any substantive error caps it at 3 or below. Use the full "
+    "1-5 range; most competent-but-imperfect sections should land at 3 or 4.\n"
     "If a candidate section is empty, 'ERROR', or 'I don't know', score all three 1."
 )
 
@@ -89,13 +94,31 @@ class LLMJudge:
         cfg.update(wrapper_kwargs)
         self.llm = OpenRouterWrapper(cfg)
 
+    @staticmethod
+    def _has_reference(reference: Optional[Dict[str, str]], s: str) -> bool:
+        v = (reference or {}).get(s)
+        return isinstance(v, str) and v.strip() != "" and v.strip().lower() != "nan"
+
+    def _gradable_sections(self, reference: Optional[Dict[str, str]],
+                           source_text: Optional[str]) -> list:
+        """Sections that can legitimately be graded.
+
+        Source mode grades everything against the decision text. Reference mode
+        grades only sections that actually have a human reference — a missing
+        reference is a dataset gap, and judging against nothing would score the
+        candidate on material the grader never saw.
+        """
+        if source_text is not None:
+            return list(SECTIONS)
+        return [s for s in SECTIONS if self._has_reference(reference, s)]
+
     def _prompt(self, case_name: str, ai: Dict[str, str], reference: Optional[Dict[str, str]],
-                source_text: Optional[str]) -> str:
-        keys = ", ".join(f'"{s}"' for s in SECTIONS)
+                source_text: Optional[str], sections: list) -> str:
+        keys = ", ".join(f'"{s}"' for s in sections)
         schema = (
             "{" + ", ".join(
                 f'"{s}": {{"accuracy": 1-5, "completeness": 1-5, "groundedness": 1-5}}'
-                for s in SECTIONS
+                for s in sections
             ) + "}"
         )
         parts = [f'Case: "{case_name}".', "", _RUBRIC, ""]
@@ -109,13 +132,13 @@ class LLMJudge:
                 "=== DECISION TEXT ===", text, "=== END DECISION TEXT ===", "",
             ]
         elif reference is not None:
-            ref = "\n".join(f"[{s}] {reference.get(s,'')}" for s in SECTIONS)
+            ref = "\n".join(f"[{s}] {reference.get(s,'')}" for s in sections)
             parts += [
                 "Grade the candidate brief against this reference brief:",
                 "=== REFERENCE BRIEF ===", ref, "=== END REFERENCE BRIEF ===", "",
             ]
 
-        cand = "\n".join(f"[{s}] {ai.get(f'ai_{s}','')}" for s in SECTIONS)
+        cand = "\n".join(f"[{s}] {ai.get(f'ai_{s}','')}" for s in sections)
         parts += [
             "=== CANDIDATE BRIEF ===", cand, "=== END CANDIDATE BRIEF ===", "",
             f"Return JSON with exactly these keys {{{keys}}}, each an object of the "
@@ -126,7 +149,14 @@ class LLMJudge:
     def judge_row(self, case_name: str, ai: Dict[str, str],
                   reference: Optional[Dict[str, str]] = None,
                   source_text: Optional[str] = None) -> Dict[str, Optional[float]]:
-        prompt = self._prompt(case_name, ai, reference, source_text)
+        sections = self._gradable_sections(reference, source_text)
+        if not sections:
+            out = {f"judge_{s}_{c}": None for s in SECTIONS for c in CRITERIA}
+            out.update({f"judge_{s}": None for s in SECTIONS})
+            out["judge_overall"] = None
+            return out
+
+        prompt = self._prompt(case_name, ai, reference, source_text, sections)
         raw = self.llm.invoke(prompt, context=SYSTEM_PROMPT)
         import json
         try:
@@ -137,6 +167,12 @@ class LLMJudge:
         out: Dict[str, Optional[float]] = {}
         sec_composites = []
         for s in SECTIONS:
+            if s not in sections:
+                # No reference for this section — excluded, not scored.
+                for c in CRITERIA:
+                    out[f"judge_{s}_{c}"] = None
+                out[f"judge_{s}"] = None
+                continue
             block = parsed.get(s, {}) if isinstance(parsed.get(s), dict) else {}
             crit_vals = []
             for c in CRITERIA:

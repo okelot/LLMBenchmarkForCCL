@@ -19,8 +19,8 @@ import pandas as pd
 SECTIONS = ["facts", "issue", "decision", "reasons", "ratio"]
 
 
-def _build_chart(df: pd.DataFrame, sim_cols: list) -> str:
-    """Render a grouped bar chart of mean section similarity per model.
+def _build_chart(df: pd.DataFrame, sim_cols: list, ylabel: str = "Avg cosine similarity") -> str:
+    """Render a grouped bar chart of mean section scores per model.
 
     Returns a base64 PNG data URI so the report stays self-contained, or "" if
     charting is unavailable or there is nothing to plot.
@@ -37,7 +37,8 @@ def _build_chart(df: pd.DataFrame, sim_cols: list) -> str:
 
     agg = df.groupby("Model_ID")[sim_cols].mean()
     models = list(agg.index)
-    sections = [c.replace("_similarity", "").title() for c in sim_cols]
+    sections = [c.replace("_similarity", "").replace("judge_", "").title()
+                for c in sim_cols]
     x = np.arange(len(models))
     width = 0.8 / max(1, len(sim_cols))
 
@@ -54,8 +55,8 @@ def _build_chart(df: pd.DataFrame, sim_cols: list) -> str:
     ax.set_xticks(x)
     ax.set_xticklabels(models, rotation=15, ha="right")
     ax.set_ylim(0, 1)
-    ax.set_ylabel("Avg cosine similarity")
-    ax.set_title("Average section similarity by model (AI vs human brief)")
+    ax.set_ylabel(ylabel)
+    ax.set_title("Average section score by model")
     ax.legend(ncol=len(sim_cols), fontsize=8, loc="lower right")
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
@@ -82,52 +83,75 @@ def _cell(value: str) -> str:
     return html.escape(str(value)) if value and not pd.isna(value) else "<em>—</em>"
 
 
-def build_html(df: pd.DataFrame, source: str) -> str:
-    sim_cols = [f"{s}_similarity" for s in SECTIONS if f"{s}_similarity" in df.columns]
-    overall = df[sim_cols].mean(axis=1) if sim_cols else None
+TRACK_TITLES = {
+    "closed": "Closed-book track (recall from case name)",
+    "open": "Open-book track (brief from decision text)",
+}
 
-    chart_uri = _build_chart(df, sim_cols)
-    chart_section = (
-        f'<h2>Section similarity chart</h2><img class="chart" src="{chart_uri}" '
-        f'alt="Average section similarity by model">'
-        if chart_uri
-        else ""
-    )
 
-    # Summary: average similarity per model.
-    summary_rows = ""
+def _track_html(df: pd.DataFrame, mode: str) -> str:
+    """Summary table + detail cards for one track (closed or open)."""
+    sim_cols = [f"{s}_similarity" for s in SECTIONS
+                if f"{s}_similarity" in df.columns and df[f"{s}_similarity"].notna().any()]
+    judge_cols = [f"judge_{s}" for s in SECTIONS
+                  if f"judge_{s}" in df.columns and df[f"judge_{s}"].notna().any()]
+    open_mode = mode == "open"
+
+    # Prefer judge sections for the chart when cosine is absent (open track).
+    chart_cols = sim_cols or judge_cols
+    ylabel = "Avg cosine similarity" if sim_cols else "Avg judge score"
+    chart_uri = _build_chart(df, chart_cols, ylabel=ylabel)
+    chart_html = (f'<img class="chart" src="{chart_uri}" alt="Average score by model">'
+                  if chart_uri else "")
+
+    # Summary: cosine (when present) and judge means per model.
+    parts_head, agg_frames = [], []
     if sim_cols:
-        agg = df.groupby("Model_ID")[sim_cols].mean()
-        agg["overall"] = agg.mean(axis=1)
-        for model, row in agg.sort_values("overall", ascending=False).iterrows():
+        parts_head += [f"{s.replace('_similarity','').title()}" for s in sim_cols]
+        agg_frames.append(df.groupby("Model_ID")[sim_cols].mean())
+    if judge_cols and "judge_overall" in df.columns:
+        parts_head.append("Judge")
+        agg_frames.append(df.groupby("Model_ID")[["judge_overall"]].mean())
+
+    summary_rows = ""
+    if agg_frames:
+        agg = pd.concat(agg_frames, axis=1)
+        sort_col = "judge_overall" if "judge_overall" in agg.columns else agg.columns[-1]
+        for model, row in agg.sort_values(sort_col, ascending=False).iterrows():
             cells = "".join(
                 f'<td style="background:{_score_color(row[c])}">{row[c]:.3f}</td>'
-                for c in sim_cols
+                if not pd.isna(row[c]) else "<td>—</td>"
+                for c in agg.columns
             )
-            summary_rows += (
-                f"<tr><td class='model'>{html.escape(str(model))}</td>{cells}"
-                f"<td class='overall' style='background:{_score_color(row['overall'])}'>"
-                f"{row['overall']:.3f}</td></tr>"
-            )
+            summary_rows += f"<tr><td class='model'>{html.escape(str(model))}</td>{cells}</tr>"
+    summary_head = "".join(f"<th>{h}</th>" for h in parts_head)
 
-    summary_head = "".join(f"<th>{s.title()}</th>" for s in SECTIONS if f"{s}_similarity" in df.columns)
-
-    # Detail cards: one per (model, case) with AI vs human briefs.
+    # Detail cards. Open-book rows have no human reference — show the judge
+    # scores and label the reference column accordingly.
+    overall = (df["judge_overall"] if "judge_overall" in df.columns
+               else (df[sim_cols].mean(axis=1) if sim_cols else None))
+    ref_head = "Decision text (excerpt)" if open_mode else "Human brief"
     cards = ""
     for i, row in df.iterrows():
-        score = f"{overall[i]:.3f}" if overall is not None and not pd.isna(overall[i]) else "n/a"
+        score = (f"{overall[i]:.3f}" if overall is not None and not pd.isna(overall[i])
+                 else "n/a")
         sec_rows = ""
         for s in SECTIONS:
+            badges = ""
             sim = row.get(f"{s}_similarity")
-            badge = (
-                f'<span class="badge" style="background:{_score_color(sim)}">{sim:.3f}</span>'
-                if sim is not None and not pd.isna(sim)
-                else ""
-            )
+            if sim is not None and not pd.isna(sim):
+                badges += f'<span class="badge" style="background:{_score_color(sim)}" title="cosine">{sim:.2f}</span> '
+            jv = row.get(f"judge_{s}")
+            if jv is not None and not pd.isna(jv):
+                badges += f'<span class="badge" style="background:{_score_color(jv)}" title="judge">J {jv:.2f}</span>'
+            if open_mode:
+                ref_cell = "<em>graded against full decision text</em>" if s == "facts" else "<em>—</em>"
+            else:
+                ref_cell = _cell(row.get(f"human_{s}"))
             sec_rows += (
-                f"<tr><th>{s.title()} {badge}</th>"
+                f"<tr><th>{s.title()} {badges}</th>"
                 f"<td>{_cell(row.get(f'ai_{s}'))}</td>"
-                f"<td>{_cell(row.get(f'human_{s}'))}</td></tr>"
+                f"<td>{ref_cell}</td></tr>"
             )
         cards += f"""
         <div class="card">
@@ -136,10 +160,30 @@ def build_html(df: pd.DataFrame, source: str) -> str:
               <span class="overall-badge" style="background:{_score_color(overall[i] if overall is not None else float('nan'))}">avg {score}</span>
           </h3>
           <table class="brief">
-            <thead><tr><th>Section</th><th>AI brief</th><th>Human brief</th></tr></thead>
+            <thead><tr><th>Section</th><th>AI brief</th><th>{ref_head}</th></tr></thead>
             <tbody>{sec_rows}</tbody>
           </table>
         </div>"""
+
+    title = TRACK_TITLES.get(mode, f"{mode} track")
+    return f"""
+  <h2>{title}</h2>
+  {chart_html}
+  <table class="summary">
+    <thead><tr><th>Model</th>{summary_head}</tr></thead>
+    <tbody>{summary_rows or '<tr><td colspan="8"><em>No score columns found.</em></td></tr>'}</tbody>
+  </table>
+  <h3 class="cards-head">Per-case briefs</h3>
+  {cards}"""
+
+
+def build_html(df: pd.DataFrame, source: str) -> str:
+    if "mode" in df.columns and df["mode"].notna().any():
+        tracks = [(str(m), sub.reset_index(drop=True)) for m, sub in df.groupby("mode")]
+        tracks.sort(key=lambda t: 0 if t[0] == "closed" else 1)
+    else:
+        tracks = [("closed", df)]
+    body = "".join(_track_html(sub, m) for m, sub in tracks)
 
     generated = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     return f"""<!doctype html>
@@ -163,6 +207,7 @@ def build_html(df: pd.DataFrame, source: str) -> str:
   .summary td.overall {{ font-weight: 700; }}
   img.chart {{ max-width: 100%; background: #fff; border-radius: 8px; padding: 8px;
                box-shadow: 0 1px 3px rgba(0,0,0,.08); }}
+  .cards-head {{ font-size: 14px; color: #475569; margin: 24px 0 4px; }}
   .card {{ margin-top: 18px; }}
   .card h3 {{ font-size: 15px; margin: 0 0 8px; }}
   .card .case {{ color: #2563eb; }}
@@ -178,14 +223,7 @@ def build_html(df: pd.DataFrame, source: str) -> str:
   <p>{len(df)} result row(s) &middot; source: {html.escape(source)} &middot; generated {generated}</p>
 </header>
 <main>
-  {chart_section}
-  <h2>Average section similarity by model</h2>
-  <table class="summary">
-    <thead><tr><th>Model</th>{summary_head}<th>Overall</th></tr></thead>
-    <tbody>{summary_rows or '<tr><td colspan="7"><em>No similarity columns found.</em></td></tr>'}</tbody>
-  </table>
-  <h2>AI vs human briefs</h2>
-  {cards}
+  {body}
 </main></body></html>"""
 
 

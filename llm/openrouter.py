@@ -95,6 +95,7 @@ class OpenRouterWrapper(LLM_Wrapper):
             kwargs["max_tokens"] = self.max_tokens
 
         start = time.perf_counter()
+        temperature_used = self.temperature
         try:
             if self.temperature is not None:
                 try:
@@ -102,7 +103,10 @@ class OpenRouterWrapper(LLM_Wrapper):
                         temperature=self.temperature, **kwargs
                     )
                 except BadRequestError:
-                    # Some reasoning models only accept the default temperature.
+                    # Some models only accept their default temperature. Retry
+                    # without it, but record that so results never claim a
+                    # decoding config that wasn't actually applied.
+                    temperature_used = None
                     response = self.client.chat.completions.create(**kwargs)
             else:
                 response = self.client.chat.completions.create(**kwargs)
@@ -122,6 +126,10 @@ class OpenRouterWrapper(LLM_Wrapper):
             "completion_tokens": getattr(usage, "completion_tokens", 0) or 0,
             "finish_reason": finish,
             "latency_s": round(latency, 3),
+            # decoding/routing transparency
+            "temperature_used": "default" if temperature_used is None else temperature_used,
+            "served_model": getattr(response, "model", None),
+            "provider": getattr(response, "provider", None),
         }
 
     def invoke(self, query: str, context: Optional[str] = None) -> str:

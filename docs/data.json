@@ -1,7 +1,7 @@
 {
   "meta": {
     "updated": "09 Jul 2026",
-    "generated": "09 Jul 2026, 22:00",
+    "generated": "10 Jul 2026, 09:48",
     "models": 8,
     "tracks": 2,
     "judge_model": "openai/gpt-5.4-mini"
@@ -12,9 +12,45 @@
       "label": "Closed-book (recall from case name)",
       "leaderboard": [
         {
+          "model": "GPT-5.5",
+          "developer": "OpenAI",
+          "n": 6,
+          "n_valid": 4,
+          "cosine": {
+            "facts": 0.6868831068277359,
+            "issue": 0.4778682291507721,
+            "decision": 0.5598762631416321,
+            "reasons": 0.6902810335159302,
+            "ratio": 0.506811335682869
+          },
+          "judge": {
+            "facts": 0.395825,
+            "issue": 0.58335,
+            "decision": 0.375025,
+            "reasons": 0.541675,
+            "ratio": 0.541675
+          },
+          "cosine_overall": 0.5843,
+          "judge_overall": 0.4875,
+          "primary_overall": 0.4875,
+          "ci_lo": 0.1667,
+          "ci_hi": 0.7,
+          "strict_overall": 0.325,
+          "groundedness": 0.55,
+          "format_rate": 0.6666666666666666,
+          "refusal_rate": 0.0,
+          "truncation_rate": 0.3333333333333333,
+          "error_rate": 0.3333333333333333,
+          "avg_cost": 0.08455,
+          "avg_latency": 70.74,
+          "tied_above": false,
+          "gap_above": null
+        },
+        {
           "model": "Claude Opus 4.8",
           "developer": "Anthropic",
           "n": 6,
+          "n_valid": 6,
           "cosine": {
             "facts": 0.7471451858679453,
             "issue": 0.47586962580680847,
@@ -27,118 +63,117 @@
             "issue": 0.5972000000000001,
             "decision": 0.3750166666666666,
             "reasons": 0.4027833333333333,
-            "ratio": 0.4444333333333333
+            "ratio": 0.41666
           },
           "cosine_overall": 0.6005,
-          "judge_overall": 0.4583,
-          "primary_overall": 0.4583,
-          "ci_lo": 0.2222,
-          "ci_hi": 0.6834,
-          "groundedness": 0.5,
+          "judge_overall": 0.4528,
+          "primary_overall": 0.4625,
+          "ci_lo": 0.2263,
+          "ci_hi": 0.6931,
+          "strict_overall": 0.4625,
+          "groundedness": 0.5062,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.027052500000000004,
           "avg_latency": 15.928333333333335,
-          "tied_above": false
+          "tied_above": true,
+          "gap_above": {
+            "diff": -0.0125,
+            "lo": -0.0917,
+            "hi": 0.0791,
+            "n": 4,
+            "significant": false
+          }
         },
         {
           "model": "GPT-5.6",
           "developer": "OpenAI",
           "n": 6,
+          "n_valid": 5,
           "cosine": {
-            "facts": 0.5779573222001394,
-            "issue": 0.34710204515916604,
-            "decision": 0.41678911199172336,
-            "reasons": 0.5581017800917228,
-            "ratio": 0.40156608838588
+            "facts": 0.7077636003494263,
+            "issue": 0.41768992841243746,
+            "decision": 0.4866833806037903,
+            "reasons": 0.6690489947795868,
+            "ratio": 0.5027730707079172
           },
           "judge": {
-            "facts": 0.34723333333333334,
-            "issue": 0.3888833333333333,
-            "decision": 0.19445,
-            "reasons": 0.34723333333333334,
-            "ratio": 0.375
+            "facts": 0.41668000000000005,
+            "issue": 0.46665999999999996,
+            "decision": 0.23334000000000002,
+            "reasons": 0.41668000000000005,
+            "ratio": 0.5625
           },
-          "cosine_overall": 0.4603,
-          "judge_overall": 0.3306,
-          "primary_overall": 0.3306,
-          "ci_lo": 0.1,
-          "ci_hi": 0.5889,
-          "groundedness": 0.3833,
+          "cosine_overall": 0.5568,
+          "judge_overall": 0.4192,
+          "primary_overall": 0.3992,
+          "ci_lo": 0.135,
+          "ci_hi": 0.6634,
+          "strict_overall": 0.3327,
+          "groundedness": 0.465,
           "format_rate": 0.8333333333333334,
           "refusal_rate": 0.16666666666666666,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.07454500000000001,
           "avg_latency": 80.71916666666667,
-          "tied_above": true
-        },
-        {
-          "model": "GPT-5.5",
-          "developer": "OpenAI",
-          "n": 6,
-          "cosine": {
-            "facts": 0.48826395720243454,
-            "issue": 0.33434383384883404,
-            "decision": 0.47854934136072796,
-            "reasons": 0.5095096876223882,
-            "ratio": 0.4103791996836662
-          },
-          "judge": {
-            "facts": 0.2638833333333333,
-            "issue": 0.3889,
-            "decision": 0.25001666666666666,
-            "reasons": 0.3611166666666667,
-            "ratio": 0.3611166666666667
-          },
-          "cosine_overall": 0.4442,
-          "judge_overall": 0.325,
-          "primary_overall": 0.325,
-          "ci_lo": 0.0917,
-          "ci_hi": 0.5807,
-          "groundedness": 0.3667,
-          "format_rate": 0.6666666666666666,
-          "refusal_rate": 0.0,
-          "error_rate": 0.3333333333333333,
-          "avg_cost": 0.08455,
-          "avg_latency": 70.74,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.1425,
+            "lo": -0.0667,
+            "hi": 0.4142,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "Claude Sonnet 4.6",
           "developer": "Anthropic",
           "n": 6,
+          "n_valid": 5,
           "cosine": {
-            "facts": 0.605802317460378,
-            "issue": 0.3600578523085763,
-            "decision": 0.3760649586717288,
-            "reasons": 0.6208079972614845,
-            "ratio": 0.39835842717438935
+            "facts": 0.7411775946617126,
+            "issue": 0.43323689699172974,
+            "decision": 0.43781439661979676,
+            "reasons": 0.7442964553833008,
+            "ratio": 0.4987634941935539
           },
           "judge": {
-            "facts": 0.3333333333333333,
-            "issue": 0.41664999999999996,
-            "decision": 0.2222166666666667,
-            "reasons": 0.2777833333333333,
-            "ratio": 0.25
+            "facts": 0.4,
+            "issue": 0.49998,
+            "decision": 0.26666,
+            "reasons": 0.33334,
+            "ratio": 0.375
           },
-          "cosine_overall": 0.4722,
-          "judge_overall": 0.3,
-          "primary_overall": 0.3,
-          "ci_lo": 0.075,
-          "ci_hi": 0.55,
-          "groundedness": 0.3667,
+          "cosine_overall": 0.5711,
+          "judge_overall": 0.375,
+          "primary_overall": 0.3675,
+          "ci_lo": 0.135,
+          "ci_hi": 0.6,
+          "strict_overall": 0.3063,
+          "groundedness": 0.4475,
           "format_rate": 0.8333333333333334,
           "refusal_rate": 0.16666666666666666,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.009005,
           "avg_latency": 13.185166666666666,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0317,
+            "lo": -0.14,
+            "hi": 0.2584,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "Grok 4.5",
           "developer": "xAI",
           "n": 6,
+          "n_valid": 6,
           "cosine": {
             "facts": 0.7058417797088623,
             "issue": 0.4683607717355092,
@@ -151,25 +186,35 @@
             "issue": 0.3749833333333334,
             "decision": 0.041666666666666664,
             "reasons": 0.20831666666666668,
-            "ratio": 0.13888333333333333
+            "ratio": 0.15
           },
           "cosine_overall": 0.5964,
-          "judge_overall": 0.1917,
-          "primary_overall": 0.1916,
+          "judge_overall": 0.1939,
+          "primary_overall": 0.2035,
           "ci_lo": 0.05,
-          "ci_hi": 0.3446,
-          "groundedness": 0.2417,
+          "ci_hi": 0.3722,
+          "strict_overall": 0.2035,
+          "groundedness": 0.2542,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.012506666666666668,
           "avg_latency": 19.545666666666666,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.1233,
+            "lo": -0.09,
+            "hi": 0.2933,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "DeepSeek Chat v3.1",
           "developer": "DeepSeek",
           "n": 6,
+          "n_valid": 6,
           "cosine": {
             "facts": 0.5752545446157455,
             "issue": 0.3676682033886512,
@@ -182,25 +227,35 @@
             "issue": 0.26389999999999997,
             "decision": 0.15278333333333335,
             "reasons": 0.11109999999999999,
-            "ratio": 0.1527666666666667
+            "ratio": 0.18332
           },
           "cosine_overall": 0.4896,
-          "judge_overall": 0.1639,
+          "judge_overall": 0.17,
           "primary_overall": 0.1639,
           "ci_lo": 0.0,
           "ci_hi": 0.3555,
+          "strict_overall": 0.1639,
           "groundedness": 0.2167,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.00033999999999999997,
           "avg_latency": 20.527833333333334,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0396,
+            "lo": -0.1111,
+            "hi": 0.2243,
+            "n": 6,
+            "significant": false
+          }
         },
         {
           "model": "Gemini 2.5 Pro",
           "developer": "Google",
           "n": 6,
+          "n_valid": 6,
           "cosine": {
             "facts": 0.7364253302415212,
             "issue": 0.45277418692906696,
@@ -213,25 +268,35 @@
             "issue": 0.16666666666666666,
             "decision": 0.12499999999999999,
             "reasons": 0.11111666666666666,
-            "ratio": 0.11111666666666666
+            "ratio": 0.13334
           },
           "cosine_overall": 0.5733,
-          "judge_overall": 0.1333,
-          "primary_overall": 0.1333,
-          "ci_lo": 0.0444,
-          "ci_hi": 0.2222,
-          "groundedness": 0.1667,
+          "judge_overall": 0.1378,
+          "primary_overall": 0.1389,
+          "ci_lo": 0.05,
+          "ci_hi": 0.2278,
+          "strict_overall": 0.1389,
+          "groundedness": 0.1708,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.020688833333333333,
           "avg_latency": 20.894666666666666,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.025,
+            "lo": -0.0945,
+            "hi": 0.1528,
+            "n": 6,
+            "significant": false
+          }
         },
         {
           "model": "Llama 4 Maverick",
           "developer": "Meta",
           "n": 6,
+          "n_valid": 6,
           "cosine": {
             "facts": 0.6498594681421915,
             "issue": 0.37272529924909276,
@@ -251,13 +316,22 @@
           "primary_overall": 0.0,
           "ci_lo": 0.0,
           "ci_hi": 0.0,
+          "strict_overall": 0.0,
           "groundedness": 0.0,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.00021533333333333335,
           "avg_latency": 8.679666666666668,
-          "tied_above": false
+          "tied_above": false,
+          "gap_above": {
+            "diff": 0.1389,
+            "lo": 0.05,
+            "hi": 0.2278,
+            "n": 6,
+            "significant": true
+          }
         }
       ]
     },
@@ -269,6 +343,7 @@
           "model": "Claude Sonnet 4.6",
           "developer": "Anthropic",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -288,18 +363,22 @@
           "primary_overall": 0.9867,
           "ci_lo": 0.9667,
           "ci_hi": 1.0,
+          "strict_overall": 0.9867,
           "groundedness": 1.0,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.058224,
           "avg_latency": 33.1378,
-          "tied_above": false
+          "tied_above": false,
+          "gap_above": null
         },
         {
           "model": "GPT-5.6",
           "developer": "OpenAI",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -319,18 +398,28 @@
           "primary_overall": 0.98,
           "ci_lo": 0.9467,
           "ci_hi": 1.0,
+          "strict_overall": 0.98,
           "groundedness": 1.0,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.09113199999999999,
           "avg_latency": 19.5612,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0067,
+            "lo": 0.0,
+            "hi": 0.02,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "GPT-5.5",
           "developer": "OpenAI",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -350,18 +439,28 @@
           "primary_overall": 0.9767,
           "ci_lo": 0.96,
           "ci_hi": 0.99,
+          "strict_overall": 0.9767,
           "groundedness": 1.0,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.094768,
           "avg_latency": 19.511,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0033,
+            "lo": -0.0233,
+            "hi": 0.0233,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "Claude Opus 4.8",
           "developer": "Anthropic",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -381,18 +480,28 @@
           "primary_overall": 0.97,
           "ci_lo": 0.9467,
           "ci_hi": 0.9933,
+          "strict_overall": 0.97,
           "groundedness": 1.0,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.13807399999999997,
           "avg_latency": 26.8936,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0066,
+            "lo": -0.0233,
+            "hi": 0.0366,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "DeepSeek Chat v3.1",
           "developer": "DeepSeek",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -412,18 +521,28 @@
           "primary_overall": 0.91,
           "ci_lo": 0.8633,
           "ci_hi": 0.9568,
+          "strict_overall": 0.91,
           "groundedness": 0.98,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.0028049999999999998,
           "avg_latency": 18.4818,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.06,
+            "lo": -0.0133,
+            "hi": 0.1233,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "Grok 4.5",
           "developer": "xAI",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -443,18 +562,28 @@
           "primary_overall": 0.9033,
           "ci_lo": 0.83,
           "ci_hi": 0.9767,
+          "strict_overall": 0.9033,
           "groundedness": 0.93,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.027186,
           "avg_latency": 8.8774,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0067,
+            "lo": -0.06,
+            "hi": 0.0801,
+            "n": 5,
+            "significant": false
+          }
         },
         {
           "model": "Gemini 2.5 Pro",
           "developer": "Google",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -474,18 +603,28 @@
           "primary_overall": 0.8567,
           "ci_lo": 0.7967,
           "ci_hi": 0.9234,
+          "strict_overall": 0.8567,
           "groundedness": 0.89,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.043186199999999994,
           "avg_latency": 25.932,
-          "tied_above": true
+          "tied_above": false,
+          "gap_above": {
+            "diff": 0.0466,
+            "lo": 0.0033,
+            "hi": 0.1166,
+            "n": 5,
+            "significant": true
+          }
         },
         {
           "model": "Llama 4 Maverick",
           "developer": "Meta",
           "n": 5,
+          "n_valid": 5,
           "cosine": {
             "facts": null,
             "issue": null,
@@ -505,13 +644,22 @@
           "primary_overall": 0.84,
           "ci_lo": 0.7733,
           "ci_hi": 0.9034,
+          "strict_overall": 0.84,
           "groundedness": 0.92,
           "format_rate": 1.0,
           "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
           "error_rate": 0.0,
           "avg_cost": 0.0019378,
           "avg_latency": 11.4906,
-          "tied_above": true
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0167,
+            "lo": -0.05,
+            "hi": 0.06,
+            "n": 5,
+            "significant": false
+          }
         }
       ]
     }
