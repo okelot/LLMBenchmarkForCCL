@@ -195,7 +195,12 @@ def build_chart_svg(rows, sections, primary):
 
 
 # ---------------------------------------------------------------- leaderboard
-def build_leaderboard(agg):
+def _dv(v):
+    """data-v attribute for client-side sorting ('' when missing)."""
+    return "" if v is None or (isinstance(v, float) and pd.isna(v)) else f"{float(v):.6f}"
+
+
+def build_leaderboard(agg, track_label=""):
     rows, primary_label = agg["rows"], agg["primary_label"]
     max_n = max((r["n"] for r in rows), default=0)
     body = []
@@ -203,36 +208,48 @@ def build_leaderboard(agg):
         ov = r["primary_overall"]
         c = _score_rgb(ov)
         pct = 0 if ov is None else max(0, min(100, ov * 100))
-        ci = (f'<span class="ci">[{r["ci_lo"]:.2f}–{r["ci_hi"]:.2f}]</span>'
-              if r["ci_lo"] is not None and r["n"] > 1 else "")
+        has_ci = r["ci_lo"] is not None and r["ci_hi"] is not None and r["n"] > 1
+        ci = f'<span class="ci">[{r["ci_lo"]:.2f}–{r["ci_hi"]:.2f}]</span>' if has_ci else ""
+        whisker, bar_title = "", ""
+        if has_ci:
+            lo = max(0.0, min(1.0, r["ci_lo"])) * 100
+            hi = max(0.0, min(1.0, r["ci_hi"])) * 100
+            whisker = f'<span class="wh" style="left:{lo:.1f}%;width:{max(hi-lo,1):.1f}%"></span>'
+            bar_title = f' title="95% CI {r["ci_lo"]:.2f}–{r["ci_hi"]:.2f}"'
         tie = '<span class="tie" title="CI overlaps the model above — gap not significant">≈</span>' if r.get("tied_above") else ""
         partial = f'<span class="tag">partial · {r["n"]}/{max_n}</span>' if r["n"] < max_n else ""
+        lat = f'{r["avg_latency"]:.1f}s' if r["avg_latency"] is not None else "—"
         body.append(f"""<tr>
-  <td class="rank">{i}</td>
-  <td class="model"><span class="mname">{html.escape(r["model"])}{tie}</span>
+  <td class="rank" data-v="{i}">{i}</td>
+  <td class="model" data-v="{html.escape(r["model"])}"><span class="mname">{html.escape(r["model"])}{tie}</span>
       <span class="dev">{html.escape(r["developer"])}</span></td>
-  <td class="overall"><span class="ov-num" style="color:{_rgb(c)}">{_fmt(ov)}</span>
-      <span class="bar"><span class="fill" style="width:{pct:.1f}%;background:{_rgb(c)}"></span></span>
+  <td class="overall" data-v="{_dv(ov)}"><span class="ov-num" style="color:{_rgb(c)}">{_fmt(ov)}</span>
+      <span class="bar"{bar_title}><span class="fill" style="width:{pct:.1f}%;background:{_rgb(c)}"></span>{whisker}</span>
       {ci}</td>
-  <td class="num">{_fmt(r["cosine_overall"], 2)}</td>
-  <td class="num">{_fmt(r["groundedness"], 2)}</td>
-  <td class="num">{_pct(r["format_rate"])}</td>
-  <td class="num">{_pct(r["refusal_rate"])}</td>
-  <td class="num">{('$'+format(r["avg_cost"],'.4f')) if r["avg_cost"] is not None else '—'}</td>
-  <td class="cases">{r["n"]}{partial}</td>
+  <td class="num" data-v="{_dv(r["cosine_overall"])}">{_fmt(r["cosine_overall"], 2)}</td>
+  <td class="num" data-v="{_dv(r["groundedness"])}">{_fmt(r["groundedness"], 2)}</td>
+  <td class="num" data-v="{_dv(r["format_rate"])}">{_pct(r["format_rate"])}</td>
+  <td class="num" data-v="{_dv(r["refusal_rate"])}">{_pct(r["refusal_rate"])}</td>
+  <td class="num" data-v="{_dv(r["avg_cost"])}">{('$'+format(r["avg_cost"],'.4f')) if r["avg_cost"] is not None else '—'}</td>
+  <td class="num" data-v="{_dv(r["avg_latency"])}">{lat}</td>
+  <td class="cases" data-v="{r["n"]}">{r["n"]}{partial}</td>
 </tr>""")
-    return f"""<div class="table-wrap"><table class="board">
+    caption = f'<caption class="sr-only">Leaderboard — {html.escape(track_label)}</caption>' if track_label else ""
+    return f"""<div class="table-wrap"><table class="board">{caption}
   <thead><tr>
-    <th class="rank">#</th><th class="model">Model</th>
-    <th class="overall">{primary_label} <span class="cih">95% CI</span></th>
-    <th class="num" title="Embedding cosine similarity">Cosine</th>
-    <th class="num" title="Judge groundedness — higher = less hallucination">Halluc-safe</th>
-    <th class="num" title="Valid-JSON rate">Format</th>
-    <th class="num" title="Share answered 'I don't know'">Refuse</th>
-    <th class="num" title="Mean cost per case (USD)">$/case</th>
-    <th class="cases">Cases</th>
+    <th class="rank" scope="col" data-sort="num" title="Rank by primary metric">#</th>
+    <th class="model" scope="col" data-sort="text">Model</th>
+    <th class="overall" scope="col" data-sort="num" title="Primary metric — click to sort">{primary_label} <span class="cih">95% CI</span></th>
+    <th class="num" scope="col" data-sort="num" title="Embedding cosine similarity">Cosine</th>
+    <th class="num" scope="col" data-sort="num" title="Judge groundedness — higher = fewer hallucinated facts, holdings, citations">Grounded</th>
+    <th class="num" scope="col" data-sort="num" title="Valid-JSON rate">Format</th>
+    <th class="num" scope="col" data-sort="num" title="Share answered 'I don't know'">Refuse</th>
+    <th class="num" scope="col" data-sort="num" title="Mean cost per case (USD)">$/case</th>
+    <th class="num" scope="col" data-sort="num" title="Mean wall-clock seconds per case">Latency</th>
+    <th class="cases" scope="col" data-sort="num" title="Number of cases evaluated">Cases</th>
   </tr></thead>
-  <tbody>{''.join(body)}</tbody></table></div>"""
+  <tbody>{''.join(body)}</tbody></table></div>
+<p class="hint">Click a column header to sort · hover headers for metric definitions.</p>"""
 
 
 def build_legend(sections):
@@ -241,66 +258,113 @@ def build_legend(sections):
 
 
 # ---------------------------------------------------------------- page shell
+# One block of colour variables per scheme; the dark block is applied both by
+# explicit user choice ([data-theme=dark]) and by OS preference (media query).
+_DARK_VARS = """
+  --paper:#181a1c;--card:#212328;--ink:#e9e7e2;--ink2:#cfcdc7;--soft:#a3a7ae;--faint:#83868c;
+  --rule:#3a3d43;--claret:#d1737e;--claret2:#de949c;
+  --rowhov:#ffffff0d;--bartrack:#ffffff1c;--notebg:#ffffff07;--dot:#ffffff04;
+  --navbg:#181a1ce8;--edge:#00000073;--boost:1.45;--cboost:1.18;
+"""
+
 CSS = """
 :root{
-  --paper:#e6e5df;--card:#f3f2ec;--ink:#1a1c1f;--soft:#54585e;--faint:#83868b;
+  --paper:#e6e5df;--card:#f3f2ec;--ink:#1a1c1f;--ink2:#2c2f33;--soft:#54585e;--faint:#83868b;
   --rule:#cdcbc2;--claret:#7b1e2b;--claret2:#a2404b;
+  --rowhov:#ffffff66;--bartrack:#00000012;--notebg:#00000005;--dot:#00000006;
+  --navbg:#e6e5dfe8;--edge:#00000030;--boost:1;--cboost:1;
   --serif:"Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
   --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
 }
+[data-theme=dark]{@@DARK@@}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){@@DARK@@}}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
   font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
-  background-image:radial-gradient(#00000006 1px,transparent 1px);background-size:4px 4px}
+  background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:4px 4px}
 .wrap{max-width:1000px;margin:0 auto;padding:0 24px}
 a{color:var(--claret);text-underline-offset:2px}
 a:hover{color:var(--claret2)}
-.mast{padding:56px 0 26px;border-bottom:2px solid var(--ink)}
+:focus-visible{outline:2px solid var(--claret);outline-offset:2px}
+.skip{position:absolute;left:-9999px;font-family:var(--mono);font-size:12px}
+.skip:focus{left:12px;top:60px;z-index:99;background:var(--card);color:var(--ink);padding:8px 12px;border:1px solid var(--rule)}
+.topnav{position:sticky;top:0;z-index:10;background:var(--navbg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.topnav .wrap{display:flex;align-items:center;gap:20px;height:46px}
+.topnav .brand{font-family:var(--serif);font-weight:600;font-size:16px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.topnav .brand b{color:var(--claret);font-weight:600}
+.topnav .links{display:flex;gap:18px;overflow-x:auto;flex:1;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topnav .links::-webkit-scrollbar{display:none}
+.topnav .links a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);text-decoration:none;white-space:nowrap;padding:4px 0}
+.topnav .links a:hover{color:var(--claret)}
+.tbtn{background:none;border:1px solid var(--rule);color:var(--soft);font-size:13px;line-height:1;padding:5px 8px;border-radius:3px;cursor:pointer;font-family:var(--mono)}
+.tbtn:hover{color:var(--claret);border-color:var(--claret)}
+.mast{padding:48px 0 26px;border-bottom:2px solid var(--ink)}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);margin:0 0 14px}
 .wordmark{font-family:var(--serif);font-weight:600;font-size:clamp(46px,9vw,84px);line-height:.92;letter-spacing:-.015em;margin:0;text-wrap:balance}
 .wordmark .lex{color:var(--ink)}.wordmark .bench{color:var(--claret)}
-.thesis{font-family:var(--serif);font-size:clamp(19px,2.6vw,25px);color:#33363b;max-width:36ch;margin:16px 0 0;text-wrap:balance}
+.thesis{font-family:var(--serif);font-size:clamp(19px,2.6vw,25px);color:var(--ink2);max-width:36ch;margin:16px 0 0;text-wrap:balance}
 .cite{font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:22px 0 0;padding-top:12px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:6px 18px}
 .cite b{color:var(--ink);font-weight:600}
 .leader{display:flex;align-items:baseline;gap:14px;margin:26px 0 0;flex-wrap:wrap}
 .leader .lab{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--soft)}
 .leader .who{font-family:var(--serif);font-size:22px;font-weight:600}
-.leader .sc{font-family:var(--mono);font-weight:600}
-section{padding:44px 0;border-bottom:1px solid var(--rule)}
+.leader .sc{font-family:var(--mono);font-weight:600;filter:brightness(var(--boost))}
+section{padding:44px 0;border-bottom:1px solid var(--rule);scroll-margin-top:56px}
 .h2{font-family:var(--serif);font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--claret);margin:0 0 4px}
-.trackname{font-family:var(--serif);font-size:23px;font-weight:600;margin:0 0 2px}
+.trackname{font-family:var(--serif);font-size:23px;font-weight:600;margin:0 0 2px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.nchip{font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.05em;color:var(--soft);border:1px solid var(--rule);border-radius:3px;padding:2px 8px;white-space:nowrap}
 .lede{color:var(--soft);font-size:14.5px;margin:0 0 22px;max-width:66ch}
-.table-wrap{overflow-x:auto;border:1px solid var(--rule);background:var(--card)}
-table.board{border-collapse:collapse;width:100%;min-width:820px;font-variant-numeric:tabular-nums}
-.board th,.board td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
-.board thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);font-weight:600;background:#eceae3;border-bottom:1.5px solid var(--ink);white-space:nowrap}
+.table-wrap{overflow-x:auto;border:1px solid var(--rule);background-color:var(--card);
+  background-image:linear-gradient(90deg,var(--card) 33%,rgba(0,0,0,0)),
+    linear-gradient(270deg,var(--card) 33%,rgba(0,0,0,0)),
+    radial-gradient(farthest-side at 0 50%,var(--edge),rgba(0,0,0,0)),
+    radial-gradient(farthest-side at 100% 50%,var(--edge),rgba(0,0,0,0));
+  background-position:0 0,100% 0,0 0,100% 0;background-repeat:no-repeat;
+  background-size:60px 100%,60px 100%,16px 100%,16px 100%;
+  background-attachment:local,local,scroll,scroll}
+table.board{border-collapse:collapse;width:100%;min-width:920px;font-variant-numeric:tabular-nums}
+.board th,.board td{padding:11px 9px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
+.board th:first-child,.board td:first-child{padding-left:14px}
+.board th:last-child,.board td:last-child{padding-right:14px}
+.board thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);font-weight:600;border-bottom:1.5px solid var(--ink);white-space:nowrap}
 .board thead th .cih{display:block;font-size:9px;letter-spacing:.04em;color:var(--faint)}
+.board thead th[data-sort]{cursor:pointer;user-select:none}
+.board thead th[data-sort]:hover{color:var(--claret)}
+.board thead th[data-sort]::after{content:"↕";opacity:.35;margin-left:4px;font-size:9px}
+.board thead th[aria-sort=descending]::after{content:"↓";opacity:1;color:var(--claret)}
+.board thead th[aria-sort=ascending]::after{content:"↑";opacity:1;color:var(--claret)}
 .board tbody tr:last-child td{border-bottom:none}
-.board tbody tr:hover{background:#ffffff66}
+.board tbody tr:hover{background:var(--rowhov)}
 .board .rank{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--claret);width:38px;text-align:center}
 .board td.model{min-width:170px}
 .mname{font-family:var(--serif);font-size:17px;font-weight:600;display:block;line-height:1.2}
 .dev{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
 .tie{color:var(--soft);font-family:var(--mono);margin-left:6px;font-size:13px}
-.board th.overall,.board td.overall{min-width:172px}
-.ov-num{font-family:var(--mono);font-size:16px;font-weight:600;display:inline-block;width:50px}
-.bar{display:inline-block;vertical-align:middle;width:60px;height:7px;background:#00000012;border-radius:1px;overflow:hidden}
-.fill{display:block;height:100%;border-radius:1px;animation:grow .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:.2s}
+.board th.overall,.board td.overall{min-width:218px;white-space:nowrap}
+.ov-num{font-family:var(--mono);font-size:16px;font-weight:600;display:inline-block;width:50px;filter:brightness(var(--boost))}
+.bar{position:relative;display:inline-block;vertical-align:middle;width:60px;height:7px;background:var(--bartrack);border-radius:1px}
+.fill{display:block;height:100%;border-radius:1px;animation:grow .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:.2s;filter:brightness(var(--boost))}
+.wh{position:absolute;top:100%;margin-top:2px;height:2px;background:var(--ink);opacity:.4;display:block;border-radius:1px}
 .ci{font-family:var(--mono);font-size:10.5px;color:var(--soft);margin-left:7px}
-.board td.num{font-family:var(--mono);font-size:13px;text-align:right;color:#2c2f33}
-.cases{font-family:var(--mono);font-size:13px;color:var(--soft);white-space:normal;min-width:70px}
+.board td.num{font-family:var(--mono);font-size:12.5px;text-align:right;color:var(--ink2)}
+.cases{font-family:var(--mono);font-size:12.5px;color:var(--soft);white-space:normal;min-width:52px}
 .tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.05em;margin-top:5px;padding:1px 6px;border:1px solid var(--claret);color:var(--claret);border-radius:2px}
-.chart{margin-top:26px}
+.hint{font-family:var(--mono);font-size:10.5px;color:var(--faint);margin:8px 0 0}
+.chartcap{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:28px 0 8px}
+.chart{margin-top:0}
 .chart svg{width:100%;height:auto;display:block}
+.chart rect{filter:brightness(var(--cboost));transition:opacity .15s ease}
+.chart svg:hover rect{opacity:.45}
+.chart svg rect:hover{opacity:1}
 .chart .grid{stroke:var(--rule);stroke-width:1}
 .chart .ytick{font-family:var(--mono);font-size:10px;fill:var(--soft);text-anchor:end}
 .chart .xtick{font-family:var(--mono);font-size:11px;fill:var(--ink);text-anchor:end}
 .legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px}
 .legend span{font-family:var(--mono);font-size:11.5px;color:var(--soft)}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;font-size:14.5px;color:#2c2f33}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px;filter:brightness(var(--cboost))}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px 40px;font-size:14.5px;color:var(--ink2)}
 .grid2 h3{font-family:var(--serif);font-size:16px;margin:0 0 6px}
 .grid2 p{margin:0 0 10px}
 .grid2 b{font-weight:600}
@@ -310,16 +374,19 @@ table.board{border-collapse:collapse;width:100%;min-width:820px;font-variant-num
 .defs .k{font-family:var(--mono);font-size:12px;color:var(--claret);letter-spacing:.03em}
 .dl{display:grid;grid-template-columns:180px 1fr;gap:4px 18px;font-size:13.5px;margin:0}
 .dl dt{font-family:var(--mono);font-size:12px;color:var(--soft)}
-.dl dd{margin:0;color:#2c2f33}
-.note{font-family:var(--mono);font-size:12px;color:var(--soft);border-left:2px solid var(--claret);padding:8px 0 8px 14px;margin:18px 0 0;background:#00000005}
+.dl dd{margin:0;color:var(--ink2)}
+.note{font-family:var(--mono);font-size:12px;color:var(--soft);border-left:2px solid var(--claret);padding:8px 0 8px 14px;margin:18px 0 0;background:var(--notebg)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 footer{padding:34px 0 60px;color:var(--soft);font-family:var(--mono);font-size:12px}
 footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
-@media(max-width:640px){.grid2{grid-template-columns:1fr}.dl{grid-template-columns:1fr}.mast{padding:40px 0 22px}}
+footer a{color:var(--soft)}
+footer a:hover{color:var(--claret)}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.dl{grid-template-columns:1fr}.mast{padding:36px 0 22px}}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes grow{from{width:0}}
 .mast,section{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}}
-"""
+@media(prefers-reduced-motion:reduce){*{animation:none!important}html{scroll-behavior:auto}}
+""".replace("@@DARK@@", _DARK_VARS)
 
 
 def _methodology_section(has_judge):
@@ -333,7 +400,7 @@ def _methodology_section(has_judge):
         "to make correctness the primary metric."
     )
     return (
-        '<section><div class="wrap"><h2 class="h2">Metrics</h2>'
+        '<section id="metrics"><div class="wrap"><h2 class="h2">Metrics</h2>'
         '<p class="lede">Each brief is measured on several independent axes, '
         'because no single number captures legal quality.</p>'
         '<ul class="defs">'
@@ -341,16 +408,18 @@ def _methodology_section(has_judge):
         '<li><span class="k">cosine</span> — embedding similarity (all-mpnet-base-v2) '
         'between the brief and the reference. A cheap topical signal, kept as a '
         'secondary check; it cannot tell a fluent-but-wrong brief from a correct one.</li>'
-        '<li><span class="k">halluc-safe</span> — mean judge groundedness; higher means '
+        '<li><span class="k">grounded</span> — mean judge groundedness; higher means '
         'fewer fabricated facts, parties, holdings, or citations.</li>'
         '<li><span class="k">format</span> — share of responses that returned valid JSON.</li>'
         '<li><span class="k">refuse</span> — share where the model declined ("I don\'t know"), '
         'reported separately so calibrated abstention is not confused with a wrong answer.</li>'
         '<li><span class="k">$/case</span> — mean cost per case from token usage × list price.</li>'
+        '<li><span class="k">latency</span> — mean wall-clock seconds per case.</li>'
         '</ul>'
         '<p class="note">95% confidence intervals are percentile bootstraps over cases '
-        '(fixed seed). A ≈ marks a model whose interval overlaps the one above it — that '
-        'gap is not statistically distinguishable.</p>'
+        '(fixed seed); the thin line beneath each score bar spans the interval. A ≈ marks '
+        'a model whose interval overlaps the one above it — that gap is not statistically '
+        'distinguishable. Sample sizes are small, so treat rankings as provisional.</p>'
         '</div></section>'
     )
 
@@ -362,7 +431,7 @@ def _dataset_section(tracks, meta):
         for t in tracks
     )
     return (
-        '<section><div class="wrap"><h2 class="h2">Dataset</h2>'
+        '<section id="dataset"><div class="wrap"><h2 class="h2">Dataset</h2>'
         '<div class="grid2">'
         '<div><h3>Sources</h3>'
         '<p><b>Closed-book briefs</b> — human-written Supreme Court of Canada case '
@@ -382,7 +451,7 @@ def _dataset_section(tracks, meta):
 
 def _repro_section(meta):
     return (
-        '<section><div class="wrap"><h2 class="h2">Reproducibility &amp; contamination</h2>'
+        '<section id="reproducibility"><div class="wrap"><h2 class="h2">Reproducibility &amp; contamination</h2>'
         '<div class="grid2">'
         '<div><h3>How to reproduce</h3><dl class="dl">'
         '<dt>models</dt><dd>pinned in ai_models.csv (OpenRouter ids)</dd>'
@@ -404,19 +473,101 @@ def _repro_section(meta):
     )
 
 
+SITE_URL = "https://okelot.github.io/LLMBenchmarkForCCL/"
+
+FAVICON = ("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>"
+           "<rect width='64' height='64' rx='10' fill='%237b1e2b'/>"
+           "<text x='32' y='46' font-family='Georgia,serif' font-weight='700' font-size='40' "
+           "fill='%23f3f2ec' text-anchor='middle'>L</text></svg>")
+
+TRACK_SHORT = {"closed": "Closed-book", "open": "Open-book"}
+
+# Runs before first paint so a stored theme choice doesn't flash the wrong scheme.
+THEME_BOOT_JS = ("try{var t=localStorage.getItem('lexbench-theme');"
+                 "if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}")
+
+PAGE_JS = """
+(function(){
+  var K='lexbench-theme',d=document.documentElement;
+  var b=document.getElementById('themetoggle');
+  if(b)b.addEventListener('click',function(){
+    var cur=d.getAttribute('data-theme')||
+      (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+    var n=cur==='dark'?'light':'dark';
+    d.setAttribute('data-theme',n);
+    try{localStorage.setItem(K,n)}catch(e){}
+  });
+  document.querySelectorAll('table.board').forEach(function(tb){
+    var body=tb.tBodies[0];
+    tb.querySelectorAll('thead th[data-sort]').forEach(function(th){
+      th.tabIndex=0;
+      var act=function(){
+        var idx=th.cellIndex,num=th.getAttribute('data-sort')==='num';
+        var desc=num?th.getAttribute('aria-sort')!=='descending'
+                    :th.getAttribute('aria-sort')==='ascending';
+        tb.querySelectorAll('thead th').forEach(function(o){o.removeAttribute('aria-sort')});
+        th.setAttribute('aria-sort',desc?'descending':'ascending');
+        Array.prototype.slice.call(body.rows).sort(function(a,b){
+          var x=a.cells[idx].getAttribute('data-v')||'',
+              y=b.cells[idx].getAttribute('data-v')||'',r;
+          if(num){x=parseFloat(x);y=parseFloat(y);
+            if(isNaN(x))x=-Infinity;if(isNaN(y))y=-Infinity}
+          r=x<y?-1:x>y?1:0;
+          return desc?-r:r;
+        }).forEach(function(row){body.appendChild(row)});
+      };
+      th.addEventListener('click',act);
+      th.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
+    });
+  });
+})();
+"""
+
+
 def render(tracks, meta):
     lead_track = next((t for t in tracks if t["agg"]["rows"]), None)
     leader = lead_track["agg"]["rows"][0] if lead_track else None
     has_judge = any(t["agg"]["primary"] == "judge" for t in tracks)
+    desc = ("LexBench benchmarks frontier LLMs on Canadian case-law briefing with an "
+            "LLM-judge rubric, contamination-resistant open-book and temporal-holdout "
+            "tracks, and confidence intervals.")
 
     p = ["<!doctype html>", '<html lang="en"><head><meta charset="utf-8">',
          '<meta name="viewport" content="width=device-width,initial-scale=1">',
          "<title>LexBench — Frontier LLMs on Canadian case law</title>",
-         '<meta name="description" content="LexBench benchmarks frontier LLMs on Canadian case-law briefing with an LLM-judge rubric, contamination-resistant open-book and temporal-holdout tracks, and confidence intervals.">',
+         f'<meta name="description" content="{desc}">',
+         f'<link rel="canonical" href="{SITE_URL}">',
+         f'<link rel="icon" href="{FAVICON}">',
+         '<meta property="og:title" content="LexBench — Frontier LLMs on Canadian case law">',
+         f'<meta property="og:description" content="{desc}">',
+         '<meta property="og:type" content="website">',
+         f'<meta property="og:url" content="{SITE_URL}">',
+         '<meta name="twitter:card" content="summary">',
+         '<meta name="theme-color" media="(prefers-color-scheme: light)" content="#e6e5df">',
+         '<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181a1c">',
+         "<script>" + THEME_BOOT_JS + "</script>",
          "<style>" + CSS + "</style></head><body>"]
 
+    # sticky nav
+    live_tracks = [t for t in tracks if t["agg"]["rows"]]
+    nav_links = "".join(
+        f'<a href="#track-{html.escape(t["key"])}">{html.escape(TRACK_SHORT.get(t["key"], t["label"]))}</a>'
+        for t in live_tracks)
+    p.append('<a class="skip" href="#main">Skip to leaderboards</a>')
+    p.append('<nav class="topnav"><div class="wrap">'
+             '<a class="brand" href="#top">Lex<b>Bench</b></a>'
+             f'<div class="links">{nav_links}'
+             '<a href="#metrics">Metrics</a>'
+             '<a href="#dataset">Dataset</a>'
+             '<a href="#reproducibility">Reproducibility</a>'
+             '<a href="https://github.com/okelot/LLMBenchmarkForCCL">GitHub</a></div>'
+             '<button id="themetoggle" class="tbtn" type="button" '
+             'aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>'
+             '</div></nav>')
+
     # masthead
-    p.append('<header class="mast"><div class="wrap">')
+    p.append('<header class="mast" id="top"><div class="wrap">')
     p.append('<p class="eyebrow">Canadian Case-Law Benchmark</p>')
     p.append('<h1 class="wordmark"><span class="lex">Lex</span><span class="bench">Bench</span></h1>')
     p.append('<p class="thesis">Frontier language models, judged on how faithfully they brief Canadian case law.</p>')
@@ -425,24 +576,27 @@ def render(tracks, meta):
                  f'<span class="who">{html.escape(leader["model"])}</span>'
                  f'<span class="sc" style="color:{_rgb(_score_rgb(leader["primary_overall"]))}">'
                  f'{leader["primary_overall"]:.3f}</span></div>')
+    plural = "" if meta["tracks"] == 1 else "s"
     p.append('<p class="cite">'
              f'<span>Updated <b>{meta["updated"]}</b></span>'
-             f'<span><b>{meta["tracks"]}</b> track(s)</span>'
+             f'<span><b>{meta["tracks"]}</b> track{plural}</span>'
              f'<span><b>{meta["models"]}</b> models</span>'
              f'<span>primary metric: <b>{"LLM-judge" if has_judge else "cosine"}</b></span>'
-             f'<span>with <b>95% CIs</b></span></p>')
+             f'<span>with <b>95% CIs</b></span>'
+             '<span><a href="data.json">raw data (JSON)</a></span></p>')
     p.append("</div></header>")
 
     # per-track leaderboards
-    for t in tracks:
+    p.append('<main id="main">')
+    for t in live_tracks:
         agg = t["agg"]
-        if not agg["rows"]:
-            continue
-        p.append('<section><div class="wrap">')
+        p.append(f'<section id="track-{html.escape(t["key"])}"><div class="wrap">')
         p.append('<h2 class="h2">Leaderboard</h2>')
-        p.append(f'<p class="trackname">{html.escape(t["label"])}</p>')
+        p.append(f'<p class="trackname">{html.escape(t["label"])}'
+                 f'<span class="nchip">{t["n_cases"]} cases · {t["n_models"]} models</span></p>')
         p.append(f'<p class="lede">{t["desc"]}</p>')
-        p.append(build_leaderboard(agg))
+        p.append(build_leaderboard(agg, t["label"]))
+        p.append(f'<p class="chartcap">{agg["primary_label"]} by brief section — hover a bar for its value</p>')
         p.append('<div class="chart">' + build_chart_svg(agg["rows"], agg["sections"], agg["primary"]) + '</div>')
         p.append('<div class="legend">' + build_legend(agg["sections"]) + '</div>')
         p.append("</div></section>")
@@ -450,11 +604,14 @@ def render(tracks, meta):
     p.append(_methodology_section(has_judge))
     p.append(_dataset_section(tracks, meta))
     p.append(_repro_section(meta))
+    p.append('</main>')
 
     p.append('<footer><div class="wrap">')
     p.append(f'<span>LexBench · generated {meta["generated"]}</span>')
+    p.append('<span>data: <a href="https://a2aj.ca/">A2AJ</a> &amp; public case-brief wikis</span>')
     p.append('<span><a href="https://github.com/okelot/LLMBenchmarkForCCL">github.com/okelot/LLMBenchmarkForCCL</a></span>')
-    p.append("</div></footer></body></html>")
+    p.append("</div></footer>")
+    p.append("<script>" + PAGE_JS + "</script></body></html>")
     return "".join(p)
 
 
