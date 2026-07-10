@@ -1,8 +1,8 @@
 {
   "meta": {
     "updated": "09 Jul 2026",
-    "generated": "09 Jul 2026, 21:40",
-    "models": 3,
+    "generated": "09 Jul 2026, 22:00",
+    "models": 8,
     "tracks": 2,
     "judge_model": "openai/gpt-5.4-mini"
   },
@@ -41,6 +41,130 @@
           "avg_cost": 0.027052500000000004,
           "avg_latency": 15.928333333333335,
           "tied_above": false
+        },
+        {
+          "model": "GPT-5.6",
+          "developer": "OpenAI",
+          "n": 6,
+          "cosine": {
+            "facts": 0.5779573222001394,
+            "issue": 0.34710204515916604,
+            "decision": 0.41678911199172336,
+            "reasons": 0.5581017800917228,
+            "ratio": 0.40156608838588
+          },
+          "judge": {
+            "facts": 0.34723333333333334,
+            "issue": 0.3888833333333333,
+            "decision": 0.19445,
+            "reasons": 0.34723333333333334,
+            "ratio": 0.375
+          },
+          "cosine_overall": 0.4603,
+          "judge_overall": 0.3306,
+          "primary_overall": 0.3306,
+          "ci_lo": 0.1,
+          "ci_hi": 0.5889,
+          "groundedness": 0.3833,
+          "format_rate": 0.8333333333333334,
+          "refusal_rate": 0.16666666666666666,
+          "error_rate": 0.0,
+          "avg_cost": 0.07454500000000001,
+          "avg_latency": 80.71916666666667,
+          "tied_above": true
+        },
+        {
+          "model": "GPT-5.5",
+          "developer": "OpenAI",
+          "n": 6,
+          "cosine": {
+            "facts": 0.48826395720243454,
+            "issue": 0.33434383384883404,
+            "decision": 0.47854934136072796,
+            "reasons": 0.5095096876223882,
+            "ratio": 0.4103791996836662
+          },
+          "judge": {
+            "facts": 0.2638833333333333,
+            "issue": 0.3889,
+            "decision": 0.25001666666666666,
+            "reasons": 0.3611166666666667,
+            "ratio": 0.3611166666666667
+          },
+          "cosine_overall": 0.4442,
+          "judge_overall": 0.325,
+          "primary_overall": 0.325,
+          "ci_lo": 0.0917,
+          "ci_hi": 0.5807,
+          "groundedness": 0.3667,
+          "format_rate": 0.6666666666666666,
+          "refusal_rate": 0.0,
+          "error_rate": 0.3333333333333333,
+          "avg_cost": 0.08455,
+          "avg_latency": 70.74,
+          "tied_above": true
+        },
+        {
+          "model": "Claude Sonnet 4.6",
+          "developer": "Anthropic",
+          "n": 6,
+          "cosine": {
+            "facts": 0.605802317460378,
+            "issue": 0.3600578523085763,
+            "decision": 0.3760649586717288,
+            "reasons": 0.6208079972614845,
+            "ratio": 0.39835842717438935
+          },
+          "judge": {
+            "facts": 0.3333333333333333,
+            "issue": 0.41664999999999996,
+            "decision": 0.2222166666666667,
+            "reasons": 0.2777833333333333,
+            "ratio": 0.25
+          },
+          "cosine_overall": 0.4722,
+          "judge_overall": 0.3,
+          "primary_overall": 0.3,
+          "ci_lo": 0.075,
+          "ci_hi": 0.55,
+          "groundedness": 0.3667,
+          "format_rate": 0.8333333333333334,
+          "refusal_rate": 0.16666666666666666,
+          "error_rate": 0.0,
+          "avg_cost": 0.009005,
+          "avg_latency": 13.185166666666666,
+          "tied_above": true
+        },
+        {
+          "model": "Grok 4.5",
+          "developer": "xAI",
+          "n": 6,
+          "cosine": {
+            "facts": 0.7058417797088623,
+            "issue": 0.4683607717355092,
+            "decision": 0.5632139046986898,
+            "reasons": 0.7575411299864451,
+            "ratio": 0.48687601685523985
+          },
+          "judge": {
+            "facts": 0.19443333333333335,
+            "issue": 0.3749833333333334,
+            "decision": 0.041666666666666664,
+            "reasons": 0.20831666666666668,
+            "ratio": 0.13888333333333333
+          },
+          "cosine_overall": 0.5964,
+          "judge_overall": 0.1917,
+          "primary_overall": 0.1916,
+          "ci_lo": 0.05,
+          "ci_hi": 0.3446,
+          "groundedness": 0.2417,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.012506666666666668,
+          "avg_latency": 19.545666666666666,
+          "tied_above": true
         },
         {
           "model": "DeepSeek Chat v3.1",
@@ -103,6 +227,37 @@
           "avg_cost": 0.020688833333333333,
           "avg_latency": 20.894666666666666,
           "tied_above": true
+        },
+        {
+          "model": "Llama 4 Maverick",
+          "developer": "Meta",
+          "n": 6,
+          "cosine": {
+            "facts": 0.6498594681421915,
+            "issue": 0.37272529924909276,
+            "decision": 0.39196478327115375,
+            "reasons": 0.5914470652739207,
+            "ratio": 0.41300345957279205
+          },
+          "judge": {
+            "facts": 0.0,
+            "issue": 0.0,
+            "decision": 0.0,
+            "reasons": 0.0,
+            "ratio": 0.0
+          },
+          "cosine_overall": 0.4838,
+          "judge_overall": 0.0,
+          "primary_overall": 0.0,
+          "ci_lo": 0.0,
+          "ci_hi": 0.0,
+          "groundedness": 0.0,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.00021533333333333335,
+          "avg_latency": 8.679666666666668,
+          "tied_above": false
         }
       ]
     },
@@ -110,6 +265,99 @@
       "key": "open",
       "label": "Open-book (brief from decision text)",
       "leaderboard": [
+        {
+          "model": "Claude Sonnet 4.6",
+          "developer": "Anthropic",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 1.0,
+            "issue": 0.96668,
+            "decision": 1.0,
+            "reasons": 0.9833400000000001,
+            "ratio": 0.9833400000000001
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.9867,
+          "primary_overall": 0.9867,
+          "ci_lo": 0.9667,
+          "ci_hi": 1.0,
+          "groundedness": 1.0,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.058224,
+          "avg_latency": 33.1378,
+          "tied_above": false
+        },
+        {
+          "model": "GPT-5.6",
+          "developer": "OpenAI",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.9833400000000001,
+            "issue": 0.96668,
+            "decision": 0.9833400000000001,
+            "reasons": 0.9833400000000001,
+            "ratio": 0.9833400000000001
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.98,
+          "primary_overall": 0.98,
+          "ci_lo": 0.9467,
+          "ci_hi": 1.0,
+          "groundedness": 1.0,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.09113199999999999,
+          "avg_latency": 19.5612,
+          "tied_above": true
+        },
+        {
+          "model": "GPT-5.5",
+          "developer": "OpenAI",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 1.0,
+            "issue": 0.95002,
+            "decision": 1.0,
+            "reasons": 0.96668,
+            "ratio": 0.96668
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.9767,
+          "primary_overall": 0.9767,
+          "ci_lo": 0.96,
+          "ci_hi": 0.99,
+          "groundedness": 1.0,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.094768,
+          "avg_latency": 19.511,
+          "tied_above": true
+        },
         {
           "model": "Claude Opus 4.8",
           "developer": "Anthropic",
@@ -139,7 +387,7 @@
           "error_rate": 0.0,
           "avg_cost": 0.13807399999999997,
           "avg_latency": 26.8936,
-          "tied_above": false
+          "tied_above": true
         },
         {
           "model": "DeepSeek Chat v3.1",
@@ -173,6 +421,37 @@
           "tied_above": true
         },
         {
+          "model": "Grok 4.5",
+          "developer": "xAI",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.85,
+            "issue": 0.9333600000000001,
+            "decision": 0.96668,
+            "reasons": 0.8833399999999999,
+            "ratio": 0.8833399999999999
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.9033,
+          "primary_overall": 0.9033,
+          "ci_lo": 0.83,
+          "ci_hi": 0.9767,
+          "groundedness": 0.93,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.027186,
+          "avg_latency": 8.8774,
+          "tied_above": true
+        },
+        {
           "model": "Gemini 2.5 Pro",
           "developer": "Google",
           "n": 5,
@@ -201,6 +480,37 @@
           "error_rate": 0.0,
           "avg_cost": 0.043186199999999994,
           "avg_latency": 25.932,
+          "tied_above": true
+        },
+        {
+          "model": "Llama 4 Maverick",
+          "developer": "Meta",
+          "n": 5,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.85002,
+            "issue": 0.85,
+            "decision": 0.9333600000000001,
+            "reasons": 0.8,
+            "ratio": 0.76668
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.84,
+          "primary_overall": 0.84,
+          "ci_lo": 0.7733,
+          "ci_hi": 0.9034,
+          "groundedness": 0.92,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.0019378,
+          "avg_latency": 11.4906,
           "tied_above": true
         }
       ]
