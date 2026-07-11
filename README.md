@@ -48,17 +48,25 @@ the benchmark runs two tracks:
 Each brief is scored on several independent axes (no single number captures
 legal quality):
 
-1. **Judge score (primary)** — an LLM-as-judge grades each section 1–5 on
+1. **Rubric score (primary)** — HealthBench-style checklist grading: a strong
+   model authors 12–20 atomic, point-weighted, case-specific criteria per case
+   (grounded in the reference brief or decision text, including negative
+   criteria for likely hallucinations), and a grader model verifies whether
+   each criterion is met. Score = weight met ÷ total weight. Rubrics are
+   versioned in `rubrics/rubrics.json`. This restored score discrimination that
+   holistic judging lacked (a measured ceiling effect).
+2. **Judge score (secondary)** — an LLM-as-judge grades each section 1–5 on
    **accuracy**, **completeness**, and **groundedness** (freedom from invented
    facts/holdings/citations). Closed-book grades against the human reference
    brief; open-book grades faithfulness to the decision text.
-2. **Cosine similarity (secondary)** — sentence-embedding similarity to the
+3. **Cosine similarity (secondary)** — sentence-embedding similarity to the
    reference. A cheap topical signal; it cannot distinguish a fluent-but-wrong
    brief from a correct one, so it is not the headline number.
-3. **Hallucination-safety** — mean judge groundedness.
-4. **Format compliance / refusal rate** — reported separately so a malformed
-   response or a calibrated "I don't know" is not confused with a wrong answer.
-5. **Cost & latency** — per-case token cost and response time.
+4. **Hallucination-safety** — mean judge groundedness.
+5. **Format compliance / refusal / truncation rates** — reported separately so
+   a malformed, cut-off, or abstaining response is not confused with a wrong
+   answer; the primary score covers valid responses only.
+6. **Cost & latency** — per-case token cost and response time.
 
 All headline scores carry **95% bootstrap confidence intervals**, and gaps that
 are not statistically distinguishable are flagged.

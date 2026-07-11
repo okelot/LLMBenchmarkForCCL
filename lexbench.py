@@ -136,9 +136,11 @@ def _repair_missing_references(df: pd.DataFrame) -> pd.DataFrame:
 def aggregate(df: pd.DataFrame):
     dev = _developer_map()
     df = _repair_missing_references(df)
-    present = [s for s in SECTIONS if f"{s}_similarity" in df.columns or f"judge_{s}" in df.columns]
+    present = [s for s in SECTIONS if f"{s}_similarity" in df.columns or f"judge_{s}" in df.columns
+               or f"rubric_{s}" in df.columns]
     has_judge = any(f"judge_{s}" in df.columns for s in SECTIONS) or "judge_overall" in df.columns
-    primary = "judge" if has_judge else "cosine"
+    has_rubric = "rubric_overall" in df.columns and df["rubric_overall"].notna().any()
+    primary = "rubric" if has_rubric else ("judge" if has_judge else "cosine")
 
     sim_cols = [f"{s}_similarity" for s in SECTIONS if f"{s}_similarity" in df.columns]
     judge_cols = [f"judge_{s}" for s in SECTIONS if f"judge_{s}" in df.columns]
@@ -158,27 +160,30 @@ def aggregate(df: pd.DataFrame):
 
         cosine = {s: _col_mean(scored, f"{s}_similarity") for s in SECTIONS}
         judge = {s: _col_mean(scored, f"judge_{s}") for s in SECTIONS}
+        rubric = {s: _col_mean(scored, f"rubric_{s}") for s in SECTIONS}
         cosine_overall = (
             float(pd.Series([v for v in cosine.values() if v is not None]).mean())
             if any(v is not None for v in cosine.values()) else None)
         judge_overall = (float(pd.Series([v for v in judge.values() if v is not None]).mean())
                          if any(v is not None for v in judge.values()) else None)
+        rubric_overall = _col_mean(scored, "rubric_overall")
 
         # primary per-row values (valid rows) -> bootstrap CI; keep per-case
         # scores so ranking gaps can be tested with a PAIRED bootstrap.
-        if primary == "judge":
-            src = scored["judge_overall"] if "judge_overall" in scored else None
-            per_row = (src.dropna().tolist() if src is not None
-                       else _row_overall(scored, judge_cols))
+        overall_col = {"rubric": "rubric_overall", "judge": "judge_overall"}.get(primary)
+        if overall_col and overall_col in scored:
+            src = scored[overall_col]
+            per_row = src.dropna().tolist()
             per_case = (dict(zip(scored["Case_Name"], pd.to_numeric(src, errors="coerce")))
-                        if src is not None and "Case_Name" in scored else {})
+                        if "Case_Name" in scored else {})
         else:
             per_row = _row_overall(scored, sim_cols)
             per_case = {}
         mean, lo, hi = stats.bootstrap_ci(per_row)
 
         # strict mean over ALL rows (failures counted as scored, usually 0)
-        strict_src = sub["judge_overall"] if "judge_overall" in sub else None
+        strict_col = overall_col or "judge_overall"
+        strict_src = sub[strict_col] if strict_col in sub else None
         strict = (round(float(pd.to_numeric(strict_src, errors="coerce").mean()), 4)
                   if strict_src is not None and strict_src.notna().any() else None)
 
@@ -190,9 +195,10 @@ def aggregate(df: pd.DataFrame):
             "developer": str(dev.get(model, "")),
             "n": int(len(sub)),
             "n_valid": int(len(valid)) if has_format else int(len(sub)),
-            "cosine": cosine, "judge": judge,
+            "cosine": cosine, "judge": judge, "rubric": rubric,
             "cosine_overall": None if cosine_overall is None else round(cosine_overall, 4),
             "judge_overall": None if judge_overall is None else round(judge_overall, 4),
+            "rubric_overall": None if rubric_overall is None else round(rubric_overall, 4),
             "primary_overall": mean, "ci_lo": lo, "ci_hi": hi,
             "strict_overall": strict,
             "_per_case": per_case,
@@ -231,8 +237,9 @@ def aggregate(df: pd.DataFrame):
     for r in rows:
         r.pop("_per_case", None)
 
+    labels = {"rubric": "Rubric score", "judge": "Judge score", "cosine": "Cosine similarity"}
     return {"rows": rows, "sections": present, "primary": primary,
-            "primary_label": "Judge score" if primary == "judge" else "Cosine similarity"}
+            "primary_label": labels[primary]}
 
 
 # ---------------------------------------------------------------- svg chart
@@ -274,6 +281,7 @@ def _dv(v):
 
 def build_leaderboard(agg, track_label=""):
     rows, primary_label = agg["rows"], agg["primary_label"]
+    show_judge = agg["primary"] == "rubric"
     max_n = max((r["n"] for r in rows), default=0)
     body = []
     for i, r in enumerate(rows, 1):
@@ -298,6 +306,8 @@ def build_leaderboard(agg, track_label=""):
         lat = f'{r["avg_latency"]:.1f}s' if r["avg_latency"] is not None else "—"
         n_valid = r.get("n_valid", r["n"])
         cases_txt = f'{n_valid}/{r["n"]}' if n_valid != r["n"] else f'{r["n"]}'
+        judge_cell = (f'<td class="num" data-v="{_dv(r.get("judge_overall"))}">'
+                      f'{_fmt(r.get("judge_overall"), 2)}</td>' if show_judge else "")
         body.append(f"""<tr>
   <td class="rank" data-v="{i}">{i}</td>
   <td class="model" data-v="{html.escape(r["model"])}"><span class="mname">{html.escape(r["model"])}{tie}</span>
@@ -305,6 +315,7 @@ def build_leaderboard(agg, track_label=""):
   <td class="overall" data-v="{_dv(ov)}"><span class="ov-num" style="color:{_rgb(c)}">{_fmt(ov)}</span>
       <span class="bar"{bar_title}><span class="fill" style="width:{pct:.1f}%;background:{_rgb(c)}"></span>{whisker}</span>
       {ci}</td>
+  {judge_cell}
   <td class="num" data-v="{_dv(r["cosine_overall"])}">{_fmt(r["cosine_overall"], 2)}</td>
   <td class="num" data-v="{_dv(r["groundedness"])}">{_fmt(r["groundedness"], 2)}</td>
   <td class="num" data-v="{_dv(r["format_rate"])}">{_pct(r["format_rate"])}</td>
@@ -320,6 +331,7 @@ def build_leaderboard(agg, track_label=""):
     <th class="rank" scope="col" data-sort="num" title="Rank by primary metric">#</th>
     <th class="model" scope="col" data-sort="text">Model</th>
     <th class="overall" scope="col" data-sort="num" title="Primary metric over VALID responses — execution failures are reported separately, not folded in as zeros">{primary_label} <span class="cih">valid · 95% CI</span></th>
+    {'<th class="num" scope="col" data-sort="num" title="Holistic LLM-judge score (secondary)">Judge</th>' if show_judge else ''}
     <th class="num" scope="col" data-sort="num" title="Embedding cosine similarity">Cosine</th>
     <th class="num" scope="col" data-sort="num" title="Judge groundedness — higher = fewer hallucinated facts, holdings, citations">Grounded</th>
     <th class="num" scope="col" data-sort="num" title="Valid-JSON rate">Format</th>
@@ -485,6 +497,14 @@ def _methodology_section(has_judge):
         '<p class="lede">Each brief is measured on several independent axes, '
         'because no single number captures legal quality.</p>'
         '<ul class="defs">'
+        '<li><span class="k">rubric score</span> — HealthBench-style checklist grading '
+        '(primary when present). A strong model authors 12–20 atomic, point-weighted, '
+        'case-specific criteria per case — grounded in the human reference brief or the '
+        'decision text, including negative criteria for likely hallucinations — and a '
+        'grader model only verifies whether each criterion is met. Score = weight met ÷ '
+        'total weight. Checking a specific criterion is far more verifiable than holistic '
+        'scoring, which restores discrimination at the top. Rubrics are versioned in '
+        '<a href="https://github.com/okelot/LLMBenchmarkForCCL/blob/main/rubrics/rubrics.json">rubrics/rubrics.json</a>.</li>'
         f'<li><span class="k">judge score</span> — {judge_def}</li>'
         '<li><span class="k">cosine</span> — embedding similarity (all-mpnet-base-v2) '
         'between the brief and the reference. A cheap topical signal, kept as a '
@@ -546,6 +566,7 @@ def _repro_section(meta):
         '<dt>models</dt><dd>pinned in ai_models.csv (OpenRouter ids)</dd>'
         '<dt>decoding</dt><dd>temperature 0, capped max tokens</dd>'
         f'<dt>judge</dt><dd>{html.escape(meta.get("judge_model","—"))}</dd>'
+        f'<dt>rubric author/grader</dt><dd>{html.escape(meta.get("rubric_model","—"))}</dd>'
         '<dt>embedding</dt><dd>all-mpnet-base-v2</dd>'
         '<dt>prompt</dt><dd>fixed system + task prompt (see benchmark.py)</dd>'
         '<dt>code</dt><dd><a href="https://github.com/okelot/LLMBenchmarkForCCL">okelot/LLMBenchmarkForCCL</a></dd>'
@@ -629,7 +650,8 @@ PAGE_JS = """
 def render(tracks, meta):
     lead_track = next((t for t in tracks if t["agg"]["rows"]), None)
     leader = lead_track["agg"]["rows"][0] if lead_track else None
-    has_judge = any(t["agg"]["primary"] == "judge" for t in tracks)
+    has_judge = any(t["agg"]["primary"] in ("judge", "rubric") for t in tracks)
+    primary_name = next((t["agg"]["primary_label"] for t in tracks if t["agg"]["rows"]), "cosine")
     desc = ("LexBench benchmarks frontier LLMs on Canadian case-law briefing with an "
             "LLM-judge rubric, contamination-resistant open-book and temporal-holdout "
             "tracks, and confidence intervals.")
@@ -682,7 +704,7 @@ def render(tracks, meta):
              f'<span>Updated <b>{meta["updated"]}</b></span>'
              f'<span><b>{meta["tracks"]}</b> track{plural}</span>'
              f'<span><b>{meta["models"]}</b> models</span>'
-             f'<span>primary metric: <b>{"LLM-judge" if has_judge else "cosine"}</b></span>'
+             f'<span>primary metric: <b>{html.escape(primary_name)}</b></span>'
              f'<span>with <b>95% CIs</b></span>'
              '<span><a href="data.json">raw data (JSON)</a></span></p>')
     p.append("</div></header>")
@@ -751,18 +773,19 @@ def generate(input_file: str = DEFAULT_INPUT, output_file: str = DEFAULT_OUTPUT,
 
     tracks = [_track_from_df(f, k) for k, f in frames]
 
-    judge_model = "—"
-    for _, f in frames:
-        if "judge_model" in f.columns and f["judge_model"].notna().any():
-            judge_model = str(f["judge_model"].dropna().iloc[0])
-            break
+    def _first_val(col):
+        for _, f in frames:
+            if col in f.columns and f[col].notna().any():
+                return str(f[col].dropna().iloc[0])
+        return "—"
 
     meta = {
         "updated": datetime.fromtimestamp(Path(input_file).stat().st_mtime).strftime("%d %b %Y"),
         "generated": datetime.now().strftime("%d %b %Y, %H:%M"),
         "models": max((t["n_models"] for t in tracks), default=0),
         "tracks": len(tracks),
-        "judge_model": judge_model,
+        "judge_model": _first_val("judge_model"),
+        "rubric_model": _first_val("rubric_model"),
     }
 
     out = Path(output_file)

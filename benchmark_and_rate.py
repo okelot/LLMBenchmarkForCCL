@@ -40,7 +40,8 @@ def _score_track(results_csv: str, mode: str, judge_model: Optional[str]) -> str
 
 def run_pipeline(models_csv="ai_models.csv", cases_csv="random_cases.csv",
                  holdout_csv: Optional[str] = None, judge_model: Optional[str] = DEFAULT_JUDGE,
-                 max_cases: Optional[int] = None, sleep_seconds: float = 0.5) -> None:
+                 max_cases: Optional[int] = None, sleep_seconds: float = 0.5,
+                 use_rubric: bool = True) -> None:
     frames = []
 
     print("\n### Closed-book track ###")
@@ -65,6 +66,17 @@ def run_pipeline(models_csv="ai_models.csv", cases_csv="random_cases.csv",
     combined.to_csv(COMBINED, index=False)
     print(f"\nCombined evaluated results -> {COMBINED}")
 
+    if use_rubric:
+        print("\n### Rubric stage (author missing rubrics, grade all briefs) ###")
+        from benchmark import SECTIONS, load_cases
+        from rubric import RubricGrader, author_missing, load_rubrics, save_rubrics
+        case_pool = load_cases(cases_csv)
+        if holdout_csv:
+            case_pool += load_cases(holdout_csv)
+        rubrics = author_missing(case_pool, load_rubrics())
+        save_rubrics(rubrics)
+        RubricGrader().evaluate_results(COMBINED, output_file=COMBINED)
+
     report_file = report.main([COMBINED, "results/report.html"])
     site_file = lexbench.generate(COMBINED)
     print("\nPipeline complete:")
@@ -80,7 +92,9 @@ if __name__ == "__main__":
     ap.add_argument("--holdout", default=None, help="open-book holdout CSV (A2AJ)")
     ap.add_argument("--judge", default=DEFAULT_JUDGE, help="judge model id")
     ap.add_argument("--no-judge", action="store_true")
+    ap.add_argument("--no-rubric", action="store_true")
     ap.add_argument("--max-cases", type=int, default=None)
     a = ap.parse_args()
     run_pipeline(models_csv=a.models, cases_csv=a.cases, holdout_csv=a.holdout,
-                 judge_model=None if a.no_judge else a.judge, max_cases=a.max_cases)
+                 judge_model=None if a.no_judge else a.judge, max_cases=a.max_cases,
+                 use_rubric=not a.no_rubric)

@@ -1,0 +1,1711 @@
+{
+  "version": 1,
+  "author_model": "anthropic/claude-opus-4.8",
+  "cases": {
+    "Miglin v Miglin": {
+      "citation": "Miglin v Miglin, 2003 SCC 24",
+      "grounding": "reference",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States the parties were married for 14 years and had four children.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States the parties operated a resort lodge in Algonquin Park (summer) and lived in Toronto (winter).",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States the agreement included a full and final release/waiver of future spousal support claims.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States the agreement provided a consulting agreement giving the wife $15,000/year for five years, renewable on consent.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that after the divorce, the wife's childcare obligations changed and the consulting agreement was not renewed, leading her to apply for spousal support.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States the trial judge awarded the wife spousal support of $4,400/month for five years.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "issue",
+          "text": "Identifies the issue as when a court should uphold/enforce a spousal support agreement.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "decision",
+          "text": "States the appeal was allowed and the original support order (from the trial judge) was set aside / does not stand.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "reasons",
+          "text": "Identifies Arbour and Bastarache as writing for the majority.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "reasons",
+          "text": "States the majority emphasized finality and certainty and treated such agreements as contracts to be enforced if openly negotiated, citing s. 9 of the Divorce Act.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "States the majority set out a two-stage analysis: (1) the formation/circumstances of the agreement's negotiation, and (2) the substance of the agreement's compliance with the objectives of the Divorce Act.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States that the presence/degree of counsel is relevant but the court should not presume an imbalance of power.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "States the analysis assesses whether current circumstances were foreseeable, with foreseeability interpreted broadly (not requiring explicit contemplation).",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "Applies the test to find both parties had expert counsel, negotiations were lengthy, and any vulnerability was compensated by counsel.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States the majority found no hardship or long-term disadvantage, in part because the wife chose not to return to work and retained substantial assets.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "States that LeBel and Deschamps dissented, emphasizing interdependence and unequal bargaining power and proposing a test of whether the agreement is objectively unfair when considered now.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "ratio",
+          "text": "States that Miglin establishes the test for enforcement of (final) spousal support agreements.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "States that a final agreement is one limiting the amount/duration of support or waiving it entirely, and does not contemplate variation.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "decision",
+          "text": "Does not state that the appeal was dismissed or that the wife's spousal support order was upheld.",
+          "weight": 3,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not attribute the majority reasons to the dissenters (LeBel/Deschamps) or vice versa.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c21",
+          "section": "facts",
+          "text": "Does not misstate the parties' names or invent parties/children not in the record.",
+          "weight": 1,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c22",
+          "section": "reasons",
+          "text": "Does not state that the majority presumed a power imbalance from the husband's dominance or invalidated the agreement on that basis.",
+          "weight": 2,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "LeBlanc v LeBlanc": {
+      "citation": "LeBlanc v LeBlanc, [1988] 1 SCR 217",
+      "grounding": "reference",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that the parties divorced after 26 years of marriage",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that the wife ran and successfully expanded a restaurant that provided the major part of the family income",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that the wife bought a house, a summer cottage and a car, all registered in her name",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that the husband was an alcoholic who drank heavily on a daily basis",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that the husband contributed only $1,000 towards the house and occasional assistance in the business, and the trial judge awarded him $6,000",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States that the Court of Appeal set aside the trial judgment, reasoning any contribution entitles each spouse to an equal share regardless of degree or quality",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "facts",
+          "text": "Does not state that the husband was the primary income earner or that the property was registered in the husband's name",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Frames the issue as whether an unequal division of marital assets should be granted",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "decision",
+          "text": "States that the appeal was allowed",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "Does not state that the appeal was dismissed or that the Court of Appeal judgment was upheld",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "Attributes the judgment to La Forest writing for the court",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States the trial judge made no error in deciding the case",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "Identifies s. 7(f) of the Marital Property Act (equivalent to s. 13 of the Matrimonial Property Act) as allowing the court to consider circumstances surrounding acquisition and maintenance of property",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States the court should not weigh the degree to which spouses contributed to increasing an asset's value",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that where an asset was acquired or improved almost exclusively by one spouse with negligible input from the other, a judge may exercise discretion to make an unequal division",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "ratio",
+          "text": "States that where one spouse makes virtually no or negligible contribution to matrimonial assets, an unequal (s. 13) division may be appropriate",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "ratio",
+          "text": "States that courts should not engage in a general weighing exercise, only where there is a significant disparity",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "Does not state that any contribution automatically entitles a spouse to an equal share as the governing rule",
+          "weight": 2,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Innisfil (Township) v Vespra (Township)": {
+      "citation": "Innisfil (Township) v Vespra (Township), [1981] 2 SCR 145",
+      "grounding": "reference",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that the proceedings began with an application by the City of Barrie to annex parts of the Townships of Innisfil, Oro and Vespra",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that the hearing took place before the Ontario Municipal Board",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that the projected population of Barrie in 2011 (150,000) was significant to the proceedings",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that the Minister forwarded a letter to the Board advising it of population allocations from a planning study",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that the Board ruled it was bound by government policy in the letter and would not permit cross-examination on the letter",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States that the Divisional Court found the Board had denied Innisfil natural justice and acted beyond its jurisdiction",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "facts",
+          "text": "States that the Court of Appeal reversed the Divisional Court but found the Board committed an error of law within its jurisdiction",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Frames the issue around what it means for cross-examination to be reasonably required for a full and fair disclosure of matters relevant to the proceeding",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "decision",
+          "text": "States that the appeal was allowed",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "Attributes the judgment to Estey, delivering the judgment of the court",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "States that the decision to exercise the right to cross-examine belonged solely to the holder of the right, and the court could not withhold it because it thought cross-examination doubtful or useless",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States that the relationship of an 'independent' agency to the executive is determined by reference to the agency's parent statute and other relevant statutes or common law",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "States that a court would require the clearest statutory direction to allow the executive to give binding policy directions immune from cross-examination",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States that an agency held out as independent remains so for all purposes until the Legislature alters its position",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that the remedy for any conflict between administrative results and government policy did not lie in denying the citizen the statutory right to oppose annexation",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "ratio",
+          "text": "Identifies the ratio as the principle that clear statutory language is required before binding executive policy directions can displace a party's procedural right to cross-examine before an independent tribunal",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "decision",
+          "text": "Does not state that the appeal was dismissed or that the Court of Appeal's result was upheld",
+          "weight": 3,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c18",
+          "section": "reasons",
+          "text": "Does not invent a dissenting or concurring judgment where the judgment was unanimous per Estey",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c19",
+          "section": "facts",
+          "text": "Does not misstate the parties or claim the annexing municipality was other than the City of Barrie",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not state that the court found cross-examination on the letter to be unnecessary or properly refused",
+          "weight": 2,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Newfoundland (Treasury Board) v NAPE": {
+      "citation": "Newfoundland (Treasury Board) v Newfoundland and Labrador Association of Public and Private Employees, 2004 SCC 66, [2004] 3 SCR 381",
+      "grounding": "reference",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that the Newfoundland government implemented a pay equity program intended to correct women being paid less than men",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that the pay equity program was originally to begin in 1988",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that due to severe financial difficulties the province passed a bill delaying the program's start until 1991",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that the union sought reimbursement of the lost wages amounting to approximately $24 million",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "Mentions that the government made other spending cuts (e.g. hospital beds and teachers' salaries) during this period",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "Does not state that the government cancelled or scrapped the pay equity program entirely rather than delaying it",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c7",
+          "section": "issue",
+          "text": "Identifies the issue of whether the delay violated women's rights under s.15 of the Charter",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Identifies the issue of whether any violation could be saved under s.1",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "issue",
+          "text": "Identifies the issue of whether financial concerns can satisfy the s.1 test",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "States that the appeal was dismissed",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "decision",
+          "text": "States that the decision was unanimous and written by Binnie J.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States that the delay amounted to discrimination creating a distinction on an enumerated ground",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "States that in normal circumstances financial concerns are not enough to justify discrimination under s.1",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States that the extreme financial crisis was found not to be a 'normal circumstance', allowing the s.1 justification",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that the government offered the union alternatives such as cutbacks and layoffs, which the union declined",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "States that there was no evidence of bad faith on the part of the government",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "reasons",
+          "text": "States that Binnie J. rejected adding an extra step to the Oakes test, finding judicial deference to the legislature is already sufficiently considered",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "States that financial issues can play a role in a s.1 justification of discrimination in times of severe financial crisis",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "ratio",
+          "text": "States that division of powers / judicial deference to legislatures is given sufficient consideration within the Oakes test",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not state that the Court held the s.15 violation was NOT saved under s.1",
+          "weight": 2,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Friedmann Equity Developments Inc. v Final Note Ltd.": {
+      "citation": "Friedmann Equity Development Inc. v Final Note Ltd., 2000 SCC 34, [2000] 1 SCR 842",
+      "grounding": "reference",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that Friedmann Equity asked the Supreme Court of Canada to abolish the 'sealed contract rule'",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "Identifies at least two of Friedmann Equity's grounds for abolition (internal inconsistencies, lack of principled justification, inapplicability in other jurisdictions, criticism by courts/academics, anachronistic, anomalous)",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "Notes that the sealed contract rule is described as old and technical",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "issue",
+          "text": "States the issue as whether the sealed contract rule should be abolished",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "decision",
+          "text": "States that the appeal was dismissed",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "decision",
+          "text": "Identifies Bastarache as writing for the court",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "reasons",
+          "text": "States that a change in the common law must be necessary to keep it in step with society, to clarify a principle, or to resolve inconsistency",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "reasons",
+          "text": "States that any change to the common law should be incremental and its consequences capable of assessment",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "reasons",
+          "text": "States that courts should not intervene where a change will have complex, uncertain, and far-reaching effects",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "reasons",
+          "text": "States that the court found no compelling reasons to abolish the sealed contract rule",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "States that the rule is consistent with commercial reality and continues to serve a useful purpose",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States that the rule has not caused inconvenience in commercial transactions or great hardship",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "Explains that abolition would call into question other rules applying to sealed instruments and other technical rules in contract and property law",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States that abolition could have far-reaching effects and create uncertainty/unfairness for those who relied on the rule",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that any change to the law should operate prospectively",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "ratio",
+          "text": "States that courts prefer an incremental approach and exercise judicial restraint over sweeping changes to the common law",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "ratio",
+          "text": "States that only the legislature has the power to create a prospective change in the law",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "decision",
+          "text": "Does not state that the sealed contract rule was abolished or that the appeal was allowed",
+          "weight": 3,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c19",
+          "section": "reasons",
+          "text": "Does not invent a dissenting or concurring judgment that did not occur",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "facts",
+          "text": "Does not misstate the names of the parties (Friedmann Equity Developments Inc. and Final Note Ltd.)",
+          "weight": 1,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Geffen v Goodman Estate": {
+      "citation": "Geffen v Goodman Estate, [1991] 2 SCR 353, 81 DLR (4th) 211",
+      "grounding": "reference",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that Tzina Goodman had been diagnosed with bipolar affective disorder and/or immature personality disorder",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that Tzina's mother, Annie Sanofsky, executed a 1968 will providing Tzina a life estate with the estate to pass to all of Annie's grandchildren on Tzina's death",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that Annie's later 1975 will left the home outright to Tzina and directed the residue to be held in trust for Tzina, passing to Tzina's children on her death",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that Tzina saw a lawyer recommended by her brothers who suggested a trust with the brothers as trustees, distributing property on Tzina's death among her children and her nieces and nephews",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that after Tzina's death her son challenged the trust, arguing his mother was unduly influenced by her brothers or the lawyer",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "Notes that Tzina's own will left the entire estate to her children only, in conflict with the trust",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "issue",
+          "text": "Frames the issue as whether the presumption of undue influence in special relationships requires a 'manifestly disadvantageous' (undue disadvantage) transaction",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "decision",
+          "text": "States that the appeal was allowed and the trust was upheld",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "reasons",
+          "text": "States that Wilson J (Cory J concurring) held a presumption of undue influence can arise in certain relationships, each assessed individually",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "reasons",
+          "text": "States that per Wilson J, commercial transactions require showing an undue disadvantage/benefit, whereas gifts do not because a gift is ipso facto disadvantageous, requiring only proof of a dominant relationship",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "States that once a dominant relationship is shown, the onus shifts to the alleged dominant party to prove the transaction was entered into as a result of the influenced party's own full, free and informed thought",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States that Wilson J found sufficient evidence (little contact with the brothers, independent legal advice to Tzina) to rebut undue influence",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "States that La Forest J (McLachlin J concurring) agreed in the result but considered the discussion of manifest disadvantage/commercial relationships to be obiter",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States that La Forest J rejected Wilson's comment that there is nothing per se reprehensible about persons in a trust relationship exerting undue influence over beneficiaries",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that Sopinka J agreed in the result but felt the case should have been restricted to the finding of no undue influence, treating other analysis as obiter",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "ratio",
+          "text": "States that a finding of undue influence requires a relationship involving dominance, manipulation, or coercive abuse of power",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "ratio",
+          "text": "States the ratio distinguishing transaction types: commercial transactions require undue disadvantage/benefit, while gift or similar transactions require only evidence of a dominant relationship",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "reasons",
+          "text": "Does not state that the trust was set aside or that undue influence was found on the facts",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c19",
+          "section": "reasons",
+          "text": "Does not invent a formal dissent; all judges (Wilson, Cory, La Forest, McLachlin, Sopinka) agreed in the result",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "facts",
+          "text": "Does not misstate the party names (e.g., Tzina Goodman, Annie Sanofsky) or confuse who executed which will",
+          "weight": 1,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Trebell v. Canada Life Assurance Company": {
+      "citation": "2026 ONCA 481",
+      "grounding": "text",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that Elizabeth Trebell applied to Canada Life for a $500,000 life insurance policy on July 8, 2014, to satisfy a separation agreement obligation to maintain insurance for her daughters",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that the Policy was issued on August 6, 2014, and delivered to Ms. Trebell on September 24, 2014",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that between application and policy delivery, Ms. Trebell experienced symptoms and underwent a sigmoidoscopy (September 18, 2014) with a recommendation for a colonoscopy",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that a colonoscopy on December 2, 2014, revealed a malignant lesion, and Ms. Trebell died of cancer on March 24, 2018",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that Canada Life denied the beneficiary Scott Trebell's claim almost four years after the sale, relying on s. 180(1)(c) of the Insurance Act",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States that the motion judge (Justice Akazaki) granted summary judgment against Canada Life for the full policy amount plus interest",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "issue",
+          "text": "Identifies the central issue as whether an insurer's ability to rely on s. 180(1)(c) is time-limited (specifically by a two-year contestability limitation)",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Identifies the secondary issues of whether a prospective interpretation of s. 180(1)(c) should be adopted and whether the Policy ousts s. 180(1)(c)",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "decision",
+          "text": "States that the Court of Appeal allowed the appeal and set aside the summary judgment",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "States that the court declined to substitute a dismissal of the summary judgment motion, instead leaving the parties to litigate the insurability issue",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "Explains that s. 184(2)'s two-year contestability limitation cannot apply directly to s. 180(1)(c) because s. 184(2) is expressly directed only at non-disclosure/misrepresentation under s. 183, and because no contract 'in effect' arises if s. 180(1)(c) is unmet",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "Explains that importing a two-year limitation into s. 180(1)(c) by analogy constitutes impermissible judicial re-drafting, since the absence of a limitation reflects a considered legislative policy choice",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "Explains that s. 180(1)(c) is a condition precedent addressing a state of fact (change in insurability) rather than disclosure, preserving the meeting of the minds on the risk assumed",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "Notes the legislative history showing the no-change requirement was enacted to accommodate insurers' concerns about being bound to risks that changed between application and delivery",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "Rejects the prospective interpretation, reasoning that the three requirements in s. 180(1) are cumulative ('and'), that no retrospective voiding mechanism is needed since the contract never takes effect, and that a prospective reading would render s. 180(1)(c) meaningless",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "Explains that the Policy's incontestability clause does not oust s. 180(1)(c) because it is predicated on the Policy being 'in force,' which itself depends on s. 180(1), so the argument begs the question",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "ratio",
+          "text": "States the ratio that s. 180(1)(c) is a condition precedent to contract formation subject to no contestability limitation, and may be relied on by an insurer at any time to resist a life insurance claim",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "reasons",
+          "text": "Notes that the applicable standard of review was correctness for both the statutory interpretation issues and the standard-form contract interpretation",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "decision",
+          "text": "Does not state or imply that the court found the appeal dismissed or that Canada Life must pay the claim",
+          "weight": 3,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not invent a dissenting or concurring judgment; the decision was unanimous with Paciocco J.A. writing and Simmons and Osborne JJ.A. agreeing",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c21",
+          "section": "reasons",
+          "text": "Does not claim that the court decided whether Ms. Trebell's insurability actually changed or resolved the insurability issue on the merits",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c22",
+          "section": "facts",
+          "text": "Does not misstate the parties, e.g. by identifying Elizabeth Trebell rather than Scott Trebell as the plaintiff/respondent, or confusing Canada Life with the agent Darrell Kemp",
+          "weight": 1,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Singh v. Canada (Citizenship and Immigration)": {
+      "citation": "2026 FC 892",
+      "grounding": "text",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that the applicant is Shivkaran Singh, who holds a closed work permit in Canada.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that Singh applied for permanent residence through the Canadian Experience Class of the Express Entry program after receiving an Invitation to Apply.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that Singh claimed 444 CRS points, including 50 points for allegedly holding a Certificate of Qualification as a truck driver.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that the IRCC Officer deducted the 50 CRS points because Singh's MELT certificate did not constitute a Certificate of Qualification, leaving him with insufficient points for PR status.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that Singh relied on his MELT certificate, his Class AZ driver's licence, and his Air Brake Endorsement as cumulatively functioning as a Certificate of Qualification.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States that NOC code 73300 for Transport Truck Drivers was included in the September 2023 PDI list but removed in the November 2023 PDI.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "issue",
+          "text": "Identifies the central issue as whether the Officer's interpretation of subparagraph 87.2(3)(d)(i) of the IRPR (that Singh did not hold a Certificate of Qualification) was reasonable.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Identifies the procedural fairness issue, including alleged breach of legitimate expectations, bias, and Charter section 15 equality.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "decision",
+          "text": "States that the application for judicial review was dismissed.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "States that no question was certified and no costs were awarded.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "States that the Court applied the reasonableness standard (per Vavilov) to the merits and a correctness-like/fairness standard to procedural fairness.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "States that only Skilled Trades Ontario may issue a Certificate of Qualification in Ontario under the Building Opportunities in the Skilled Trades Act, and it does not issue such certificates to truck drivers.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "Notes that Singh conceded he did not hold a Certificate of Qualification issued by Skilled Trades Ontario, which alone sufficed to uphold the Decision.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States that neither the September nor November PDI eliminated the requirement that an applicant hold a valid Certificate of Qualification to claim the 50 points.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that no legitimate expectation arose because there was no clear, unambiguous and unqualified representation (per Agraira), and the doctrine does not create substantive rights.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "States that Singh failed to establish bias and provided no evidence that other applicants actually received the 50 points for a MELT certificate or licence.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "reasons",
+          "text": "Notes that there is no horizontal stare decisis among administrative decision-makers (citing Zone3-XXXVI) and that Singh failed to identify an enumerated or analogous ground for the Charter section 15 claim.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "States that a MELT certificate, Class AZ licence, and Air Brake Endorsement do not, individually or cumulatively, constitute a Certificate of Qualification under subparagraph 87.2(3)(d)(i) of the IRPR.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "ratio",
+          "text": "Does not state that the judicial review was allowed or that Singh was granted the 50 CRS points or PR status.",
+          "weight": 3,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not assert that the Court found the Officer biased or found a Charter section 15 breach established.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c21",
+          "section": "reasons",
+          "text": "Does not claim the Court found reliance on the November PDI to be a reviewable error or that the PDIs were held invalid.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c22",
+          "section": "facts",
+          "text": "Does not misstate the parties, the judge (Justice Fuhrer), or the citation (2026 FC 892 / IMM-10868-24).",
+          "weight": 1,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Zhang  v. Canada (Public Safety and Emergency Preparedness)": {
+      "citation": "2026 FC 889",
+      "grounding": "text",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that the Applicant, Yifan Zhang, is a citizen of China who entered Canada in August 2021 as a student.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that the Applicant married Zhenhao Song on February 2, 2024, and he submitted a Spousal Sponsorship Application on May 8, 2024.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that the deferral request sought deferral pending a decision on the Spousal Sponsorship Application eligibility, or in the alternative for eight months until March 2025.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that the inland enforcement Officer refused the deferral request by decision dated June 21, 2024.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that Justice Ahmed granted a stay of removal on June 27, 2024, pending disposition of the underlying ALJR.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States that the Respondent conceded the Deferral Decision was unreasonable because a new risk (family abuse in China) had not been assessed.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "issue",
+          "text": "Identifies whether the ALJR is moot as the primary/threshold issue.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Identifies the issue of whether the Applicant's request for 'alternative relief' (a continued stay) should be granted.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "issue",
+          "text": "Identifies the issue of whether costs should be awarded against the Applicant.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "States that the application for judicial review was dismissed.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "decision",
+          "text": "States that there was no order as to costs.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "decision",
+          "text": "States that there was no question certified.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "States that the Court found the ALJR moot because the requested deferral timeframes, including the longer March 2025 date, had passed and the Applicant had obtained the relief she sought.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "States that the Court applied the two-step Borowski test for mootness.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "States that the Court declined to exercise its discretion to hear the moot matter, finding no judicial economy and that removal efforts would continue regardless.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "States that the Court refused the 'alternative relief' because it was not raised in the ALJR (Rule 5(1)(e)) and because the Court cannot substitute its own decision for the decision-maker's.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "reasons",
+          "text": "States that the Court declined costs because the high 'special reasons' threshold under Rule 22 of the IRP Rules was not met and bad faith was not established.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "States that it is the passing of the events for which deferral was sought (not merely the removal date) that renders a deferral judicial review moot.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "ratio",
+          "text": "Distinguishes or notes reliance on Sosic, noting that unlike Sosic there was no 'whichever is sooner' qualification but March 2025 was the longer requested timeframe.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not state that the Court found the Deferral Decision reasonable or ruled on its merits.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c21",
+          "section": "decision",
+          "text": "Does not state that costs were awarded against the Applicant.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c22",
+          "section": "facts",
+          "text": "Does not misstate the parties (Applicant Yifan Zhang; Respondent the Minister of Public Safety and Emergency Preparedness) or invent that the Applicant filed a PRRA application (she did not).",
+          "weight": 1,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Sharif v. Canada (Public Safety and Emergency Preparedness)": {
+      "citation": "2026 ONCA 476",
+      "grounding": "text",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that Mahir Yahya Sharif is a refugee from Somalia who was granted refugee status and resettled in Canada as a permanent resident.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that Sharif pled guilty to sexual assault committed while he was an involuntary patient in a psychiatric institution.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that Sharif was found inadmissible for serious criminality and lost his permanent resident status under s. 46(1)(c) of IRPA.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that a Danger Opinion was issued under s. 115(2) of IRPA weighing the risk Sharif faces in Somalia against the danger he poses to the Canadian public.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that Sharif filed a complaint with the UN Human Rights Committee, which issued an Interim Measures Request asking Canada to hold his removal in abeyance.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "States that the Minister refused the UNHRC's request, gave no reasons, and produced no record.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "facts",
+          "text": "Notes that Sharif was formally diagnosed with schizophrenia on July 31, 2025, after the Minister's decision and his communication to the UNHRC.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Identifies the three issues: whether the Superior Court had jurisdiction, whether the decision was justiciable, and whether the decision was reasonable.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "decision",
+          "text": "States that the Court of Appeal dismissed the appeal (and dismissed the cross-appeal).",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "States that the court held the Superior Court had jurisdiction, the matter was justiciable, and the Minister was not required to give reasons / the decision was reasonable.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "reasons",
+          "text": "Explains that the refusal of the UNHRC's IMR was an exercise of Crown prerogative over foreign affairs, not made by or under an order, so it is not within the Federal Court's exclusive jurisdiction and superior courts retain inherent jurisdiction.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "reasons",
+          "text": "Explains that justiciability operates on a sliding scale and the decision was justiciable because it directly and profoundly affects the rights, safety, and life of a specific individual (relying on Black).",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "Explains that reasons were not required because Sharif was not a party to the request, the ICCPR/Optional Protocol are not incorporated into domestic law, and it is the Minister's custom not to give reasons for IMRs.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "Explains that the Minister had all relevant information (including the May 7, 2025 psychiatric report and Sharif's UNHRC communication) so the decision could not be found unreasonable on that basis.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "Relies on Suresh v. Canada to hold that non-refoulement is subject to the s. 115(2) exception for those constituting a danger to the public, and that this exception is Charter-compliant.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "Notes that Sharif did not bring a Charter claim before the Court of Appeal.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "ratio",
+          "text": "States the ratio that a decision to remove a refugee in accordance with a Danger Opinion under s. 115(2) is not necessarily inconsistent with non-refoulement as construed in domestic law, so refusing the UNHRC's IMR was a reasonable exercise of discretion.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "Notes that Suresh remains binding authority unless and until the Supreme Court revisits it, despite criticism and later statements calling non-refoulement the cornerstone of refugee protection.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "reasons",
+          "text": "Does not state that the decision was found unreasonable or that the appeal was allowed.",
+          "weight": 3,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not claim that UNHRC views or Interim Measures Requests are binding on Canada in domestic law.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c21",
+          "section": "decision",
+          "text": "Does not invent a dissenting or separate concurring judgment; the decision was unanimous (Thorburn J.A., with Pomerance and Rahman JJ.A. agreeing).",
+          "weight": 1,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c22",
+          "section": "facts",
+          "text": "Does not state that the Federal Court had judicially reviewed the Danger Opinion (the Federal Court's proceeding concerned only the stay motion and leave application).",
+          "weight": 2,
+          "polarity": "must_not"
+        }
+      ]
+    },
+    "Paterson v. Royal Bank of Canada": {
+      "citation": "2026 ONCA 480",
+      "grounding": "text",
+      "author_model": "anthropic/claude-opus-4.8",
+      "created": "2026-07-10",
+      "criteria": [
+        {
+          "id": "c1",
+          "section": "facts",
+          "text": "States that the appellant is G. Scott Paterson, former Chair and CEO of Yorkton Securities Inc.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c2",
+          "section": "facts",
+          "text": "States that Paterson alleged the respondents (RBC/RBC DS and individuals) conducted a campaign to defame and injure him, including pressuring the OSC to investigate him and Yorkton.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c3",
+          "section": "facts",
+          "text": "States that the action was commenced on May 13, 2022 and that the alleged acts/omissions took place from before 1998 until 2002.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c4",
+          "section": "facts",
+          "text": "States that the OSC proceedings culminated in a Settlement and OSC Order requiring Paterson to sell his Yorkton interest at book value, be reprimanded, be suspended as a director/officer for two years, be barred from trading for six months, and pay a fine and costs.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c5",
+          "section": "facts",
+          "text": "States that in 2004 Peter C. Newman told Paterson that confidential sources said RBC and its executives hated him and had encouraged the press to attack him and caused the OSC to investigate him.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c6",
+          "section": "facts",
+          "text": "Mentions the Whistleblower Note and the attached Douglas Memorandum (dated November 20, 1998) as documents Paterson later received.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c7",
+          "section": "facts",
+          "text": "States that Paterson claimed $250 million in general/aggravated damages and $25 million in punitive/exemplary damages.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c8",
+          "section": "issue",
+          "text": "Identifies the central issue as whether it was plain and obvious that the claims were barred by the 15-year ultimate limitation period under s. 15 of the Limitations Act, 2002, including whether wilful concealment under s. 15(4)(c) tolled it.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c9",
+          "section": "issue",
+          "text": "Notes the secondary issue of whether the motion judge erred in the 'no costs' order (raised on the cross-appeal).",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c10",
+          "section": "decision",
+          "text": "States that the Court of Appeal dismissed the appeal.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c11",
+          "section": "decision",
+          "text": "States that the Court granted leave to appeal costs and allowed the cross-appeal, setting aside the 'no costs' order and ordering costs of $51,746.77 to the respondents.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c12",
+          "section": "decision",
+          "text": "Notes that the Court declined to decide the abuse of process ground, finding the limitation period issue dispositive.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c13",
+          "section": "reasons",
+          "text": "Explains that wilful concealment under s. 15(4)(c) has a 'causative element': it only tolls the limitation period where the defendant's concealment prevented the plaintiff from discovering the claim.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c14",
+          "section": "reasons",
+          "text": "Explains that the Court found Paterson knew the material facts underlying his claims by no later than 2004 (chiefly via the Newman conversation), so wilful concealment could not assist him.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c15",
+          "section": "reasons",
+          "text": "Notes that the Statement of Claim showed the respondents acted openly and directly in defaming Paterson, undermining any claim of concealment.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c16",
+          "section": "reasons",
+          "text": "Notes that the standard of review for the r. 21.01(1) question of law was correctness.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c17",
+          "section": "reasons",
+          "text": "Explains the costs order was overturned because the motion judge made a 'no costs' order based on the respondents' animus without giving the parties an opportunity to make submissions.",
+          "weight": 2,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c18",
+          "section": "ratio",
+          "text": "States the ratio that the ultimate limitation period is tolled under s. 15(4)(c) only where the defendant's concealment or misleading actually prevented the plaintiff from discovering the claim; if the plaintiff had sufficient knowledge, no tolling occurs.",
+          "weight": 3,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c19",
+          "section": "reasons",
+          "text": "Correctly notes that the Court expressly left undecided whether s. 15(4)(c) requires active conduct (as opposed to passive nondisclosure) by the defendant.",
+          "weight": 1,
+          "polarity": "must_include"
+        },
+        {
+          "id": "c20",
+          "section": "reasons",
+          "text": "Does not state or imply that the Court decided the appeal on the abuse of process ground or endorsed the motion judge's abuse of process findings.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c21",
+          "section": "decision",
+          "text": "Does not state that the appeal was allowed or that the action was permitted to proceed.",
+          "weight": 2,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c22",
+          "section": "reasons",
+          "text": "Does not invent a dissenting opinion; the panel (van Rensburg, Dawe, Madsen JJ.A.) was unanimous.",
+          "weight": 1,
+          "polarity": "must_not"
+        },
+        {
+          "id": "c23",
+          "section": "facts",
+          "text": "Does not misstate the ultimate limitation period as anything other than 15 years, nor state it expired in 2017 as the correct date (the Court corrected the expiry to January 1, 2019).",
+          "weight": 1,
+          "polarity": "must_not"
+        }
+      ]
+    }
+  }
+}

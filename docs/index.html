@@ -127,11 +127,12 @@ footer a:hover{color:var(--claret)}
 @keyframes grow{from{width:0}}
 .mast,section{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}html{scroll-behavior:auto}}
-</style></head><body><a class="skip" href="#main">Skip to leaderboards</a><nav class="topnav"><div class="wrap"><a class="brand" href="#top">Lex<b>Bench</b></a><div class="links"><a href="#track-closed">Closed-book</a><a href="#track-open">Open-book</a><a href="#metrics">Metrics</a><a href="#dataset">Dataset</a><a href="#reproducibility">Reproducibility</a><a href="https://github.com/okelot/LLMBenchmarkForCCL">GitHub</a></div><button id="themetoggle" class="tbtn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button></div></nav><header class="mast" id="top"><div class="wrap"><p class="eyebrow">Canadian Case-Law Benchmark</p><h1 class="wordmark"><span class="lex">Lex</span><span class="bench">Bench</span></h1><p class="thesis">Frontier language models, judged on how faithfully they brief Canadian case law.</p><div class="leader"><span class="lab">Leader · Closed-book (recall from case name)</span><span class="who">Claude Opus 4.8</span><span class="sc" style="color:rgb(116,131,73)">0.704</span></div><p class="cite"><span>Updated <b>10 Jul 2026</b></span><span><b>2</b> tracks</span><span><b>8</b> models</span><span>primary metric: <b>LLM-judge</b></span><span>with <b>95% CIs</b></span><span><a href="data.json">raw data (JSON)</a></span></p></div></header><main id="main"><section id="track-closed"><div class="wrap"><h2 class="h2">Leaderboard</h2><p class="trackname">Closed-book (recall from case name)<span class="nchip">6 cases · 8 models</span></p><p class="lede">The model receives only the case name and must recall the brief from parametric knowledge — a knowledge test, sensitive to training contamination.</p><div class="table-wrap"><table class="board"><caption class="sr-only">Leaderboard — Closed-book (recall from case name)</caption>
+</style></head><body><a class="skip" href="#main">Skip to leaderboards</a><nav class="topnav"><div class="wrap"><a class="brand" href="#top">Lex<b>Bench</b></a><div class="links"><a href="#track-closed">Closed-book</a><a href="#track-open">Open-book</a><a href="#metrics">Metrics</a><a href="#dataset">Dataset</a><a href="#reproducibility">Reproducibility</a><a href="https://github.com/okelot/LLMBenchmarkForCCL">GitHub</a></div><button id="themetoggle" class="tbtn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button></div></nav><header class="mast" id="top"><div class="wrap"><p class="eyebrow">Canadian Case-Law Benchmark</p><h1 class="wordmark"><span class="lex">Lex</span><span class="bench">Bench</span></h1><p class="thesis">Frontier language models, judged on how faithfully they brief Canadian case law.</p><div class="leader"><span class="lab">Leader · Closed-book (recall from case name)</span><span class="who">Claude Opus 4.8</span><span class="sc" style="color:rgb(201,162,40)">0.546</span></div><p class="cite"><span>Updated <b>10 Jul 2026</b></span><span><b>2</b> tracks</span><span><b>8</b> models</span><span>primary metric: <b>Rubric score</b></span><span>with <b>95% CIs</b></span><span><a href="data.json">raw data (JSON)</a></span></p></div></header><main id="main"><section id="track-closed"><div class="wrap"><h2 class="h2">Leaderboard</h2><p class="trackname">Closed-book (recall from case name)<span class="nchip">6 cases · 8 models</span></p><p class="lede">The model receives only the case name and must recall the brief from parametric knowledge — a knowledge test, sensitive to training contamination.</p><div class="table-wrap"><table class="board"><caption class="sr-only">Leaderboard — Closed-book (recall from case name)</caption>
   <thead><tr>
     <th class="rank" scope="col" data-sort="num" title="Rank by primary metric">#</th>
     <th class="model" scope="col" data-sort="text">Model</th>
-    <th class="overall" scope="col" data-sort="num" title="Primary metric over VALID responses — execution failures are reported separately, not folded in as zeros">Judge score <span class="cih">valid · 95% CI</span></th>
+    <th class="overall" scope="col" data-sort="num" title="Primary metric over VALID responses — execution failures are reported separately, not folded in as zeros">Rubric score <span class="cih">valid · 95% CI</span></th>
+    <th class="num" scope="col" data-sort="num" title="Holistic LLM-judge score (secondary)">Judge</th>
     <th class="num" scope="col" data-sort="num" title="Embedding cosine similarity">Cosine</th>
     <th class="num" scope="col" data-sort="num" title="Judge groundedness — higher = fewer hallucinated facts, holdings, citations">Grounded</th>
     <th class="num" scope="col" data-sort="num" title="Valid-JSON rate">Format</th>
@@ -145,9 +146,10 @@ footer a:hover{color:var(--claret)}
   <td class="rank" data-v="1">1</td>
   <td class="model" data-v="Claude Opus 4.8"><span class="mname">Claude Opus 4.8</span>
       <span class="dev">Anthropic</span></td>
-  <td class="overall" data-v="0.703500"><span class="ov-num" style="color:rgb(116,131,73)">0.704</span>
-      <span class="bar" title="95% CI 0.50–0.88"><span class="fill" style="width:70.3%;background:rgb(116,131,73)"></span><span class="wh" style="left:50.3%;width:37.3%"></span></span>
-      <span class="ci">[0.50–0.88]</span></td>
+  <td class="overall" data-v="0.545800"><span class="ov-num" style="color:rgb(201,162,40)">0.546</span>
+      <span class="bar" title="95% CI 0.40–0.71"><span class="fill" style="width:54.6%;background:rgb(201,162,40)"></span><span class="wh" style="left:39.5%;width:31.5%"></span></span>
+      <span class="ci">[0.40–0.71]</span></td>
+  <td class="num" data-v="0.696700">0.70</td>
   <td class="num" data-v="0.600500">0.60</td>
   <td class="num" data-v="0.741700">0.74</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -158,11 +160,12 @@ footer a:hover{color:var(--claret)}
   <td class="cases" data-v="6">6</td>
 </tr><tr>
   <td class="rank" data-v="2">2</td>
-  <td class="model" data-v="GPT-5.5"><span class="mname">GPT-5.5<span class="tie" title="Paired bootstrap vs model above: diff +0.208, 95% CI [-0.062, +0.479] over 4 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="GPT-5.5"><span class="mname">GPT-5.5</span>
       <span class="dev">OpenAI</span></td>
-  <td class="overall" data-v="0.558400"><span class="ov-num" style="color:rgb(196,160,41)">0.558</span>
-      <span class="bar" title="95% CI 0.19–0.77"><span class="fill" style="width:55.8%;background:rgb(196,160,41)"></span><span class="wh" style="left:19.2%;width:57.5%"></span></span>
-      <span class="ci">[0.19–0.77]</span></td>
+  <td class="overall" data-v="0.422600"><span class="ov-num" style="color:rgb(188,149,72)">0.423</span>
+      <span class="bar" title="95% CI 0.28–0.53"><span class="fill" style="width:42.3%;background:rgb(188,149,72)"></span><span class="wh" style="left:27.5%;width:25.9%"></span></span>
+      <span class="ci">[0.28–0.53]</span></td>
+  <td class="num" data-v="0.558300">0.56</td>
   <td class="num" data-v="0.584300">0.58</td>
   <td class="num" data-v="0.650000">0.65</td>
   <td class="num" data-v="0.666667">67%</td>
@@ -173,26 +176,12 @@ footer a:hover{color:var(--claret)}
   <td class="cases" data-v="4">4/6</td>
 </tr><tr>
   <td class="rank" data-v="3">3</td>
-  <td class="model" data-v="Grok 4.5"><span class="mname">Grok 4.5<span class="tie" title="Paired bootstrap vs model above: diff -0.017, 95% CI [-0.575, +0.533] over 4 shared cases — not significant">≈</span></span>
-      <span class="dev">xAI</span></td>
-  <td class="overall" data-v="0.484100"><span class="ov-num" style="color:rgb(194,155,56)">0.484</span>
-      <span class="bar" title="95% CI 0.24–0.73"><span class="fill" style="width:48.4%;background:rgb(194,155,56)"></span><span class="wh" style="left:23.7%;width:49.7%"></span></span>
-      <span class="ci">[0.24–0.73]</span></td>
-  <td class="num" data-v="0.596400">0.60</td>
-  <td class="num" data-v="0.539600">0.54</td>
-  <td class="num" data-v="1.000000">100%</td>
-  <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.012507">$0.0125</td>
-  <td class="num" data-v="19.545667">19.5s</td>
-  <td class="cases" data-v="6">6</td>
-</tr><tr>
-  <td class="rank" data-v="4">4</td>
-  <td class="model" data-v="GPT-5.6"><span class="mname">GPT-5.6<span class="tie" title="Paired bootstrap vs model above: diff +0.102, 95% CI [-0.332, +0.536] over 5 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="GPT-5.6"><span class="mname">GPT-5.6<span class="tie" title="Paired bootstrap vs model above: diff -0.041, 95% CI [-0.112, +0.072] over 4 shared cases — not significant">≈</span></span>
       <span class="dev">OpenAI</span></td>
-  <td class="overall" data-v="0.478300"><span class="ov-num" style="color:rgb(194,155,58)">0.478</span>
-      <span class="bar" title="95% CI 0.18–0.77"><span class="fill" style="width:47.8%;background:rgb(194,155,58)"></span><span class="wh" style="left:18.3%;width:59.0%"></span></span>
-      <span class="ci">[0.18–0.77]</span></td>
+  <td class="overall" data-v="0.404000"><span class="ov-num" style="color:rgb(186,147,77)">0.404</span>
+      <span class="bar" title="95% CI 0.19–0.61"><span class="fill" style="width:40.4%;background:rgb(186,147,77)"></span><span class="wh" style="left:18.8%;width:42.0%"></span></span>
+      <span class="ci">[0.19–0.61]</span></td>
+  <td class="num" data-v="0.498300">0.50</td>
   <td class="num" data-v="0.556800">0.56</td>
   <td class="num" data-v="0.545000">0.55</td>
   <td class="num" data-v="0.833333">83%</td>
@@ -202,12 +191,13 @@ footer a:hover{color:var(--claret)}
   <td class="num" data-v="80.719167">80.7s</td>
   <td class="cases" data-v="5">5/6</td>
 </tr><tr>
-  <td class="rank" data-v="5">5</td>
-  <td class="model" data-v="Claude Sonnet 4.6"><span class="mname">Claude Sonnet 4.6<span class="tie" title="Paired bootstrap vs model above: diff +0.048, 95% CI [-0.130, +0.317] over 5 shared cases — not significant">≈</span></span>
+  <td class="rank" data-v="4">4</td>
+  <td class="model" data-v="Claude Sonnet 4.6"><span class="mname">Claude Sonnet 4.6<span class="tie" title="Paired bootstrap vs model above: diff +0.035, 95% CI [-0.147, +0.244] over 5 shared cases — not significant">≈</span></span>
       <span class="dev">Anthropic</span></td>
-  <td class="overall" data-v="0.430000"><span class="ov-num" style="color:rgb(189,150,70)">0.430</span>
-      <span class="bar" title="95% CI 0.16–0.70"><span class="fill" style="width:43.0%;background:rgb(189,150,70)"></span><span class="wh" style="left:16.0%;width:54.0%"></span></span>
-      <span class="ci">[0.16–0.70]</span></td>
+  <td class="overall" data-v="0.369100"><span class="ov-num" style="color:rgb(183,144,86)">0.369</span>
+      <span class="bar" title="95% CI 0.16–0.57"><span class="fill" style="width:36.9%;background:rgb(183,144,86)"></span><span class="wh" style="left:16.4%;width:41.0%"></span></span>
+      <span class="ci">[0.16–0.57]</span></td>
+  <td class="num" data-v="0.436700">0.44</td>
   <td class="num" data-v="0.571100">0.57</td>
   <td class="num" data-v="0.420000">0.42</td>
   <td class="num" data-v="0.833333">83%</td>
@@ -217,12 +207,29 @@ footer a:hover{color:var(--claret)}
   <td class="num" data-v="13.185167">13.2s</td>
   <td class="cases" data-v="5">5/6</td>
 </tr><tr>
+  <td class="rank" data-v="5">5</td>
+  <td class="model" data-v="Grok 4.5"><span class="mname">Grok 4.5<span class="tie" title="Paired bootstrap vs model above: diff -0.011, 95% CI [-0.138, +0.105] over 5 shared cases — not significant">≈</span></span>
+      <span class="dev">xAI</span></td>
+  <td class="overall" data-v="0.355500"><span class="ov-num" style="color:rgb(182,143,90)">0.355</span>
+      <span class="bar" title="95% CI 0.25–0.47"><span class="fill" style="width:35.5%;background:rgb(182,143,90)"></span><span class="wh" style="left:25.4%;width:21.5%"></span></span>
+      <span class="ci">[0.25–0.47]</span></td>
+  <td class="num" data-v="0.481700">0.48</td>
+  <td class="num" data-v="0.596400">0.60</td>
+  <td class="num" data-v="0.539600">0.54</td>
+  <td class="num" data-v="1.000000">100%</td>
+  <td class="num" data-v="0.000000">0%</td>
+  <td class="num" data-v="0.000000">0%</td>
+  <td class="num" data-v="0.012507">$0.0125</td>
+  <td class="num" data-v="19.545667">19.5s</td>
+  <td class="cases" data-v="6">6</td>
+</tr><tr>
   <td class="rank" data-v="6">6</td>
-  <td class="model" data-v="Gemini 2.5 Pro"><span class="mname">Gemini 2.5 Pro<span class="tie" title="Paired bootstrap vs model above: diff +0.168, 95% CI [-0.010, +0.458] over 5 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="Gemini 2.5 Pro"><span class="mname">Gemini 2.5 Pro<span class="tie" title="Paired bootstrap vs model above: diff +0.051, 95% CI [-0.066, +0.177] over 6 shared cases — not significant">≈</span></span>
       <span class="dev">Google</span></td>
-  <td class="overall" data-v="0.218100"><span class="ov-num" style="color:rgb(176,137,104)">0.218</span>
-      <span class="bar" title="95% CI 0.05–0.46"><span class="fill" style="width:21.8%;background:rgb(176,137,104)"></span><span class="wh" style="left:4.6%;width:41.7%"></span></span>
-      <span class="ci">[0.05–0.46]</span></td>
+  <td class="overall" data-v="0.304100"><span class="ov-num" style="color:rgb(176,137,103)">0.304</span>
+      <span class="bar" title="95% CI 0.19–0.44"><span class="fill" style="width:30.4%;background:rgb(176,137,103)"></span><span class="wh" style="left:19.0%;width:25.5%"></span></span>
+      <span class="ci">[0.19–0.44]</span></td>
+  <td class="num" data-v="0.217800">0.22</td>
   <td class="num" data-v="0.573300">0.57</td>
   <td class="num" data-v="0.179200">0.18</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -233,11 +240,12 @@ footer a:hover{color:var(--claret)}
   <td class="cases" data-v="6">6</td>
 </tr><tr>
   <td class="rank" data-v="7">7</td>
-  <td class="model" data-v="DeepSeek Chat v3.1"><span class="mname">DeepSeek Chat v3.1<span class="tie" title="Paired bootstrap vs model above: diff +0.037, 95% CI [-0.147, +0.171] over 6 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="DeepSeek Chat v3.1"><span class="mname">DeepSeek Chat v3.1<span class="tie" title="Paired bootstrap vs model above: diff +0.105, 95% CI [-0.024, +0.233] over 6 shared cases — not significant">≈</span></span>
       <span class="dev">DeepSeek</span></td>
-  <td class="overall" data-v="0.180600"><span class="ov-num" style="color:rgb(176,137,104)">0.181</span>
-      <span class="bar" title="95% CI 0.02–0.38"><span class="fill" style="width:18.1%;background:rgb(176,137,104)"></span><span class="wh" style="left:1.7%;width:36.4%"></span></span>
-      <span class="ci">[0.02–0.38]</span></td>
+  <td class="overall" data-v="0.198600"><span class="ov-num" style="color:rgb(176,137,104)">0.199</span>
+      <span class="bar" title="95% CI 0.12–0.29"><span class="fill" style="width:19.9%;background:rgb(176,137,104)"></span><span class="wh" style="left:11.8%;width:16.8%"></span></span>
+      <span class="ci">[0.12–0.29]</span></td>
+  <td class="num" data-v="0.190000">0.19</td>
   <td class="num" data-v="0.489600">0.49</td>
   <td class="num" data-v="0.200000">0.20</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -248,11 +256,12 @@ footer a:hover{color:var(--claret)}
   <td class="cases" data-v="6">6</td>
 </tr><tr>
   <td class="rank" data-v="8">8</td>
-  <td class="model" data-v="Llama 4 Maverick"><span class="mname">Llama 4 Maverick<span class="tie" title="Paired bootstrap vs model above: diff +0.068, 95% CI [-0.022, +0.180] over 6 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="Llama 4 Maverick"><span class="mname">Llama 4 Maverick<span class="tie" title="Paired bootstrap vs model above: diff +0.038, 95% CI [-0.024, +0.102] over 6 shared cases — not significant">≈</span></span>
       <span class="dev">Meta</span></td>
-  <td class="overall" data-v="0.112500"><span class="ov-num" style="color:rgb(176,137,104)">0.113</span>
-      <span class="bar" title="95% CI 0.02–0.25"><span class="fill" style="width:11.2%;background:rgb(176,137,104)"></span><span class="wh" style="left:1.9%;width:23.5%"></span></span>
-      <span class="ci">[0.02–0.25]</span></td>
+  <td class="overall" data-v="0.160300"><span class="ov-num" style="color:rgb(176,137,104)">0.160</span>
+      <span class="bar" title="95% CI 0.13–0.19"><span class="fill" style="width:16.0%;background:rgb(176,137,104)"></span><span class="wh" style="left:12.8%;width:6.5%"></span></span>
+      <span class="ci">[0.13–0.19]</span></td>
+  <td class="num" data-v="0.114400">0.11</td>
   <td class="num" data-v="0.483800">0.48</td>
   <td class="num" data-v="0.125000">0.12</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -262,11 +271,12 @@ footer a:hover{color:var(--claret)}
   <td class="num" data-v="8.679667">8.7s</td>
   <td class="cases" data-v="6">6</td>
 </tr></tbody></table></div>
-<p class="hint">Click a column header to sort · hover headers for metric definitions.</p><p class="chartcap">Judge score by brief section — hover a bar for its value</p><div class="chart"><svg viewBox="0 0 860 430" role="img" aria-label="Score by section and model" preserveAspectRatio="xMidYMid meet"><line x1="46" y1="326.0" x2="842" y2="326.0" class="grid"/><text x="38" y="329.5" class="ytick">0.0</text><line x1="46" y1="265.2" x2="842" y2="265.2" class="grid"/><text x="38" y="268.7" class="ytick">0.2</text><line x1="46" y1="204.4" x2="842" y2="204.4" class="grid"/><text x="38" y="207.9" class="ytick">0.4</text><line x1="46" y1="143.6" x2="842" y2="143.6" class="grid"/><text x="38" y="147.1" class="ytick">0.6</text><line x1="46" y1="82.8" x2="842" y2="82.8" class="grid"/><text x="38" y="86.3" class="ytick">0.8</text><line x1="46" y1="22.0" x2="842" y2="22.0" class="grid"/><text x="38" y="25.5" class="ytick">1.0</text><rect x="58.9" y="131.8" width="12.7" height="194.2" fill="#4a7c59"><title>Claude Opus 4.8 · facts: 0.639</title></rect><rect x="73.7" y="76.9" width="12.7" height="249.1" fill="#4e6d8c"><title>Claude Opus 4.8 · issue: 0.819</title></rect><rect x="88.4" y="110.7" width="12.7" height="215.3" fill="#a9762f"><title>Claude Opus 4.8 · decision: 0.708</title></rect><rect x="103.1" y="123.3" width="12.7" height="202.7" fill="#7d6b9e"><title>Claude Opus 4.8 · reasons: 0.667</title></rect><rect x="117.8" y="128.4" width="12.7" height="197.6" fill="#8c5a4a"><title>Claude Opus 4.8 · ratio: 0.650</title></rect><text x="95.8" y="340.0" class="xtick" transform="rotate(-22 95.8 340.0)">Claude Opus 4.8</text><rect x="158.4" y="161.3" width="12.7" height="164.7" fill="#4a7c59"><title>GPT-5.5 · facts: 0.542</title></rect><rect x="173.2" y="117.0" width="12.7" height="209.0" fill="#4e6d8c"><title>GPT-5.5 · issue: 0.688</title></rect><rect x="187.9" y="193.0" width="12.7" height="133.0" fill="#a9762f"><title>GPT-5.5 · decision: 0.438</title></rect><rect x="202.6" y="155.0" width="12.7" height="171.0" fill="#7d6b9e"><title>GPT-5.5 · reasons: 0.562</title></rect><rect x="217.3" y="155.0" width="12.7" height="171.0" fill="#8c5a4a"><title>GPT-5.5 · ratio: 0.562</title></rect><text x="195.2" y="340.0" class="xtick" transform="rotate(-22 195.2 340.0)">GPT-5.5</text><rect x="257.9" y="195.1" width="12.7" height="130.9" fill="#4a7c59"><title>Grok 4.5 · facts: 0.431</title></rect><rect x="272.7" y="140.2" width="12.7" height="185.8" fill="#4e6d8c"><title>Grok 4.5 · issue: 0.611</title></rect><rect x="287.4" y="190.9" width="12.7" height="135.1" fill="#a9762f"><title>Grok 4.5 · decision: 0.444</title></rect><rect x="302.1" y="207.8" width="12.7" height="118.2" fill="#7d6b9e"><title>Grok 4.5 · reasons: 0.389</title></rect><rect x="316.8" y="163.9" width="12.7" height="162.1" fill="#8c5a4a"><title>Grok 4.5 · ratio: 0.533</title></rect><text x="294.8" y="340.0" class="xtick" transform="rotate(-22 294.8 340.0)">Grok 4.5</text><rect x="357.4" y="194.3" width="12.7" height="131.7" fill="#4a7c59"><title>GPT-5.6 · facts: 0.433</title></rect><rect x="372.2" y="148.7" width="12.7" height="177.3" fill="#4e6d8c"><title>GPT-5.6 · issue: 0.583</title></rect><rect x="386.9" y="219.6" width="12.7" height="106.4" fill="#a9762f"><title>GPT-5.6 · decision: 0.350</title></rect><rect x="401.6" y="174.0" width="12.7" height="152.0" fill="#7d6b9e"><title>GPT-5.6 · reasons: 0.500</title></rect><rect x="416.3" y="136.0" width="12.7" height="190.0" fill="#8c5a4a"><title>GPT-5.6 · ratio: 0.625</title></rect><text x="394.2" y="340.0" class="xtick" transform="rotate(-22 394.2 340.0)">GPT-5.6</text><rect x="456.9" y="204.4" width="12.7" height="121.6" fill="#4a7c59"><title>Claude Sonnet 4.6 · facts: 0.400</title></rect><rect x="471.7" y="153.7" width="12.7" height="172.3" fill="#4e6d8c"><title>Claude Sonnet 4.6 · issue: 0.567</title></rect><rect x="486.4" y="244.9" width="12.7" height="81.1" fill="#a9762f"><title>Claude Sonnet 4.6 · decision: 0.267</title></rect><rect x="501.1" y="189.2" width="12.7" height="136.8" fill="#7d6b9e"><title>Claude Sonnet 4.6 · reasons: 0.450</title></rect><rect x="515.8" y="174.0" width="12.7" height="152.0" fill="#8c5a4a"><title>Claude Sonnet 4.6 · ratio: 0.500</title></rect><text x="493.8" y="340.0" class="xtick" transform="rotate(-22 493.8 340.0)">Claude Sonnet 4.6</text><rect x="556.4" y="279.5" width="12.7" height="46.5" fill="#4a7c59"><title>Gemini 2.5 Pro · facts: 0.153</title></rect><rect x="571.2" y="250.0" width="12.7" height="76.0" fill="#4e6d8c"><title>Gemini 2.5 Pro · issue: 0.250</title></rect><rect x="585.9" y="224.7" width="12.7" height="101.3" fill="#a9762f"><title>Gemini 2.5 Pro · decision: 0.333</title></rect><rect x="600.6" y="279.6" width="12.7" height="46.4" fill="#7d6b9e"><title>Gemini 2.5 Pro · reasons: 0.153</title></rect><rect x="615.3" y="265.2" width="12.7" height="60.8" fill="#8c5a4a"><title>Gemini 2.5 Pro · ratio: 0.200</title></rect><text x="593.2" y="340.0" class="xtick" transform="rotate(-22 593.2 340.0)">Gemini 2.5 Pro</text><rect x="655.9" y="283.8" width="12.7" height="42.2" fill="#4a7c59"><title>DeepSeek Chat v3.1 · facts: 0.139</title></rect><rect x="670.7" y="224.7" width="12.7" height="101.3" fill="#4e6d8c"><title>DeepSeek Chat v3.1 · issue: 0.333</title></rect><rect x="685.4" y="313.3" width="12.7" height="12.7" fill="#a9762f"><title>DeepSeek Chat v3.1 · decision: 0.042</title></rect><rect x="700.1" y="279.6" width="12.7" height="46.4" fill="#7d6b9e"><title>DeepSeek Chat v3.1 · reasons: 0.153</title></rect><rect x="714.8" y="239.9" width="12.7" height="86.1" fill="#8c5a4a"><title>DeepSeek Chat v3.1 · ratio: 0.283</title></rect><text x="692.8" y="340.0" class="xtick" transform="rotate(-22 692.8 340.0)">DeepSeek Chat v3.1</text><rect x="755.4" y="300.7" width="12.7" height="25.3" fill="#4a7c59"><title>Llama 4 Maverick · facts: 0.083</title></rect><rect x="770.2" y="283.8" width="12.7" height="42.2" fill="#4e6d8c"><title>Llama 4 Maverick · issue: 0.139</title></rect><rect x="784.9" y="271.1" width="12.7" height="54.9" fill="#a9762f"><title>Llama 4 Maverick · decision: 0.181</title></rect><rect x="799.6" y="304.9" width="12.7" height="21.1" fill="#7d6b9e"><title>Llama 4 Maverick · reasons: 0.069</title></rect><rect x="814.3" y="295.6" width="12.7" height="30.4" fill="#8c5a4a"><title>Llama 4 Maverick · ratio: 0.100</title></rect><text x="792.2" y="340.0" class="xtick" transform="rotate(-22 792.2 340.0)">Llama 4 Maverick</text></svg></div><div class="legend"><span><i style="background:#4a7c59"></i>Facts</span><span><i style="background:#4e6d8c"></i>Issue</span><span><i style="background:#a9762f"></i>Decision</span><span><i style="background:#7d6b9e"></i>Reasons</span><span><i style="background:#8c5a4a"></i>Ratio</span></div></div></section><section id="track-open"><div class="wrap"><h2 class="h2">Leaderboard</h2><p class="trackname">Open-book (brief from decision text)<span class="nchip">5 cases · 8 models</span></p><p class="lede">The model is given the full decision text and must brief it — a reading/extraction task that is contamination-resistant.</p><div class="table-wrap"><table class="board"><caption class="sr-only">Leaderboard — Open-book (brief from decision text)</caption>
+<p class="hint">Click a column header to sort · hover headers for metric definitions.</p><p class="chartcap">Rubric score by brief section — hover a bar for its value</p><div class="chart"><svg viewBox="0 0 860 430" role="img" aria-label="Score by section and model" preserveAspectRatio="xMidYMid meet"><line x1="46" y1="326.0" x2="842" y2="326.0" class="grid"/><text x="38" y="329.5" class="ytick">0.0</text><line x1="46" y1="265.2" x2="842" y2="265.2" class="grid"/><text x="38" y="268.7" class="ytick">0.2</text><line x1="46" y1="204.4" x2="842" y2="204.4" class="grid"/><text x="38" y="207.9" class="ytick">0.4</text><line x1="46" y1="143.6" x2="842" y2="143.6" class="grid"/><text x="38" y="147.1" class="ytick">0.6</text><line x1="46" y1="82.8" x2="842" y2="82.8" class="grid"/><text x="38" y="86.3" class="ytick">0.8</text><line x1="46" y1="22.0" x2="842" y2="22.0" class="grid"/><text x="38" y="25.5" class="ytick">1.0</text><rect x="58.9" y="207.3" width="12.7" height="118.7" fill="#4a7c59"><title>Claude Opus 4.8 · facts: 0.390</title></rect><rect x="73.7" y="123.3" width="12.7" height="202.7" fill="#4e6d8c"><title>Claude Opus 4.8 · issue: 0.667</title></rect><rect x="88.4" y="123.3" width="12.7" height="202.7" fill="#a9762f"><title>Claude Opus 4.8 · decision: 0.667</title></rect><rect x="103.1" y="171.9" width="12.7" height="154.1" fill="#7d6b9e"><title>Claude Opus 4.8 · reasons: 0.507</title></rect><rect x="117.8" y="102.3" width="12.7" height="223.7" fill="#8c5a4a"><title>Claude Opus 4.8 · ratio: 0.736</title></rect><text x="95.8" y="340.0" class="xtick" transform="rotate(-22 95.8 340.0)">Claude Opus 4.8</text><rect x="158.4" y="243.2" width="12.7" height="82.8" fill="#4a7c59"><title>GPT-5.5 · facts: 0.272</title></rect><rect x="173.2" y="98.0" width="12.7" height="228.0" fill="#4e6d8c"><title>GPT-5.5 · issue: 0.750</title></rect><rect x="187.9" y="193.0" width="12.7" height="133.0" fill="#a9762f"><title>GPT-5.5 · decision: 0.438</title></rect><rect x="202.6" y="192.3" width="12.7" height="133.7" fill="#7d6b9e"><title>GPT-5.5 · reasons: 0.440</title></rect><rect x="217.3" y="196.8" width="12.7" height="129.2" fill="#8c5a4a"><title>GPT-5.5 · ratio: 0.425</title></rect><text x="195.2" y="340.0" class="xtick" transform="rotate(-22 195.2 340.0)">GPT-5.5</text><rect x="257.9" y="242.3" width="12.7" height="83.7" fill="#4a7c59"><title>GPT-5.6 · facts: 0.275</title></rect><rect x="272.7" y="143.6" width="12.7" height="182.4" fill="#4e6d8c"><title>GPT-5.6 · issue: 0.600</title></rect><rect x="287.4" y="228.7" width="12.7" height="97.3" fill="#a9762f"><title>GPT-5.6 · decision: 0.320</title></rect><rect x="302.1" y="175.4" width="12.7" height="150.6" fill="#7d6b9e"><title>GPT-5.6 · reasons: 0.495</title></rect><rect x="316.8" y="222.6" width="12.7" height="103.4" fill="#8c5a4a"><title>GPT-5.6 · ratio: 0.340</title></rect><text x="294.8" y="340.0" class="xtick" transform="rotate(-22 294.8 340.0)">GPT-5.6</text><rect x="357.4" y="240.5" width="12.7" height="85.5" fill="#4a7c59"><title>Claude Sonnet 4.6 · facts: 0.281</title></rect><rect x="372.2" y="204.4" width="12.7" height="121.6" fill="#4e6d8c"><title>Claude Sonnet 4.6 · issue: 0.400</title></rect><rect x="386.9" y="164.9" width="12.7" height="161.1" fill="#a9762f"><title>Claude Sonnet 4.6 · decision: 0.530</title></rect><rect x="401.6" y="215.2" width="12.7" height="110.8" fill="#7d6b9e"><title>Claude Sonnet 4.6 · reasons: 0.365</title></rect><rect x="416.3" y="253.0" width="12.7" height="73.0" fill="#8c5a4a"><title>Claude Sonnet 4.6 · ratio: 0.240</title></rect><text x="394.2" y="340.0" class="xtick" transform="rotate(-22 394.2 340.0)">Claude Sonnet 4.6</text><rect x="456.9" y="243.7" width="12.7" height="82.3" fill="#4a7c59"><title>Grok 4.5 · facts: 0.271</title></rect><rect x="471.7" y="186.7" width="12.7" height="139.3" fill="#4e6d8c"><title>Grok 4.5 · issue: 0.458</title></rect><rect x="486.4" y="132.0" width="12.7" height="194.0" fill="#a9762f"><title>Grok 4.5 · decision: 0.638</title></rect><rect x="501.1" y="250.7" width="12.7" height="75.3" fill="#7d6b9e"><title>Grok 4.5 · reasons: 0.248</title></rect><rect x="515.8" y="225.4" width="12.7" height="100.6" fill="#8c5a4a"><title>Grok 4.5 · ratio: 0.331</title></rect><text x="493.8" y="340.0" class="xtick" transform="rotate(-22 493.8 340.0)">Grok 4.5</text><rect x="556.4" y="240.0" width="12.7" height="86.0" fill="#4a7c59"><title>Gemini 2.5 Pro · facts: 0.283</title></rect><rect x="571.2" y="275.3" width="12.7" height="50.7" fill="#4e6d8c"><title>Gemini 2.5 Pro · issue: 0.167</title></rect><rect x="585.9" y="155.9" width="12.7" height="170.1" fill="#a9762f"><title>Gemini 2.5 Pro · decision: 0.560</title></rect><rect x="600.6" y="243.4" width="12.7" height="82.6" fill="#7d6b9e"><title>Gemini 2.5 Pro · reasons: 0.272</title></rect><rect x="615.3" y="225.4" width="12.7" height="100.6" fill="#8c5a4a"><title>Gemini 2.5 Pro · ratio: 0.331</title></rect><text x="593.2" y="340.0" class="xtick" transform="rotate(-22 593.2 340.0)">Gemini 2.5 Pro</text><rect x="655.9" y="290.9" width="12.7" height="35.1" fill="#4a7c59"><title>DeepSeek Chat v3.1 · facts: 0.115</title></rect><rect x="670.7" y="224.7" width="12.7" height="101.3" fill="#4e6d8c"><title>DeepSeek Chat v3.1 · issue: 0.333</title></rect><rect x="685.4" y="237.3" width="12.7" height="88.7" fill="#a9762f"><title>DeepSeek Chat v3.1 · decision: 0.292</title></rect><rect x="700.1" y="280.4" width="12.7" height="45.6" fill="#7d6b9e"><title>DeepSeek Chat v3.1 · reasons: 0.150</title></rect><rect x="714.8" y="260.9" width="12.7" height="65.1" fill="#8c5a4a"><title>DeepSeek Chat v3.1 · ratio: 0.214</title></rect><text x="692.8" y="340.0" class="xtick" transform="rotate(-22 692.8 340.0)">DeepSeek Chat v3.1</text><rect x="755.4" y="304.0" width="12.7" height="22.0" fill="#4a7c59"><title>Llama 4 Maverick · facts: 0.072</title></rect><rect x="770.2" y="326.0" width="12.7" height="0.0" fill="#4e6d8c"><title>Llama 4 Maverick · issue: 0.000</title></rect><rect x="784.9" y="195.4" width="12.7" height="130.6" fill="#a9762f"><title>Llama 4 Maverick · decision: 0.430</title></rect><rect x="799.6" y="269.0" width="12.7" height="57.0" fill="#7d6b9e"><title>Llama 4 Maverick · reasons: 0.187</title></rect><rect x="814.3" y="311.5" width="12.7" height="14.5" fill="#8c5a4a"><title>Llama 4 Maverick · ratio: 0.048</title></rect><text x="792.2" y="340.0" class="xtick" transform="rotate(-22 792.2 340.0)">Llama 4 Maverick</text></svg></div><div class="legend"><span><i style="background:#4a7c59"></i>Facts</span><span><i style="background:#4e6d8c"></i>Issue</span><span><i style="background:#a9762f"></i>Decision</span><span><i style="background:#7d6b9e"></i>Reasons</span><span><i style="background:#8c5a4a"></i>Ratio</span></div></div></section><section id="track-open"><div class="wrap"><h2 class="h2">Leaderboard</h2><p class="trackname">Open-book (brief from decision text)<span class="nchip">5 cases · 8 models</span></p><p class="lede">The model is given the full decision text and must brief it — a reading/extraction task that is contamination-resistant.</p><div class="table-wrap"><table class="board"><caption class="sr-only">Leaderboard — Open-book (brief from decision text)</caption>
   <thead><tr>
     <th class="rank" scope="col" data-sort="num" title="Rank by primary metric">#</th>
     <th class="model" scope="col" data-sort="text">Model</th>
-    <th class="overall" scope="col" data-sort="num" title="Primary metric over VALID responses — execution failures are reported separately, not folded in as zeros">Judge score <span class="cih">valid · 95% CI</span></th>
+    <th class="overall" scope="col" data-sort="num" title="Primary metric over VALID responses — execution failures are reported separately, not folded in as zeros">Rubric score <span class="cih">valid · 95% CI</span></th>
+    <th class="num" scope="col" data-sort="num" title="Holistic LLM-judge score (secondary)">Judge</th>
     <th class="num" scope="col" data-sort="num" title="Embedding cosine similarity">Cosine</th>
     <th class="num" scope="col" data-sort="num" title="Judge groundedness — higher = fewer hallucinated facts, holdings, citations">Grounded</th>
     <th class="num" scope="col" data-sort="num" title="Valid-JSON rate">Format</th>
@@ -278,26 +288,28 @@ footer a:hover{color:var(--claret)}
   </tr></thead>
   <tbody><tr>
   <td class="rank" data-v="1">1</td>
-  <td class="model" data-v="GPT-5.6"><span class="mname">GPT-5.6</span>
-      <span class="dev">OpenAI</span></td>
-  <td class="overall" data-v="0.980000"><span class="ov-num" style="color:rgb(63,111,95)">0.980</span>
-      <span class="bar" title="95% CI 0.96–1.00"><span class="fill" style="width:98.0%;background:rgb(63,111,95)"></span><span class="wh" style="left:96.0%;width:4.0%"></span></span>
+  <td class="model" data-v="Claude Opus 4.8"><span class="mname">Claude Opus 4.8</span>
+      <span class="dev">Anthropic</span></td>
+  <td class="overall" data-v="0.975300"><span class="ov-num" style="color:rgb(63,111,95)">0.975</span>
+      <span class="bar" title="95% CI 0.96–1.00"><span class="fill" style="width:97.5%;background:rgb(63,111,95)"></span><span class="wh" style="left:95.5%;width:4.0%"></span></span>
       <span class="ci">[0.96–1.00]</span></td>
+  <td class="num" data-v="0.973300">0.97</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="1.000000">1.00</td>
   <td class="num" data-v="1.000000">100%</td>
   <td class="num" data-v="0.000000">0%</td>
   <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.091132">$0.0911</td>
-  <td class="num" data-v="19.561200">19.6s</td>
+  <td class="num" data-v="0.138074">$0.1381</td>
+  <td class="num" data-v="26.893600">26.9s</td>
   <td class="cases" data-v="5">5</td>
 </tr><tr>
   <td class="rank" data-v="2">2</td>
-  <td class="model" data-v="Claude Sonnet 4.6"><span class="mname">Claude Sonnet 4.6<span class="tie" title="Paired bootstrap vs model above: diff +0.003, 95% CI [-0.010, +0.020] over 5 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="Claude Sonnet 4.6"><span class="mname">Claude Sonnet 4.6<span class="tie" title="Paired bootstrap vs model above: diff +0.019, 95% CI [-0.015, +0.054] over 5 shared cases — not significant">≈</span></span>
       <span class="dev">Anthropic</span></td>
-  <td class="overall" data-v="0.976700"><span class="ov-num" style="color:rgb(63,111,95)">0.977</span>
-      <span class="bar" title="95% CI 0.96–0.99"><span class="fill" style="width:97.7%;background:rgb(63,111,95)"></span><span class="wh" style="left:96.0%;width:3.3%"></span></span>
-      <span class="ci">[0.96–0.99]</span></td>
+  <td class="overall" data-v="0.955900"><span class="ov-num" style="color:rgb(63,111,95)">0.956</span>
+      <span class="bar" title="95% CI 0.92–1.00"><span class="fill" style="width:95.6%;background:rgb(63,111,95)"></span><span class="wh" style="left:91.5%;width:8.1%"></span></span>
+      <span class="ci">[0.92–1.00]</span></td>
+  <td class="num" data-v="0.976700">0.98</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="1.000000">1.00</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -308,26 +320,28 @@ footer a:hover{color:var(--claret)}
   <td class="cases" data-v="5">5</td>
 </tr><tr>
   <td class="rank" data-v="3">3</td>
-  <td class="model" data-v="Claude Opus 4.8"><span class="mname">Claude Opus 4.8<span class="tie" title="Paired bootstrap vs model above: diff +0.003, 95% CI [-0.017, +0.020] over 5 shared cases — not significant">≈</span></span>
-      <span class="dev">Anthropic</span></td>
-  <td class="overall" data-v="0.973300"><span class="ov-num" style="color:rgb(63,111,95)">0.973</span>
-      <span class="bar" title="95% CI 0.94–1.00"><span class="fill" style="width:97.3%;background:rgb(63,111,95)"></span><span class="wh" style="left:94.0%;width:6.0%"></span></span>
-      <span class="ci">[0.94–1.00]</span></td>
+  <td class="model" data-v="Grok 4.5"><span class="mname">Grok 4.5</span>
+      <span class="dev">xAI</span></td>
+  <td class="overall" data-v="0.894600"><span class="ov-num" style="color:rgb(63,111,95)">0.895</span>
+      <span class="bar" title="95% CI 0.86–0.93"><span class="fill" style="width:89.5%;background:rgb(63,111,95)"></span><span class="wh" style="left:85.6%;width:7.6%"></span></span>
+      <span class="ci">[0.86–0.93]</span></td>
+  <td class="num" data-v="0.946700">0.95</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="1.000000">1.00</td>
   <td class="num" data-v="1.000000">100%</td>
   <td class="num" data-v="0.000000">0%</td>
   <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.138074">$0.1381</td>
-  <td class="num" data-v="26.893600">26.9s</td>
+  <td class="num" data-v="0.027186">$0.0272</td>
+  <td class="num" data-v="8.877400">8.9s</td>
   <td class="cases" data-v="5">5</td>
 </tr><tr>
   <td class="rank" data-v="4">4</td>
-  <td class="model" data-v="GPT-5.5"><span class="mname">GPT-5.5<span class="tie" title="Paired bootstrap vs model above: diff +0.007, 95% CI [-0.013, +0.027] over 5 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="GPT-5.5"><span class="mname">GPT-5.5<span class="tie" title="Paired bootstrap vs model above: diff +0.013, 95% CI [-0.035, +0.067] over 5 shared cases — not significant">≈</span></span>
       <span class="dev">OpenAI</span></td>
-  <td class="overall" data-v="0.966700"><span class="ov-num" style="color:rgb(63,111,95)">0.967</span>
-      <span class="bar" title="95% CI 0.95–0.98"><span class="fill" style="width:96.7%;background:rgb(63,111,95)"></span><span class="wh" style="left:95.3%;width:3.0%"></span></span>
-      <span class="ci">[0.95–0.98]</span></td>
+  <td class="overall" data-v="0.881900"><span class="ov-num" style="color:rgb(63,111,95)">0.882</span>
+      <span class="bar" title="95% CI 0.84–0.92"><span class="fill" style="width:88.2%;background:rgb(63,111,95)"></span><span class="wh" style="left:84.4%;width:7.7%"></span></span>
+      <span class="ci">[0.84–0.92]</span></td>
+  <td class="num" data-v="0.966700">0.97</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="1.000000">1.00</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -338,41 +352,28 @@ footer a:hover{color:var(--claret)}
   <td class="cases" data-v="5">5</td>
 </tr><tr>
   <td class="rank" data-v="5">5</td>
-  <td class="model" data-v="Grok 4.5"><span class="mname">Grok 4.5<span class="tie" title="Paired bootstrap vs model above: diff +0.020, 95% CI [+0.000, +0.047] over 5 shared cases — not significant">≈</span></span>
-      <span class="dev">xAI</span></td>
-  <td class="overall" data-v="0.946700"><span class="ov-num" style="color:rgb(63,111,95)">0.947</span>
-      <span class="bar" title="95% CI 0.92–0.98"><span class="fill" style="width:94.7%;background:rgb(63,111,95)"></span><span class="wh" style="left:91.7%;width:6.0%"></span></span>
-      <span class="ci">[0.92–0.98]</span></td>
+  <td class="model" data-v="GPT-5.6"><span class="mname">GPT-5.6<span class="tie" title="Paired bootstrap vs model above: diff +0.017, 95% CI [-0.041, +0.088] over 5 shared cases — not significant">≈</span></span>
+      <span class="dev">OpenAI</span></td>
+  <td class="overall" data-v="0.864800"><span class="ov-num" style="color:rgb(63,111,95)">0.865</span>
+      <span class="bar" title="95% CI 0.82–0.89"><span class="fill" style="width:86.5%;background:rgb(63,111,95)"></span><span class="wh" style="left:81.9%;width:7.1%"></span></span>
+      <span class="ci">[0.82–0.89]</span></td>
+  <td class="num" data-v="0.980000">0.98</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="1.000000">1.00</td>
   <td class="num" data-v="1.000000">100%</td>
   <td class="num" data-v="0.000000">0%</td>
   <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.027186">$0.0272</td>
-  <td class="num" data-v="8.877400">8.9s</td>
+  <td class="num" data-v="0.091132">$0.0911</td>
+  <td class="num" data-v="19.561200">19.6s</td>
   <td class="cases" data-v="5">5</td>
 </tr><tr>
   <td class="rank" data-v="6">6</td>
-  <td class="model" data-v="DeepSeek Chat v3.1"><span class="mname">DeepSeek Chat v3.1<span class="tie" title="Paired bootstrap vs model above: diff +0.007, 95% CI [+0.000, +0.013] over 5 shared cases — not significant">≈</span></span>
-      <span class="dev">DeepSeek</span></td>
-  <td class="overall" data-v="0.940000"><span class="ov-num" style="color:rgb(63,111,95)">0.940</span>
-      <span class="bar" title="95% CI 0.91–0.97"><span class="fill" style="width:94.0%;background:rgb(63,111,95)"></span><span class="wh" style="left:91.0%;width:6.3%"></span></span>
-      <span class="ci">[0.91–0.97]</span></td>
-  <td class="num" data-v="">—</td>
-  <td class="num" data-v="0.980000">0.98</td>
-  <td class="num" data-v="1.000000">100%</td>
-  <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.000000">0%</td>
-  <td class="num" data-v="0.002805">$0.0028</td>
-  <td class="num" data-v="18.481800">18.5s</td>
-  <td class="cases" data-v="5">5</td>
-</tr><tr>
-  <td class="rank" data-v="7">7</td>
-  <td class="model" data-v="Gemini 2.5 Pro"><span class="mname">Gemini 2.5 Pro<span class="tie" title="Paired bootstrap vs model above: diff +0.017, 95% CI [-0.007, +0.053] over 5 shared cases — not significant">≈</span></span>
+  <td class="model" data-v="Gemini 2.5 Pro"><span class="mname">Gemini 2.5 Pro</span>
       <span class="dev">Google</span></td>
-  <td class="overall" data-v="0.923400"><span class="ov-num" style="color:rgb(63,111,95)">0.923</span>
-      <span class="bar" title="95% CI 0.91–0.94"><span class="fill" style="width:92.3%;background:rgb(63,111,95)"></span><span class="wh" style="left:91.0%;width:3.0%"></span></span>
-      <span class="ci">[0.91–0.94]</span></td>
+  <td class="overall" data-v="0.796800"><span class="ov-num" style="color:rgb(65,112,94)">0.797</span>
+      <span class="bar" title="95% CI 0.76–0.84"><span class="fill" style="width:79.7%;background:rgb(65,112,94)"></span><span class="wh" style="left:76.1%;width:7.6%"></span></span>
+      <span class="ci">[0.76–0.84]</span></td>
+  <td class="num" data-v="0.923300">0.92</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="0.980000">0.98</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -382,12 +383,29 @@ footer a:hover{color:var(--claret)}
   <td class="num" data-v="25.932000">25.9s</td>
   <td class="cases" data-v="5">5</td>
 </tr><tr>
+  <td class="rank" data-v="7">7</td>
+  <td class="model" data-v="DeepSeek Chat v3.1"><span class="mname">DeepSeek Chat v3.1<span class="tie" title="Paired bootstrap vs model above: diff +0.005, 95% CI [-0.054, +0.070] over 5 shared cases — not significant">≈</span></span>
+      <span class="dev">DeepSeek</span></td>
+  <td class="overall" data-v="0.791700"><span class="ov-num" style="color:rgb(68,113,93)">0.792</span>
+      <span class="bar" title="95% CI 0.71–0.87"><span class="fill" style="width:79.2%;background:rgb(68,113,93)"></span><span class="wh" style="left:71.2%;width:15.7%"></span></span>
+      <span class="ci">[0.71–0.87]</span></td>
+  <td class="num" data-v="0.940000">0.94</td>
+  <td class="num" data-v="">—</td>
+  <td class="num" data-v="0.980000">0.98</td>
+  <td class="num" data-v="1.000000">100%</td>
+  <td class="num" data-v="0.000000">0%</td>
+  <td class="num" data-v="0.000000">0%</td>
+  <td class="num" data-v="0.002805">$0.0028</td>
+  <td class="num" data-v="18.481800">18.5s</td>
+  <td class="cases" data-v="5">5</td>
+</tr><tr>
   <td class="rank" data-v="8">8</td>
   <td class="model" data-v="Llama 4 Maverick"><span class="mname">Llama 4 Maverick</span>
       <span class="dev">Meta</span></td>
-  <td class="overall" data-v="0.883400"><span class="ov-num" style="color:rgb(63,111,95)">0.883</span>
-      <span class="bar" title="95% CI 0.83–0.93"><span class="fill" style="width:88.3%;background:rgb(63,111,95)"></span><span class="wh" style="left:83.0%;width:10.0%"></span></span>
-      <span class="ci">[0.83–0.93]</span></td>
+  <td class="overall" data-v="0.607900"><span class="ov-num" style="color:rgb(169,150,52)">0.608</span>
+      <span class="bar" title="95% CI 0.50–0.72"><span class="fill" style="width:60.8%;background:rgb(169,150,52)"></span><span class="wh" style="left:49.6%;width:22.1%"></span></span>
+      <span class="ci">[0.50–0.72]</span></td>
+  <td class="num" data-v="0.883400">0.88</td>
   <td class="num" data-v="">—</td>
   <td class="num" data-v="0.940000">0.94</td>
   <td class="num" data-v="1.000000">100%</td>
@@ -397,7 +415,7 @@ footer a:hover{color:var(--claret)}
   <td class="num" data-v="11.490600">11.5s</td>
   <td class="cases" data-v="5">5</td>
 </tr></tbody></table></div>
-<p class="hint">Click a column header to sort · hover headers for metric definitions.</p><p class="chartcap">Judge score by brief section — hover a bar for its value</p><div class="chart"><svg viewBox="0 0 860 430" role="img" aria-label="Score by section and model" preserveAspectRatio="xMidYMid meet"><line x1="46" y1="326.0" x2="842" y2="326.0" class="grid"/><text x="38" y="329.5" class="ytick">0.0</text><line x1="46" y1="265.2" x2="842" y2="265.2" class="grid"/><text x="38" y="268.7" class="ytick">0.2</text><line x1="46" y1="204.4" x2="842" y2="204.4" class="grid"/><text x="38" y="207.9" class="ytick">0.4</text><line x1="46" y1="143.6" x2="842" y2="143.6" class="grid"/><text x="38" y="147.1" class="ytick">0.6</text><line x1="46" y1="82.8" x2="842" y2="82.8" class="grid"/><text x="38" y="86.3" class="ytick">0.8</text><line x1="46" y1="22.0" x2="842" y2="22.0" class="grid"/><text x="38" y="25.5" class="ytick">1.0</text><rect x="58.9" y="32.1" width="12.7" height="293.9" fill="#4a7c59"><title>GPT-5.6 · facts: 0.967</title></rect><rect x="73.7" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>GPT-5.6 · issue: 1.000</title></rect><rect x="88.4" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>GPT-5.6 · decision: 1.000</title></rect><rect x="103.1" y="32.1" width="12.7" height="293.9" fill="#7d6b9e"><title>GPT-5.6 · reasons: 0.967</title></rect><rect x="117.8" y="32.1" width="12.7" height="293.9" fill="#8c5a4a"><title>GPT-5.6 · ratio: 0.967</title></rect><text x="95.8" y="340.0" class="xtick" transform="rotate(-22 95.8 340.0)">GPT-5.6</text><rect x="158.4" y="27.1" width="12.7" height="298.9" fill="#4a7c59"><title>Claude Sonnet 4.6 · facts: 0.983</title></rect><rect x="173.2" y="32.1" width="12.7" height="293.9" fill="#4e6d8c"><title>Claude Sonnet 4.6 · issue: 0.967</title></rect><rect x="187.9" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>Claude Sonnet 4.6 · decision: 1.000</title></rect><rect x="202.6" y="27.1" width="12.7" height="298.9" fill="#7d6b9e"><title>Claude Sonnet 4.6 · reasons: 0.983</title></rect><rect x="217.3" y="37.2" width="12.7" height="288.8" fill="#8c5a4a"><title>Claude Sonnet 4.6 · ratio: 0.950</title></rect><text x="195.2" y="340.0" class="xtick" transform="rotate(-22 195.2 340.0)">Claude Sonnet 4.6</text><rect x="257.9" y="32.1" width="12.7" height="293.9" fill="#4a7c59"><title>Claude Opus 4.8 · facts: 0.967</title></rect><rect x="272.7" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>Claude Opus 4.8 · issue: 1.000</title></rect><rect x="287.4" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>Claude Opus 4.8 · decision: 1.000</title></rect><rect x="302.1" y="37.2" width="12.7" height="288.8" fill="#7d6b9e"><title>Claude Opus 4.8 · reasons: 0.950</title></rect><rect x="316.8" y="37.2" width="12.7" height="288.8" fill="#8c5a4a"><title>Claude Opus 4.8 · ratio: 0.950</title></rect><text x="294.8" y="340.0" class="xtick" transform="rotate(-22 294.8 340.0)">Claude Opus 4.8</text><rect x="357.4" y="37.2" width="12.7" height="288.8" fill="#4a7c59"><title>GPT-5.5 · facts: 0.950</title></rect><rect x="372.2" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>GPT-5.5 · issue: 1.000</title></rect><rect x="386.9" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>GPT-5.5 · decision: 1.000</title></rect><rect x="401.6" y="37.2" width="12.7" height="288.8" fill="#7d6b9e"><title>GPT-5.5 · reasons: 0.950</title></rect><rect x="416.3" y="42.3" width="12.7" height="283.7" fill="#8c5a4a"><title>GPT-5.5 · ratio: 0.933</title></rect><text x="394.2" y="340.0" class="xtick" transform="rotate(-22 394.2 340.0)">GPT-5.5</text><rect x="456.9" y="47.3" width="12.7" height="278.7" fill="#4a7c59"><title>Grok 4.5 · facts: 0.917</title></rect><rect x="471.7" y="27.1" width="12.7" height="298.9" fill="#4e6d8c"><title>Grok 4.5 · issue: 0.983</title></rect><rect x="486.4" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>Grok 4.5 · decision: 1.000</title></rect><rect x="501.1" y="52.4" width="12.7" height="273.6" fill="#7d6b9e"><title>Grok 4.5 · reasons: 0.900</title></rect><rect x="515.8" y="42.3" width="12.7" height="283.7" fill="#8c5a4a"><title>Grok 4.5 · ratio: 0.933</title></rect><text x="493.8" y="340.0" class="xtick" transform="rotate(-22 493.8 340.0)">Grok 4.5</text><rect x="556.4" y="42.3" width="12.7" height="283.7" fill="#4a7c59"><title>DeepSeek Chat v3.1 · facts: 0.933</title></rect><rect x="571.2" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>DeepSeek Chat v3.1 · issue: 1.000</title></rect><rect x="585.9" y="27.1" width="12.7" height="298.9" fill="#a9762f"><title>DeepSeek Chat v3.1 · decision: 0.983</title></rect><rect x="600.6" y="47.3" width="12.7" height="278.7" fill="#7d6b9e"><title>DeepSeek Chat v3.1 · reasons: 0.917</title></rect><rect x="615.3" y="62.5" width="12.7" height="263.5" fill="#8c5a4a"><title>DeepSeek Chat v3.1 · ratio: 0.867</title></rect><text x="593.2" y="340.0" class="xtick" transform="rotate(-22 593.2 340.0)">DeepSeek Chat v3.1</text><rect x="655.9" y="47.3" width="12.7" height="278.7" fill="#4a7c59"><title>Gemini 2.5 Pro · facts: 0.917</title></rect><rect x="670.7" y="27.1" width="12.7" height="298.9" fill="#4e6d8c"><title>Gemini 2.5 Pro · issue: 0.983</title></rect><rect x="685.4" y="27.1" width="12.7" height="298.9" fill="#a9762f"><title>Gemini 2.5 Pro · decision: 0.983</title></rect><rect x="700.1" y="52.4" width="12.7" height="273.6" fill="#7d6b9e"><title>Gemini 2.5 Pro · reasons: 0.900</title></rect><rect x="714.8" y="72.7" width="12.7" height="253.3" fill="#8c5a4a"><title>Gemini 2.5 Pro · ratio: 0.833</title></rect><text x="692.8" y="340.0" class="xtick" transform="rotate(-22 692.8 340.0)">Gemini 2.5 Pro</text><rect x="755.4" y="62.5" width="12.7" height="263.5" fill="#4a7c59"><title>Llama 4 Maverick · facts: 0.867</title></rect><rect x="770.2" y="37.2" width="12.7" height="288.8" fill="#4e6d8c"><title>Llama 4 Maverick · issue: 0.950</title></rect><rect x="784.9" y="32.1" width="12.7" height="293.9" fill="#a9762f"><title>Llama 4 Maverick · decision: 0.967</title></rect><rect x="799.6" y="72.7" width="12.7" height="253.3" fill="#7d6b9e"><title>Llama 4 Maverick · reasons: 0.833</title></rect><rect x="814.3" y="82.8" width="12.7" height="243.2" fill="#8c5a4a"><title>Llama 4 Maverick · ratio: 0.800</title></rect><text x="792.2" y="340.0" class="xtick" transform="rotate(-22 792.2 340.0)">Llama 4 Maverick</text></svg></div><div class="legend"><span><i style="background:#4a7c59"></i>Facts</span><span><i style="background:#4e6d8c"></i>Issue</span><span><i style="background:#a9762f"></i>Decision</span><span><i style="background:#7d6b9e"></i>Reasons</span><span><i style="background:#8c5a4a"></i>Ratio</span></div></div></section><section id="metrics"><div class="wrap"><h2 class="h2">Metrics</h2><p class="lede">Each brief is measured on several independent axes, because no single number captures legal quality.</p><ul class="defs"><li><span class="k">judge score</span> — A strong judge model grades each section 1–5 on <b>accuracy</b>, <b>completeness</b>, and <b>groundedness</b> (freedom from invented facts/holdings/citations), normalised to 0–1. It grades against the reference brief (closed-book) or the decision text (open-book).</li><li><span class="k">cosine</span> — embedding similarity (all-mpnet-base-v2) between the brief and the reference. A cheap topical signal, kept as a secondary check; it cannot tell a fluent-but-wrong brief from a correct one.</li><li><span class="k">grounded</span> — mean judge groundedness; higher means fewer fabricated facts, parties, holdings, or citations.</li><li><span class="k">format</span> — share of responses that returned valid JSON.</li><li><span class="k">trunc</span> — share cut off by the completion-token cap. Truncated and malformed responses are execution failures: they are excluded from the quality mean and reported here instead, so the headline score never mixes legal quality with infrastructure policy. (A strict all-rows mean is kept in data.json for anyone who prefers failures counted as zero.)</li><li><span class="k">refuse</span> — share where the model declined ("I don't know"), reported separately so calibrated abstention is not confused with a wrong answer.</li><li><span class="k">$/case</span> — mean cost per case from token usage × list price.</li><li><span class="k">latency</span> — mean wall-clock seconds per case.</li></ul><p class="note">95% confidence intervals are percentile bootstraps over cases (fixed seed); the thin line beneath each score bar spans the interval. Because every model sees the same cases, ranking gaps are tested with a <b>paired</b> bootstrap on per-case differences; a ≈ marks a gap whose paired 95% CI includes zero (hover it for the interval). Sections lacking a human reference are excluded from reference-mode judging rather than scored against nothing. Sample sizes are small, so treat rankings as provisional.</p></div></section><section id="dataset"><div class="wrap"><h2 class="h2">Dataset</h2><div class="grid2"><div><h3>Sources</h3><p><b>Closed-book briefs</b> — human-written Supreme Court of Canada case summaries scraped from public case-brief wikis; used as reference answers.</p><p><b>Open-book &amp; temporal holdout</b> — full decision text from <a href="https://a2aj.ca/">A2AJ</a> (Access to Algorithmic Justice), an open corpus of 191k+ Canadian decisions. Holdout cases are drawn from dates that postdate current model training cutoffs.</p></div><div><h3>Composition</h3><dl class="dl"><dt>Closed-book (recall from case name)</dt><dd>8 models · 6 cases</dd><dt>Open-book (brief from decision text)</dt><dd>8 models · 5 cases</dd></dl><p style="margin-top:12px"><b>Licensing.</b> A2AJ methods are MIT; individual decisions retain upstream terms (often non-commercial). Full decision text is not republished here — only case name, citation, court, date, and scores.</p></div></div></div></section><section id="reproducibility"><div class="wrap"><h2 class="h2">Reproducibility &amp; contamination</h2><div class="grid2"><div><h3>How to reproduce</h3><dl class="dl"><dt>models</dt><dd>pinned in ai_models.csv (OpenRouter ids)</dd><dt>decoding</dt><dd>temperature 0, capped max tokens</dd><dt>judge</dt><dd>qwen/qwen3-max</dd><dt>embedding</dt><dd>all-mpnet-base-v2</dd><dt>prompt</dt><dd>fixed system + task prompt (see benchmark.py)</dd><dt>code</dt><dd><a href="https://github.com/okelot/LLMBenchmarkForCCL">okelot/LLMBenchmarkForCCL</a></dd></dl></div><div><h3>Contamination controls</h3><p>Closed-book uses public cases whose summaries may appear in training data, so a high score there can reflect memorisation. The <b>open-book</b> and <b>temporal holdout</b> tracks counter this: open-book supplies the text (a reading task, not recall), and the holdout uses decisions issued after model cutoffs, which cannot have been memorised.</p><p class="note">Provider routing on OpenRouter may vary backend/quantization run to run (served model/provider are recorded per row in newer runs); pin a provider for byte-exact reproducibility. Some reasoning models ignore the requested temperature — the decoding config actually applied is recorded, not assumed.</p><p class="note"><b>Judge caveats.</b> Current data is graded by a judge from a family with no contestant on the board (Qwen), blind to model identity. A judge-swap experiment (OpenAI-family judge vs cross-family judge, same briefs) shifted absolute scores materially and moved mid-table order — treat scores as judge-relative, not absolute. Notably, the OpenAI judge ranked an OpenAI model above Claude Opus on closed-book; the cross-family judge reversed that. Open-book scores show a ceiling effect under both judges and rubrics (most ratings perfect), so top-of-table open-book gaps are weak evidence. Next mitigations: multi-judge panels and a human-graded calibration sample.</p></div></div></div></section></main><footer><div class="wrap"><span>LexBench · generated 10 Jul 2026, 10:11</span><span>data: <a href="https://a2aj.ca/">A2AJ</a> &amp; public case-brief wikis</span><span><a href="https://github.com/okelot/LLMBenchmarkForCCL">github.com/okelot/LLMBenchmarkForCCL</a></span></div></footer><script>
+<p class="hint">Click a column header to sort · hover headers for metric definitions.</p><p class="chartcap">Rubric score by brief section — hover a bar for its value</p><div class="chart"><svg viewBox="0 0 860 430" role="img" aria-label="Score by section and model" preserveAspectRatio="xMidYMid meet"><line x1="46" y1="326.0" x2="842" y2="326.0" class="grid"/><text x="38" y="329.5" class="ytick">0.0</text><line x1="46" y1="265.2" x2="842" y2="265.2" class="grid"/><text x="38" y="268.7" class="ytick">0.2</text><line x1="46" y1="204.4" x2="842" y2="204.4" class="grid"/><text x="38" y="207.9" class="ytick">0.4</text><line x1="46" y1="143.6" x2="842" y2="143.6" class="grid"/><text x="38" y="147.1" class="ytick">0.6</text><line x1="46" y1="82.8" x2="842" y2="82.8" class="grid"/><text x="38" y="86.3" class="ytick">0.8</text><line x1="46" y1="22.0" x2="842" y2="22.0" class="grid"/><text x="38" y="25.5" class="ytick">1.0</text><rect x="58.9" y="42.0" width="12.7" height="284.0" fill="#4a7c59"><title>Claude Opus 4.8 · facts: 0.934</title></rect><rect x="73.7" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>Claude Opus 4.8 · issue: 1.000</title></rect><rect x="88.4" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>Claude Opus 4.8 · decision: 1.000</title></rect><rect x="103.1" y="25.2" width="12.7" height="300.8" fill="#7d6b9e"><title>Claude Opus 4.8 · reasons: 0.989</title></rect><rect x="117.8" y="22.0" width="12.7" height="304.0" fill="#8c5a4a"><title>Claude Opus 4.8 · ratio: 1.000</title></rect><text x="95.8" y="340.0" class="xtick" transform="rotate(-22 95.8 340.0)">Claude Opus 4.8</text><rect x="158.4" y="45.2" width="12.7" height="280.8" fill="#4a7c59"><title>Claude Sonnet 4.6 · facts: 0.924</title></rect><rect x="173.2" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>Claude Sonnet 4.6 · issue: 1.000</title></rect><rect x="187.9" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>Claude Sonnet 4.6 · decision: 1.000</title></rect><rect x="202.6" y="40.5" width="12.7" height="285.5" fill="#7d6b9e"><title>Claude Sonnet 4.6 · reasons: 0.939</title></rect><rect x="217.3" y="22.0" width="12.7" height="304.0" fill="#8c5a4a"><title>Claude Sonnet 4.6 · ratio: 1.000</title></rect><text x="195.2" y="340.0" class="xtick" transform="rotate(-22 195.2 340.0)">Claude Sonnet 4.6</text><rect x="257.9" y="95.1" width="12.7" height="230.9" fill="#4a7c59"><title>Grok 4.5 · facts: 0.759</title></rect><rect x="272.7" y="22.0" width="12.7" height="304.0" fill="#4e6d8c"><title>Grok 4.5 · issue: 1.000</title></rect><rect x="287.4" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>Grok 4.5 · decision: 1.000</title></rect><rect x="302.1" y="51.7" width="12.7" height="274.3" fill="#7d6b9e"><title>Grok 4.5 · reasons: 0.902</title></rect><rect x="316.8" y="22.0" width="12.7" height="304.0" fill="#8c5a4a"><title>Grok 4.5 · ratio: 1.000</title></rect><text x="294.8" y="340.0" class="xtick" transform="rotate(-22 294.8 340.0)">Grok 4.5</text><rect x="357.4" y="76.9" width="12.7" height="249.1" fill="#4a7c59"><title>GPT-5.5 · facts: 0.819</title></rect><rect x="372.2" y="58.5" width="12.7" height="267.5" fill="#4e6d8c"><title>GPT-5.5 · issue: 0.880</title></rect><rect x="386.9" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>GPT-5.5 · decision: 1.000</title></rect><rect x="401.6" y="64.2" width="12.7" height="261.8" fill="#7d6b9e"><title>GPT-5.5 · reasons: 0.861</title></rect><rect x="416.3" y="22.0" width="12.7" height="304.0" fill="#8c5a4a"><title>GPT-5.5 · ratio: 1.000</title></rect><text x="394.2" y="340.0" class="xtick" transform="rotate(-22 394.2 340.0)">GPT-5.5</text><rect x="456.9" y="91.4" width="12.7" height="234.6" fill="#4a7c59"><title>GPT-5.6 · facts: 0.772</title></rect><rect x="471.7" y="58.5" width="12.7" height="267.5" fill="#4e6d8c"><title>GPT-5.6 · issue: 0.880</title></rect><rect x="486.4" y="22.0" width="12.7" height="304.0" fill="#a9762f"><title>GPT-5.6 · decision: 1.000</title></rect><rect x="501.1" y="55.3" width="12.7" height="270.7" fill="#7d6b9e"><title>GPT-5.6 · reasons: 0.890</title></rect><rect x="515.8" y="61.5" width="12.7" height="264.5" fill="#8c5a4a"><title>GPT-5.6 · ratio: 0.870</title></rect><text x="493.8" y="340.0" class="xtick" transform="rotate(-22 493.8 340.0)">GPT-5.6</text><rect x="556.4" y="133.5" width="12.7" height="192.5" fill="#4a7c59"><title>Gemini 2.5 Pro · facts: 0.633</title></rect><rect x="571.2" y="37.2" width="12.7" height="288.8" fill="#4e6d8c"><title>Gemini 2.5 Pro · issue: 0.950</title></rect><rect x="585.9" y="58.3" width="12.7" height="267.7" fill="#a9762f"><title>Gemini 2.5 Pro · decision: 0.881</title></rect><rect x="600.6" y="75.6" width="12.7" height="250.4" fill="#7d6b9e"><title>Gemini 2.5 Pro · reasons: 0.824</title></rect><rect x="615.3" y="37.2" width="12.7" height="288.8" fill="#8c5a4a"><title>Gemini 2.5 Pro · ratio: 0.950</title></rect><text x="593.2" y="340.0" class="xtick" transform="rotate(-22 593.2 340.0)">Gemini 2.5 Pro</text><rect x="655.9" y="132.9" width="12.7" height="193.1" fill="#4a7c59"><title>DeepSeek Chat v3.1 · facts: 0.635</title></rect><rect x="670.7" y="37.2" width="12.7" height="288.8" fill="#4e6d8c"><title>DeepSeek Chat v3.1 · issue: 0.950</title></rect><rect x="685.4" y="60.0" width="12.7" height="266.0" fill="#a9762f"><title>DeepSeek Chat v3.1 · decision: 0.875</title></rect><rect x="700.1" y="81.8" width="12.7" height="244.2" fill="#7d6b9e"><title>DeepSeek Chat v3.1 · reasons: 0.803</title></rect><rect x="714.8" y="37.2" width="12.7" height="288.8" fill="#8c5a4a"><title>DeepSeek Chat v3.1 · ratio: 0.950</title></rect><text x="692.8" y="340.0" class="xtick" transform="rotate(-22 692.8 340.0)">DeepSeek Chat v3.1</text><rect x="755.4" y="166.3" width="12.7" height="159.7" fill="#4a7c59"><title>Llama 4 Maverick · facts: 0.525</title></rect><rect x="770.2" y="98.0" width="12.7" height="228.0" fill="#4e6d8c"><title>Llama 4 Maverick · issue: 0.750</title></rect><rect x="784.9" y="79.4" width="12.7" height="246.6" fill="#a9762f"><title>Llama 4 Maverick · decision: 0.811</title></rect><rect x="799.6" y="147.6" width="12.7" height="178.4" fill="#7d6b9e"><title>Llama 4 Maverick · reasons: 0.587</title></rect><rect x="814.3" y="128.4" width="12.7" height="197.6" fill="#8c5a4a"><title>Llama 4 Maverick · ratio: 0.650</title></rect><text x="792.2" y="340.0" class="xtick" transform="rotate(-22 792.2 340.0)">Llama 4 Maverick</text></svg></div><div class="legend"><span><i style="background:#4a7c59"></i>Facts</span><span><i style="background:#4e6d8c"></i>Issue</span><span><i style="background:#a9762f"></i>Decision</span><span><i style="background:#7d6b9e"></i>Reasons</span><span><i style="background:#8c5a4a"></i>Ratio</span></div></div></section><section id="metrics"><div class="wrap"><h2 class="h2">Metrics</h2><p class="lede">Each brief is measured on several independent axes, because no single number captures legal quality.</p><ul class="defs"><li><span class="k">rubric score</span> — HealthBench-style checklist grading (primary when present). A strong model authors 12–20 atomic, point-weighted, case-specific criteria per case — grounded in the human reference brief or the decision text, including negative criteria for likely hallucinations — and a grader model only verifies whether each criterion is met. Score = weight met ÷ total weight. Checking a specific criterion is far more verifiable than holistic scoring, which restores discrimination at the top. Rubrics are versioned in <a href="https://github.com/okelot/LLMBenchmarkForCCL/blob/main/rubrics/rubrics.json">rubrics/rubrics.json</a>.</li><li><span class="k">judge score</span> — A strong judge model grades each section 1–5 on <b>accuracy</b>, <b>completeness</b>, and <b>groundedness</b> (freedom from invented facts/holdings/citations), normalised to 0–1. It grades against the reference brief (closed-book) or the decision text (open-book).</li><li><span class="k">cosine</span> — embedding similarity (all-mpnet-base-v2) between the brief and the reference. A cheap topical signal, kept as a secondary check; it cannot tell a fluent-but-wrong brief from a correct one.</li><li><span class="k">grounded</span> — mean judge groundedness; higher means fewer fabricated facts, parties, holdings, or citations.</li><li><span class="k">format</span> — share of responses that returned valid JSON.</li><li><span class="k">trunc</span> — share cut off by the completion-token cap. Truncated and malformed responses are execution failures: they are excluded from the quality mean and reported here instead, so the headline score never mixes legal quality with infrastructure policy. (A strict all-rows mean is kept in data.json for anyone who prefers failures counted as zero.)</li><li><span class="k">refuse</span> — share where the model declined ("I don't know"), reported separately so calibrated abstention is not confused with a wrong answer.</li><li><span class="k">$/case</span> — mean cost per case from token usage × list price.</li><li><span class="k">latency</span> — mean wall-clock seconds per case.</li></ul><p class="note">95% confidence intervals are percentile bootstraps over cases (fixed seed); the thin line beneath each score bar spans the interval. Because every model sees the same cases, ranking gaps are tested with a <b>paired</b> bootstrap on per-case differences; a ≈ marks a gap whose paired 95% CI includes zero (hover it for the interval). Sections lacking a human reference are excluded from reference-mode judging rather than scored against nothing. Sample sizes are small, so treat rankings as provisional.</p></div></section><section id="dataset"><div class="wrap"><h2 class="h2">Dataset</h2><div class="grid2"><div><h3>Sources</h3><p><b>Closed-book briefs</b> — human-written Supreme Court of Canada case summaries scraped from public case-brief wikis; used as reference answers.</p><p><b>Open-book &amp; temporal holdout</b> — full decision text from <a href="https://a2aj.ca/">A2AJ</a> (Access to Algorithmic Justice), an open corpus of 191k+ Canadian decisions. Holdout cases are drawn from dates that postdate current model training cutoffs.</p></div><div><h3>Composition</h3><dl class="dl"><dt>Closed-book (recall from case name)</dt><dd>8 models · 6 cases</dd><dt>Open-book (brief from decision text)</dt><dd>8 models · 5 cases</dd></dl><p style="margin-top:12px"><b>Licensing.</b> A2AJ methods are MIT; individual decisions retain upstream terms (often non-commercial). Full decision text is not republished here — only case name, citation, court, date, and scores.</p></div></div></div></section><section id="reproducibility"><div class="wrap"><h2 class="h2">Reproducibility &amp; contamination</h2><div class="grid2"><div><h3>How to reproduce</h3><dl class="dl"><dt>models</dt><dd>pinned in ai_models.csv (OpenRouter ids)</dd><dt>decoding</dt><dd>temperature 0, capped max tokens</dd><dt>judge</dt><dd>qwen/qwen3-max</dd><dt>rubric author/grader</dt><dd>anthropic/claude-opus-4.8</dd><dt>embedding</dt><dd>all-mpnet-base-v2</dd><dt>prompt</dt><dd>fixed system + task prompt (see benchmark.py)</dd><dt>code</dt><dd><a href="https://github.com/okelot/LLMBenchmarkForCCL">okelot/LLMBenchmarkForCCL</a></dd></dl></div><div><h3>Contamination controls</h3><p>Closed-book uses public cases whose summaries may appear in training data, so a high score there can reflect memorisation. The <b>open-book</b> and <b>temporal holdout</b> tracks counter this: open-book supplies the text (a reading task, not recall), and the holdout uses decisions issued after model cutoffs, which cannot have been memorised.</p><p class="note">Provider routing on OpenRouter may vary backend/quantization run to run (served model/provider are recorded per row in newer runs); pin a provider for byte-exact reproducibility. Some reasoning models ignore the requested temperature — the decoding config actually applied is recorded, not assumed.</p><p class="note"><b>Judge caveats.</b> Current data is graded by a judge from a family with no contestant on the board (Qwen), blind to model identity. A judge-swap experiment (OpenAI-family judge vs cross-family judge, same briefs) shifted absolute scores materially and moved mid-table order — treat scores as judge-relative, not absolute. Notably, the OpenAI judge ranked an OpenAI model above Claude Opus on closed-book; the cross-family judge reversed that. Open-book scores show a ceiling effect under both judges and rubrics (most ratings perfect), so top-of-table open-book gaps are weak evidence. Next mitigations: multi-judge panels and a human-graded calibration sample.</p></div></div></div></section></main><footer><div class="wrap"><span>LexBench · generated 10 Jul 2026, 22:23</span><span>data: <a href="https://a2aj.ca/">A2AJ</a> &amp; public case-brief wikis</span><span><a href="https://github.com/okelot/LLMBenchmarkForCCL">github.com/okelot/LLMBenchmarkForCCL</a></span></div></footer><script>
 (function(){
   var K='lexbench-theme',d=document.documentElement;
   var b=document.getElementById('themetoggle');
