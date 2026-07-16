@@ -11,6 +11,7 @@ import datetime
 import json
 import os
 import re
+import sys
 from pathlib import Path
 from time import sleep
 from typing import Dict, List, Optional
@@ -20,6 +21,10 @@ from dotenv import load_dotenv
 from llm.openrouter import OpenRouterWrapper
 
 load_dotenv()
+
+# Full decision texts (open-book track) exceed the csv module's default 128KB
+# field limit — raise it so long judgments load intact.
+csv.field_size_limit(sys.maxsize)
 
 # Sections that make up a case brief.
 SECTIONS = ["facts", "issue", "decision", "reasons", "ratio"]
@@ -223,6 +228,7 @@ def run_benchmark(
     output_path: Optional[str] = None,
     max_cases: Optional[int] = None,
     mode: str = "closed",
+    parallel_models: bool = False,
 ) -> str:
     """Run every model over every case and write a results CSV. Returns its path.
 
@@ -252,57 +258,76 @@ def run_benchmark(
         + (["case_text"] if mode == "open" else [])
     )
 
+    def bench_model(config) -> List[Dict]:
+        """Run one model over all cases; returns its rows (failures retained)."""
+        model_id = config["display_name"]
+        in_price, out_price = _price(config, "input_price"), _price(config, "output_price")
+        print(f"=== Testing model: {model_id} ({config['model_id']}) ===")
+        try:
+            llm = OpenRouterWrapper(config)
+        except Exception as e:
+            print(f"  Error initializing {model_id}: {e}")
+            return []
+
+        rows = []
+        for case in cases:
+            case_name = case["title"]
+            prompt = (
+                build_open_prompt(case_name, case["citation"], case["case_text"])
+                if mode == "open"
+                else build_prompt(case_name, case["citation"])
+            )
+            error_msg = ""
+            try:
+                ai_output, meta = generate_brief(llm, prompt)
+            except Exception as e:
+                # Retain the failure as an explicit execution record so every
+                # model is evaluated over the same case population.
+                print(f"  [{model_id}] Error on {case_name}: {e}")
+                error_msg = str(e)[:300]
+                ai_output = {f"ai_{s}": "ERROR" for s in SECTIONS}
+                meta = {"latency_s": None, "tokens_in": 0, "tokens_out": 0,
+                        "finish_reason": "exception", "format_ok": 0, "refused": 0,
+                        "temperature_used": "", "served_model": "", "provider": ""}
+
+            cost = meta["tokens_in"] / 1e6 * in_price + meta["tokens_out"] / 1e6 * out_price
+            row = {"Model_ID": model_id, "Case_Name": case_name, "mode": mode,
+                   "Citation": case["citation"], "cost_usd": round(cost, 6),
+                   "error": error_msg}
+            row.update(ai_output)
+            row.update({f"human_{s}": case["human"][s] for s in SECTIONS})
+            row.update({k: meta[k] for k in
+                        ["latency_s", "tokens_in", "tokens_out", "finish_reason",
+                         "format_ok", "refused", "temperature_used",
+                         "served_model", "provider"]})
+            if mode == "open":
+                row["case_text"] = case["case_text"]
+            rows.append(row)
+            if sleep_seconds:
+                sleep(sleep_seconds)
+        print(f"=== {model_id}: done ({len(rows)} rows) ===")
+        return rows
+
     with open(output_path, "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
-        for config in models:
-            model_id = config["display_name"]
-            in_price, out_price = _price(config, "input_price"), _price(config, "output_price")
-            print(f"\n=== Testing model: {model_id} ({config['model_id']}) ===")
-            try:
-                llm = OpenRouterWrapper(config)
-            except Exception as e:
-                print(f"  Error initializing {model_id}: {e}")
-                continue
-
-            for case in cases:
-                case_name = case["title"]
-                print(f"  Processing case: {case_name}")
-                prompt = (
-                    build_open_prompt(case_name, case["citation"], case["case_text"])
-                    if mode == "open"
-                    else build_prompt(case_name, case["citation"])
-                )
-                error_msg = ""
-                try:
-                    ai_output, meta = generate_brief(llm, prompt)
-                except Exception as e:
-                    # Retain the failure as an explicit execution record so every
-                    # model is evaluated over the same case population.
-                    print(f"    Error on {case_name} with {model_id}: {e}")
-                    error_msg = str(e)[:300]
-                    ai_output = {f"ai_{s}": "ERROR" for s in SECTIONS}
-                    meta = {"latency_s": None, "tokens_in": 0, "tokens_out": 0,
-                            "finish_reason": "exception", "format_ok": 0, "refused": 0,
-                            "temperature_used": "", "served_model": "", "provider": ""}
-
-                cost = meta["tokens_in"] / 1e6 * in_price + meta["tokens_out"] / 1e6 * out_price
-                row = {"Model_ID": model_id, "Case_Name": case_name, "mode": mode,
-                       "Citation": case["citation"], "cost_usd": round(cost, 6),
-                       "error": error_msg}
-                row.update(ai_output)
-                row.update({f"human_{s}": case["human"][s] for s in SECTIONS})
-                row.update({k: meta[k] for k in
-                            ["latency_s", "tokens_in", "tokens_out", "finish_reason",
-                             "format_ok", "refused", "temperature_used",
-                             "served_model", "provider"]})
-                if mode == "open":
-                    row["case_text"] = case["case_text"]
-                writer.writerow(row)
+        if parallel_models and len(models) > 1:
+            # One worker per model; each model's block is written (and flushed)
+            # as soon as that model finishes, so a crash loses at most the
+            # unfinished models.
+            from concurrent.futures import ThreadPoolExecutor, as_completed
+            with ThreadPoolExecutor(max_workers=min(len(models), 8)) as ex:
+                futures = {ex.submit(bench_model, cfg): cfg for cfg in models}
+                for fut in as_completed(futures):
+                    for row in fut.result():
+                        writer.writerow(row)
+                    csvfile.flush()
+        else:
+            for config in models:
+                for row in bench_model(config):
+                    writer.writerow(row)
                 csvfile.flush()
-                if sleep_seconds:
-                    sleep(sleep_seconds)
 
     print(f"\nResults saved to {output_path}")
     return output_path

@@ -146,6 +146,15 @@ class LLMJudge:
         ]
         return "\n".join(parts)
 
+    @staticmethod
+    def _is_failed_brief(ai: Dict[str, str]) -> bool:
+        """True when every section is empty, ERROR, or a refusal."""
+        for s in SECTIONS:
+            v = str(ai.get(f"ai_{s}", "")).strip().lower()
+            if v and v not in ("error", "nan") and "i don't know" not in v:
+                return False
+        return True
+
     def judge_row(self, case_name: str, ai: Dict[str, str],
                   reference: Optional[Dict[str, str]] = None,
                   source_text: Optional[str] = None) -> Dict[str, Optional[float]]:
@@ -154,6 +163,17 @@ class LLMJudge:
             out = {f"judge_{s}_{c}": None for s in SECTIONS for c in CRITERIA}
             out.update({f"judge_{s}": None for s in SECTIONS})
             out["judge_overall"] = None
+            return out
+
+        # Failed briefs score the rubric minimum without an API call.
+        if self._is_failed_brief(ai):
+            out: Dict[str, Optional[float]] = {}
+            for s in SECTIONS:
+                gradable = s in sections
+                for c in CRITERIA:
+                    out[f"judge_{s}_{c}"] = 0.0 if gradable else None
+                out[f"judge_{s}"] = 0.0 if gradable else None
+            out["judge_overall"] = 0.0
             return out
 
         prompt = self._prompt(case_name, ai, reference, source_text, sections)
@@ -191,7 +211,7 @@ class LLMJudge:
 
     def evaluate_results(self, input_file: str, output_file: Optional[str] = None,
                          mode: str = "reference", text_column: str = "case_text",
-                         sleep_seconds: float = 0.4) -> str:
+                         sleep_seconds: float = 0.4, max_workers: int = 1) -> str:
         df = pd.read_csv(input_file)
         for col in [f"ai_{s}" for s in SECTIONS]:
             if col not in df.columns:
@@ -201,21 +221,37 @@ class LLMJudge:
                 f"source mode needs a '{text_column}' column of decision text"
             )
 
-        records: List[Dict] = []
+        def _one(payload):
+            i, name, ai, ref, src = payload
+            try:
+                return self.judge_row(name, ai, ref, src)
+            except Exception as e:
+                print(f"  judge error on row {i}: {e}")
+                return {}
+
+        payloads = []
         for i, row in df.iterrows():
             ai = {f"ai_{s}": row.get(f"ai_{s}", "") for s in SECTIONS}
             ref = {s: row.get(f"human_{s}", "") for s in SECTIONS} if mode == "reference" else None
             src = str(row.get(text_column, "")) if mode == "source" else None
-            try:
-                scores = self.judge_row(str(row.get("Case_Name", "")), ai, ref, src)
-            except Exception as e:
-                print(f"  judge error on row {i} ({row.get('Model_ID','?')}): {e}")
-                scores = {}
-            records.append(scores)
-            if (i + 1) % 10 == 0:
-                print(f"  judged {i+1}/{len(df)} rows")
-            if sleep_seconds:
-                sleep(sleep_seconds)
+            payloads.append((i, str(row.get("Case_Name", "")), ai, ref, src))
+
+        if max_workers > 1:
+            from concurrent.futures import ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=max_workers) as ex:
+                records: List[Dict] = []
+                for i, rec in enumerate(ex.map(_one, payloads)):
+                    records.append(rec)
+                    if (i + 1) % 20 == 0:
+                        print(f"  judged {i+1}/{len(df)} rows")
+        else:
+            records = []
+            for p in payloads:
+                records.append(_one(p))
+                if (p[0] + 1) % 10 == 0:
+                    print(f"  judged {p[0]+1}/{len(df)} rows")
+                if sleep_seconds:
+                    sleep(sleep_seconds)
 
         judge_df = pd.DataFrame(records)
         for c in judge_df.columns:

@@ -162,20 +162,37 @@ def author_rubric(llm: OpenRouterWrapper, case_name: str, citation: str,
     return clean if len(clean) >= 8 else None
 
 
-def author_missing(cases: List[Dict], rubrics: Dict, sleep_seconds: float = 0.3) -> Dict:
+def author_missing(cases: List[Dict], rubrics: Dict, sleep_seconds: float = 0.3,
+                   max_workers: int = 1) -> Dict:
     """Author rubrics for any case not yet in the cache."""
     llm = OpenRouterWrapper({
         "model_id": AUTHOR_MODEL, "temperature": 0, "max_tokens": 8192,
         "api_key": os.environ.get("OPENROUTER_API_KEY"),
     })
-    for case in cases:
+    todo = [c for c in cases if c["title"] not in rubrics["cases"]]
+    if not todo:
+        return rubrics
+    print(f"  authoring {len(todo)} missing rubric(s)...")
+
+    def _one(case):
         name = case["title"]
-        if name in rubrics["cases"]:
-            continue
-        print(f"  authoring rubric: {name}")
         crit = author_rubric(llm, name, case.get("citation", ""),
                              reference=case.get("human"),
                              source_text=case.get("case_text") or None)
+        return name, case, crit
+
+    if max_workers > 1:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=max_workers) as ex:
+            results = list(ex.map(_one, todo))
+    else:
+        results = []
+        for case in todo:
+            results.append(_one(case))
+            if sleep_seconds:
+                sleep(sleep_seconds)
+
+    for name, case, crit in results:
         if crit:
             rubrics["cases"][name] = {
                 "citation": case.get("citation", ""),
@@ -184,12 +201,10 @@ def author_missing(cases: List[Dict], rubrics: Dict, sleep_seconds: float = 0.3)
                 "created": datetime.now().strftime("%Y-%m-%d"),
                 "criteria": crit,
             }
-            print(f"    {len(crit)} criteria "
+            print(f"  + {name}: {len(crit)} criteria "
                   f"({sum(1 for c in crit if c['polarity']=='must_not')} negative)")
         else:
-            print("    FAILED to author (skipping)")
-        if sleep_seconds:
-            sleep(sleep_seconds)
+            print(f"  ! {name}: FAILED to author (skipping)")
     return rubrics
 
 
@@ -202,8 +217,25 @@ class RubricGrader:
             "api_key": os.environ.get("OPENROUTER_API_KEY"),
         })
 
+    @staticmethod
+    def _is_failed_brief(ai: Dict[str, str]) -> bool:
+        """True when every section is empty, ERROR, or a refusal."""
+        for s in SECTIONS:
+            v = str(ai.get(f"ai_{s}", "")).strip().lower()
+            if v and v not in ("error", "nan") and "i don't know" not in v:
+                return False
+        return True
+
     def grade_row(self, case_name: str, criteria: List[Dict],
                   ai: Dict[str, str]) -> Dict:
+        # A failed brief earns nothing — including must_not criteria, which an
+        # empty response would otherwise satisfy vacuously. No grader call.
+        if self._is_failed_brief(ai):
+            out = {f"rubric_{s}": 0.0 for s in SECTIONS}
+            out["rubric_overall"] = 0.0
+            out["rubric_details"] = json.dumps({c["id"]: False for c in criteria})
+            return out
+
         raw = self.llm.invoke(_grade_prompt(case_name, criteria, ai),
                               context=GRADER_SYSTEM)
         try:
@@ -229,27 +261,43 @@ class RubricGrader:
 
     def evaluate_results(self, input_file: str, rubrics_path: str = RUBRICS_PATH,
                          output_file: Optional[str] = None,
-                         sleep_seconds: float = 0.15) -> str:
+                         sleep_seconds: float = 0.15, max_workers: int = 1) -> str:
         df = pd.read_csv(input_file)
         rubrics = load_rubrics(rubrics_path)
 
-        records = []
+        def _one(payload):
+            i, name, criteria, ai = payload
+            if criteria is None:
+                return {}
+            try:
+                return self.grade_row(name, criteria, ai)
+            except Exception as e:
+                print(f"  grade error row {i} ({name}): {e}")
+                return {}
+
+        payloads = []
         for i, row in df.iterrows():
             name = str(row.get("Case_Name", ""))
             entry = rubrics["cases"].get(name)
-            if not entry:
-                records.append({})
-                continue
             ai = {f"ai_{s}": row.get(f"ai_{s}", "") for s in SECTIONS}
-            try:
-                records.append(self.grade_row(name, entry["criteria"], ai))
-            except Exception as e:
-                print(f"  grade error row {i} ({row.get('Model_ID','?')}/{name}): {e}")
-                records.append({})
-            if (i + 1) % 10 == 0:
-                print(f"  graded {i+1}/{len(df)} rows")
-            if sleep_seconds:
-                sleep(sleep_seconds)
+            payloads.append((i, name, entry["criteria"] if entry else None, ai))
+
+        if max_workers > 1:
+            from concurrent.futures import ThreadPoolExecutor
+            with ThreadPoolExecutor(max_workers=max_workers) as ex:
+                records = []
+                for i, rec in enumerate(ex.map(_one, payloads)):
+                    records.append(rec)
+                    if (i + 1) % 20 == 0:
+                        print(f"  graded {i+1}/{len(df)} rows")
+        else:
+            records = []
+            for p in payloads:
+                records.append(_one(p))
+                if (p[0] + 1) % 10 == 0:
+                    print(f"  graded {p[0]+1}/{len(df)} rows")
+                if sleep_seconds:
+                    sleep(sleep_seconds)
 
         rub_df = pd.DataFrame(records)
         for c in rub_df.columns:

@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .DS_Store
 .env
+# A2AJ holdout contains full decision text (upstream non-commercial license) — do not publish
+random_cases_holdout.csv
+results/

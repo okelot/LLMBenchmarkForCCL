@@ -151,11 +151,19 @@ def aggregate(df: pd.DataFrame):
 
     rows = []
     for model, sub in df.groupby("Model_ID"):
-        # Quality is measured over VALID responses only; execution failures
-        # (invalid JSON, truncation, exceptions) are reported as their own
-        # metrics rather than entering the quality mean as zeros. A strict
+        # Quality is measured over VALID ATTEMPTED responses only; execution
+        # failures (invalid JSON, truncation, exceptions) and refusals are
+        # reported as their own metrics rather than entering the quality mean
+        # as zeros. Refusals are excluded whether they arrive as plain text or
+        # wrapped in valid JSON — same behaviour, same treatment. A strict
         # all-rows mean is kept alongside for anyone who prefers that policy.
-        valid = sub[sub["format_ok"] == 1] if has_format else sub
+        if has_format:
+            mask = sub["format_ok"] == 1
+            if "refused" in sub.columns:
+                mask &= sub["refused"] != 1
+            valid = sub[mask]
+        else:
+            valid = sub
         scored = valid if len(valid) else sub
 
         cosine = {s: _col_mean(scored, f"{s}_similarity") for s in SECTIONS}

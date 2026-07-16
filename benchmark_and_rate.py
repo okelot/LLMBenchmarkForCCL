@@ -24,7 +24,8 @@ from rate_embedding import EmbeddingEvaluator
 COMBINED = "results/evaluated_case_model_results_with_section_similarity.csv"
 
 
-def _score_track(results_csv: str, mode: str, judge_model: Optional[str]) -> str:
+def _score_track(results_csv: str, mode: str, judge_model: Optional[str],
+                 max_workers: int = 1) -> str:
     """Add cosine (closed-book only) and judge columns to a results CSV."""
     out = results_csv
     if mode == "closed":
@@ -34,26 +35,30 @@ def _score_track(results_csv: str, mode: str, judge_model: Optional[str]) -> str
         judge = LLMJudge(judge_model=judge_model)
         out = judge.evaluate_results(
             out, output_file=results_csv.replace(".csv", "_judged.csv"),
-            mode="reference" if mode == "closed" else "source")
+            mode="reference" if mode == "closed" else "source",
+            max_workers=max_workers)
     return out
 
 
 def run_pipeline(models_csv="ai_models.csv", cases_csv="random_cases.csv",
                  holdout_csv: Optional[str] = None, judge_model: Optional[str] = DEFAULT_JUDGE,
                  max_cases: Optional[int] = None, sleep_seconds: float = 0.5,
-                 use_rubric: bool = True) -> None:
+                 use_rubric: bool = True, parallel: bool = False) -> None:
+    workers = 6 if parallel else 1
     frames = []
 
     print("\n### Closed-book track ###")
     closed_raw = run_benchmark(models_csv=models_csv, cases_csv=cases_csv,
-                               sleep_seconds=sleep_seconds, max_cases=max_cases, mode="closed")
-    frames.append(_score_track(closed_raw, "closed", judge_model))
+                               sleep_seconds=sleep_seconds, max_cases=max_cases,
+                               mode="closed", parallel_models=parallel)
+    frames.append(_score_track(closed_raw, "closed", judge_model, max_workers=workers))
 
     if holdout_csv:
         print("\n### Open-book track (temporal holdout) ###")
         open_raw = run_benchmark(models_csv=models_csv, cases_csv=holdout_csv,
-                                 sleep_seconds=sleep_seconds, max_cases=max_cases, mode="open")
-        frames.append(_score_track(open_raw, "open", judge_model))
+                                 sleep_seconds=sleep_seconds, max_cases=max_cases,
+                                 mode="open", parallel_models=parallel)
+        frames.append(_score_track(open_raw, "open", judge_model, max_workers=workers))
 
     # combine tracks (union of columns; ensure a mode column)
     dfs = []
@@ -70,12 +75,13 @@ def run_pipeline(models_csv="ai_models.csv", cases_csv="random_cases.csv",
         print("\n### Rubric stage (author missing rubrics, grade all briefs) ###")
         from benchmark import SECTIONS, load_cases
         from rubric import RubricGrader, author_missing, load_rubrics, save_rubrics
-        case_pool = load_cases(cases_csv)
+        case_pool = load_cases(cases_csv, max_cases=max_cases)
         if holdout_csv:
-            case_pool += load_cases(holdout_csv)
-        rubrics = author_missing(case_pool, load_rubrics())
+            case_pool += load_cases(holdout_csv, max_cases=max_cases)
+        rubrics = author_missing(case_pool, load_rubrics(), max_workers=workers)
         save_rubrics(rubrics)
-        RubricGrader().evaluate_results(COMBINED, output_file=COMBINED)
+        RubricGrader().evaluate_results(COMBINED, output_file=COMBINED,
+                                        max_workers=workers)
 
     report_file = report.main([COMBINED, "results/report.html"])
     site_file = lexbench.generate(COMBINED)
@@ -93,8 +99,10 @@ if __name__ == "__main__":
     ap.add_argument("--judge", default=DEFAULT_JUDGE, help="judge model id")
     ap.add_argument("--no-judge", action="store_true")
     ap.add_argument("--no-rubric", action="store_true")
+    ap.add_argument("--parallel", action="store_true",
+                    help="parallelize across models (generation) and rows (grading)")
     ap.add_argument("--max-cases", type=int, default=None)
     a = ap.parse_args()
     run_pipeline(models_csv=a.models, cases_csv=a.cases, holdout_csv=a.holdout,
                  judge_model=None if a.no_judge else a.judge, max_cases=a.max_cases,
-                 use_rubric=not a.no_rubric)
+                 use_rubric=not a.no_rubric, parallel=a.parallel)
