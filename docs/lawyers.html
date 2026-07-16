@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LexBench for Lawyers — Can you trust AI with Canadian case law?</title>
+<meta name="description" content="A plain-English report card on how accurately popular AI models summarize Canadian court decisions — and how often they make things up.">
+<link rel="canonical" href="https://okelot.github.io/LLMBenchmarkForCCL/lawyers.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%237b1e2b'/><text x='32' y='46' font-family='Georgia,serif' font-weight='700' font-size='40' fill='%23f3f2ec' text-anchor='middle'>L</text></svg>">
+<meta property="og:title" content="LexBench for Lawyers — Can you trust AI with Canadian case law?">
+<meta property="og:description" content="A plain-English report card on how accurately popular AI models summarize Canadian court decisions — and how often they make things up.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://okelot.github.io/LLMBenchmarkForCCL/lawyers.html">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#e6e5df">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181a1c">
+<script>try{var t=localStorage.getItem('lexbench-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<style>
+:root{
+  --paper:#e6e5df;--card:#f3f2ec;--ink:#1a1c1f;--ink2:#2c2f33;--soft:#54585e;--faint:#83868b;
+  --rule:#cdcbc2;--claret:#7b1e2b;--claret2:#a2404b;
+  --rowhov:#ffffff66;--bartrack:#00000012;--notebg:#00000005;--dot:#00000006;
+  --navbg:#e6e5dfe8;--good:#4a7c59;--warn:#a9762f;--bad:#9e3a3a;--boost:1;
+  --serif:"Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+[data-theme=dark]{
+  --paper:#181a1c;--card:#212328;--ink:#e9e7e2;--ink2:#cfcdc7;--soft:#a3a7ae;--faint:#83868c;
+  --rule:#3a3d43;--claret:#d1737e;--claret2:#de949c;
+  --rowhov:#ffffff0d;--bartrack:#ffffff1c;--notebg:#ffffff07;--dot:#ffffff04;
+  --navbg:#181a1ce8;--good:#6faf83;--warn:#cfa050;--bad:#d4726f;--boost:1.45;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --paper:#181a1c;--card:#212328;--ink:#e9e7e2;--ink2:#cfcdc7;--soft:#a3a7ae;--faint:#83868c;
+  --rule:#3a3d43;--claret:#d1737e;--claret2:#de949c;
+  --rowhov:#ffffff0d;--bartrack:#ffffff1c;--notebg:#ffffff07;--dot:#ffffff04;
+  --navbg:#181a1ce8;--good:#6faf83;--warn:#cfa050;--bad:#d4726f;--boost:1.45;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(var(--dot) 1px,transparent 1px);background-size:4px 4px}
+.wrap{max-width:820px;margin:0 auto;padding:0 24px}
+a{color:var(--claret);text-underline-offset:2px}
+a:hover{color:var(--claret2)}
+:focus-visible{outline:2px solid var(--claret);outline-offset:2px}
+.topnav{position:sticky;top:0;z-index:10;background:var(--navbg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.topnav .wrap{display:flex;align-items:center;gap:20px;height:46px;max-width:820px}
+.topnav .brand{font-family:var(--serif);font-weight:600;font-size:16px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.topnav .brand b{color:var(--claret);font-weight:600}
+.topnav .links{display:flex;gap:18px;overflow-x:auto;flex:1;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topnav .links::-webkit-scrollbar{display:none}
+.topnav .links a{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);text-decoration:none;white-space:nowrap;padding:4px 0}
+.topnav .links a:hover{color:var(--claret)}
+.tbtn{background:none;border:1px solid var(--rule);color:var(--soft);font-size:13px;line-height:1;padding:5px 8px;border-radius:3px;cursor:pointer;font-family:var(--mono)}
+.tbtn:hover{color:var(--claret);border-color:var(--claret)}
+.mast{padding:52px 0 30px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--soft);margin:0 0 14px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,6vw,52px);line-height:1.08;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h1 b{color:var(--claret);font-weight:600}
+.standfirst{font-family:var(--serif);font-size:clamp(18px,2.4vw,22px);color:var(--ink2);max-width:56ch;margin:18px 0 0;text-wrap:balance}
+.stamp{font-family:var(--mono);font-size:12.5px;color:var(--soft);margin:22px 0 0;padding-top:12px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:6px 18px}
+.stamp b{color:var(--ink);font-weight:600}
+section{padding:42px 0;border-bottom:1px solid var(--rule);scroll-margin-top:56px}
+.h2{font-family:var(--serif);font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--claret);margin:0 0 6px}
+h3.big{font-family:var(--serif);font-size:clamp(22px,3.4vw,28px);font-weight:600;margin:0 0 12px;line-height:1.2}
+p{margin:0 0 14px;color:var(--ink2);max-width:64ch}
+p:last-child{margin-bottom:0}
+.testcard{background:var(--card);border:1px solid var(--rule);padding:22px 24px;margin:0 0 26px}
+.testcard:last-child{margin-bottom:0}
+.testname{font-family:var(--serif);font-size:21px;font-weight:600;margin:0 0 4px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.testname .no{color:var(--claret)}
+.analogy{font-style:italic;color:var(--soft);font-size:15.5px;margin:0 0 16px}
+.rows{margin:14px 0 0}
+.row{display:grid;grid-template-columns:minmax(120px,1fr) minmax(150px,2.2fr) auto;gap:6px 16px;align-items:center;padding:12px 0;border-top:1px solid var(--rule)}
+.row .name{font-family:var(--serif);font-size:17px;font-weight:600;line-height:1.25}
+.row .name small{display:block;font-family:var(--mono);font-size:10.5px;font-weight:400;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.meter{position:relative;height:10px;background:var(--bartrack);border-radius:2px;overflow:hidden}
+.meter i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;filter:brightness(var(--boost))}
+.row .read{text-align:right;min-width:150px}
+.pct{font-family:var(--mono);font-size:17px;font-weight:600;filter:brightness(var(--boost))}
+.verdict{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.flags{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--mono);font-size:11px;color:var(--soft)}
+.flags .fl{border:1px solid var(--rule);border-radius:3px;padding:2px 8px;white-space:nowrap}
+.flags .fl.risk{border-color:var(--bad);color:var(--bad)}
+.flags .fl.ok{border-color:var(--good);color:var(--good)}
+.smallnote{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin:12px 0 0}
+.scale{list-style:none;padding:0;margin:16px 0 0;font-size:15px}
+.scale li{display:flex;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--rule)}
+.scale li:last-child{border:none}
+.scale .band{font-family:var(--mono);font-size:12.5px;font-weight:600;min-width:86px;filter:brightness(var(--boost))}
+.steps{list-style:none;counter-reset:st;padding:0;margin:0}
+.steps li{counter-increment:st;position:relative;padding:0 0 18px 52px}
+.steps li::before{content:counter(st);position:absolute;left:0;top:0;width:34px;height:34px;border:1.5px solid var(--claret);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;font-weight:600;color:var(--claret)}
+.steps h4{font-family:var(--serif);font-size:17px;margin:4px 0 4px}
+.steps p{font-size:15.5px;margin:0}
+.takeaways{list-style:none;padding:0;margin:0}
+.takeaways li{padding:14px 0;border-bottom:1px solid var(--rule);max-width:66ch}
+.takeaways li:last-child{border:none}
+.takeaways b{font-family:var(--serif);font-size:17px;display:block;margin-bottom:2px}
+.takeaways span{font-size:15.5px;color:var(--ink2)}
+details{border:1px solid var(--rule);background:var(--card);margin:0 0 10px}
+details summary{cursor:pointer;padding:14px 18px;font-family:var(--serif);font-size:17px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"+";font-family:var(--mono);color:var(--claret);font-size:18px;flex-shrink:0}
+details[open] summary::after{content:"–"}
+details .body{padding:0 18px 16px;font-size:15.5px}
+.note{font-family:var(--mono);font-size:12.5px;color:var(--soft);border-left:2px solid var(--claret);padding:10px 0 10px 14px;margin:20px 0 0;background:var(--notebg);max-width:none}
+.loading,.loaderr{font-family:var(--mono);font-size:13px;color:var(--soft);padding:18px 0}
+.loaderr{color:var(--bad)}
+footer{padding:34px 0 60px;color:var(--soft);font-family:var(--mono);font-size:12px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+footer a{color:var(--soft)}
+footer a:hover{color:var(--claret)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:560px){
+  .row{grid-template-columns:1fr auto}
+  .row .meter{grid-column:1 / -1}
+  .mast{padding:38px 0 24px}
+}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.mast,section{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes grow{from{width:0}}
+.meter i{animation:grow .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:.15s}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav class="topnav"><div class="wrap">
+  <a class="brand" href="lawyers.html">Lex<b>Bench</b></a>
+  <div class="links">
+    <a href="#results">Results</a>
+    <a href="#how">How we test</a>
+    <a href="#takeaways">What it means</a>
+    <a href="#questions">Questions</a>
+    <a href="index.html">Researcher version</a>
+  </div>
+  <button id="themetoggle" class="tbtn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+</div></nav>
+
+<header class="mast" id="top"><div class="wrap">
+  <p class="eyebrow">A plain-English report card</p>
+  <h1>Can you trust AI with <b>Canadian case law?</b></h1>
+  <p class="standfirst">We asked popular AI models to brief real Canadian court decisions, then graded every brief against the actual judgment. This page gives you the results without the statistics degree.</p>
+  <p class="stamp" id="stamp"><span>Updated <b id="st-updated">…</b></span><span id="st-models-wrap"><b id="st-models">…</b> <span id="st-models-noun">models</span> tested</span><span>Prefer the technical details? <a href="index.html">Researcher version</a></span></p>
+</div></header>
+
+<main id="main">
+
+<section id="results"><div class="wrap">
+  <h2 class="h2">The results</h2>
+  <h3 class="big">Two tests, because "knowing the law" and "reading a judgment" are different skills.</h3>
+  <p>Each model prepares a standard case brief — facts, issue, decision, reasons, and the ratio — and earns a percentage: the share of checklist points its brief got right. Think of it as a law-school grade, marked by a very consistent (if non-human) marker.</p>
+  <div id="tracks"><p class="loading">Loading the latest results…</p></div>
+  <noscript><p class="loaderr">This page needs JavaScript to load the latest results. The <a href="index.html">researcher version</a> works without it.</p></noscript>
+  <p class="chartcap" style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:26px 0 8px">How to read a score</p>
+  <ul class="scale">
+    <li><span class="band" style="color:var(--good)">80%+</span><span>Strong — reliably captures what the case decided. Still verify citations.</span></li>
+    <li><span class="band" style="color:var(--good)">65–79%</span><span>Good — sound overall, but expect gaps in the details.</span></li>
+    <li><span class="band" style="color:var(--warn)">50–64%</span><span>Mixed — useful as a starting point, not as an answer.</span></li>
+    <li><span class="band" style="color:var(--warn)">30–49%</span><span>Weak — significant errors or omissions. Treat with suspicion.</span></li>
+    <li><span class="band" style="color:var(--bad)">Under 30%</span><span>Poor — do not rely on it. Much of the brief is wrong or missing.</span></li>
+  </ul>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <h2 class="h2">How we test</h2>
+  <h3 class="big">The same way you'd test an articling student.</h3>
+  <ol class="steps">
+    <li>
+      <h4>Pick real Canadian decisions</h4>
+      <p>Cases come from public sources, including the <a href="https://a2aj.ca/">A2AJ</a> open corpus of Canadian court decisions. For each case we hold a trusted reference: a human-written brief, or the decision text itself.</p>
+    </li>
+    <li>
+      <h4>Ask each AI for a standard case brief</h4>
+      <p>Facts, issue, decision, reasons, ratio — the same five-part brief every law student learns. Every model gets the identical instructions.</p>
+    </li>
+    <li>
+      <h4>Mark it against a case-specific checklist</h4>
+      <p>Each case has a detailed marking checklist — did the brief name the right parties, the right outcome, the actual legal principle? The checklist also watches for things a model is likely to invent. Points earned ÷ points available = the score you see above.</p>
+    </li>
+    <li>
+      <h4>Check for invented content separately</h4>
+      <p>Made-up facts, holdings, or citations are the single biggest risk of using AI in practice — Canadian courts have already dealt with filings containing non-existent cases. We track this separately, and flag it in the results.</p>
+    </li>
+  </ol>
+  <p class="note">Full disclosure: the marking is done by an AI applying the checklist — not by a panel of lawyers — and some test runs cover a small number of cases. Treat the numbers as a strong indication, not a certification. Every methodological detail, caveat, and raw score is in the <a href="index.html">researcher version</a>.</p>
+</div></section>
+
+<section id="takeaways"><div class="wrap">
+  <h2 class="h2">What it means for your practice</h2>
+  <h3 class="big">Three rules of thumb the data supports.</h3>
+  <ul class="takeaways">
+    <li>
+      <b>Never trust an AI's memory of a case.</b>
+      <span>Scores on the "from memory" test are consistently far below the "judgment in hand" test. An AI answering from memory will sound just as confident while inventing parties, outcomes, and citations. If you only remember one thing from this page, make it this one.</span>
+    </li>
+    <li>
+      <b>Give it the document.</b>
+      <span>The same models score dramatically higher when you paste in the actual decision text. Used as a reading assistant — "summarize this judgment I'm giving you" — AI is far more dependable than as an oracle.</span>
+    </li>
+    <li>
+      <b>Verify citations, every time.</b>
+      <span>Even the best scores here are not 100%, and your professional obligations don't transfer to the software. Several Canadian law societies have issued guidance on generative AI; checking that every cited case exists and says what the AI claims remains your job.</span>
+    </li>
+  </ul>
+</div></section>
+
+<section id="questions"><div class="wrap">
+  <h2 class="h2">Common questions</h2>
+  <h3 class="big">The fine print, in plain English.</h3>
+  <details>
+    <summary>Who runs this, and is anyone paying for the results?</summary>
+    <div class="body"><p>LexBench is an independent open-source project. The code, the test cases, and the marking checklists are all public on <a href="https://github.com/okelot/LLMBenchmarkForCCL">GitHub</a>, so anyone can re-run the tests or challenge the grading. No AI vendor sponsors it.</p></div>
+  </details>
+  <details>
+    <summary>Why is an AI doing the marking?</summary>
+    <div class="body"><p>Grading hundreds of briefs by hand doesn't scale, so a separate AI — from a different company than any model being tested — applies each case's checklist. Checking "does the brief state that the appeal was dismissed?" is a much more reliable task for an AI than open-ended grading. It's still a limitation, which is why the checklists are published and human spot-checking is on the roadmap.</p></div>
+  </details>
+  <details>
+    <summary>Couldn't the AI have just memorized these cases?</summary>
+    <div class="body"><p>For famous cases, yes — that's partly what the "from memory" test measures. That's also why the "judgment in hand" test matters more for practice: it measures reading, not recall. The benchmark also tests decisions issued <em>after</em> the models were trained, which they cannot have memorized.</p></div>
+  </details>
+  <details>
+    <summary>Does a high score mean I can rely on the output?</summary>
+    <div class="body"><p>No. A high score means the model made fewer mistakes on our test cases. It is not legal advice, not a product endorsement, and not a substitute for reading the authority yourself. Rules of professional conduct on competence and supervision apply to AI-assisted work the same way they apply to work delegated to a student.</p></div>
+  </details>
+  <details>
+    <summary>What exactly do "facts, issue, decision, reasons, ratio" scores measure?</summary>
+    <div class="body"><p>Each brief is scored section by section: did it get the material <b>facts</b> right, state the <b>issue</b> the court actually decided, report the correct <b>decision</b>, capture the court's <b>reasons</b>, and extract the <b>ratio</b> — the binding principle. In our results so far, models are strongest on the issue and outcome, and weakest on facts and ratio — exactly the parts you'd rely on most.</p></div>
+  </details>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <span id="ft-gen">LexBench</span>
+  <span>Not legal advice · not an endorsement</span>
+  <span><a href="index.html">Researcher version</a> · <a href="https://github.com/okelot/LLMBenchmarkForCCL">GitHub</a></span>
+</div></footer>
+
+<script>
+(function(){
+  var K='lexbench-theme',d=document.documentElement;
+  var b=document.getElementById('themetoggle');
+  if(b)b.addEventListener('click',function(){
+    var cur=d.getAttribute('data-theme')||
+      (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+    var n=cur==='dark'?'light':'dark';
+    d.setAttribute('data-theme',n);
+    try{localStorage.setItem(K,n)}catch(e){}
+  });
+
+  // Plain-language framing per track key; unknown keys fall back to the raw label.
+  var TRACKS={
+    closed:{
+      name:'Test 1 · From memory',
+      analogy:'Like asking a colleague, "What did that case decide?" — from the case name alone, no materials.',
+      desc:'The AI gets only the case name and must produce the brief from whatever it learned in training. This is what happens when you ask a chatbot about a case without giving it the judgment.'
+    },
+    open:{
+      name:'Test 2 · With the judgment in hand',
+      analogy:'Like handing a student the full decision and asking for a one-page brief.',
+      desc:'The AI gets the complete text of the decision and must brief it. This is the safer way to use AI in practice — and the scores show it.'
+    },
+    holdout:{
+      name:'Test 3 · Brand-new decisions',
+      analogy:'Cases decided after the AI finished training — it cannot have seen them before.',
+      desc:'Recent decisions the models could not have memorized, briefed from the full text. The purest test of reading ability.'
+    }
+  };
+
+  function verdict(s){
+    if(s>=.80)return['Strong','var(--good)'];
+    if(s>=.65)return['Good','var(--good)'];
+    if(s>=.50)return['Mixed','var(--warn)'];
+    if(s>=.30)return['Weak','var(--warn)'];
+    return['Poor','var(--bad)'];
+  }
+  function esc(t){var e=document.createElement('span');e.textContent=t==null?'':String(t);return e.innerHTML}
+
+  function flags(r){
+    var out=[];
+    if(typeof r.groundedness==='number'){
+      var inv=1-r.groundedness;
+      if(inv>=.3)out.push('<span class="fl risk">⚠ invented content: high</span>');
+      else if(inv>=.1)out.push('<span class="fl risk">invented content: some</span>');
+      else out.push('<span class="fl ok">no invented content detected</span>');
+    }
+    if(typeof r.refusal_rate==='number'&&r.refusal_rate>0)
+      out.push('<span class="fl">said “I don’t know” on '+Math.round(r.refusal_rate*100)+'% of cases</span>');
+    if(typeof r.truncation_rate==='number'&&r.truncation_rate>0)
+      out.push('<span class="fl">'+Math.round(r.truncation_rate*100)+'% of answers cut off</span>');
+    var n=r.n_valid!=null?r.n_valid:r.n;
+    if(n!=null)out.push('<span class="fl">'+n+' case'+(n===1?'':'s')+' tested</span>');
+    return out.length?'<div class="flags">'+out.join('')+'</div>':'';
+  }
+
+  function render(data){
+    var m=data.meta||{};
+    var u=document.getElementById('st-updated');if(u)u.textContent=m.updated||'—';
+    var mo=document.getElementById('st-models');if(mo)mo.textContent=m.models!=null?m.models:'—';
+    var mn=document.getElementById('st-models-noun');if(mn&&m.models===1)mn.textContent='model';
+    var g=document.getElementById('ft-gen');if(g&&m.generated)g.textContent='LexBench · results generated '+m.generated;
+
+    var host=document.getElementById('tracks');
+    host.innerHTML='';
+    (data.tracks||[]).forEach(function(t){
+      var info=TRACKS[t.key]||{name:t.label,analogy:'',desc:''};
+      var rows=(t.leaderboard||[]).filter(function(r){return r.primary_overall!=null})
+        .sort(function(a,b){return b.primary_overall-a.primary_overall});
+      if(!rows.length)return;
+      var card=document.createElement('div');card.className='testcard';
+      var h='<p class="testname"><span class="no">'+esc(info.name)+'</span></p>';
+      if(info.analogy)h+='<p class="analogy">'+esc(info.analogy)+'</p>';
+      if(info.desc)h+='<p style="font-size:15.5px">'+esc(info.desc)+'</p>';
+      h+='<div class="rows">';
+      rows.forEach(function(r){
+        var s=r.primary_overall,v=verdict(s),pct=Math.round(s*100);
+        h+='<div class="row">'
+          +'<div class="name">'+esc(r.model)
+          +(r.developer?'<small>'+esc(r.developer)+'</small>':'')+'</div>'
+          +'<div class="meter" role="img" aria-label="'+pct+' percent"><i style="width:'+(s*100).toFixed(1)+'%;background:'+v[1]+'"></i></div>'
+          +'<div class="read"><span class="pct" style="color:'+v[1]+'">'+pct+'%</span>'
+          +'<span class="verdict">'+v[0]+'</span></div>'
+          +flags(r)
+          +'</div>';
+      });
+      h+='</div>';
+      if(t.key==='closed')h+='<p class="smallnote">Famous cases may appear in an AI’s training data, so even these scores can flatter what it would do on a case it has never seen.</p>';
+      card.innerHTML=h;
+      host.appendChild(card);
+    });
+    if(!host.children.length)host.innerHTML='<p class="loaderr">No results available yet.</p>';
+  }
+
+  fetch('data.json').then(function(r){
+    if(!r.ok)throw new Error(r.status);
+    return r.json();
+  }).then(render).catch(function(){
+    document.getElementById('tracks').innerHTML=
+      '<p class="loaderr">Couldn’t load the latest results. They’re available on the <a href="index.html">researcher version</a> of this page.</p>';
+  });
+})();
+</script>
+</body>
+</html>

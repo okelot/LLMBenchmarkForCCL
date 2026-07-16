@@ -692,6 +692,7 @@ def render(tracks, meta):
              '<a href="#metrics">Metrics</a>'
              '<a href="#dataset">Dataset</a>'
              '<a href="#reproducibility">Reproducibility</a>'
+             '<a href="lawyers.html">For lawyers</a>'
              '<a href="https://github.com/okelot/LLMBenchmarkForCCL">GitHub</a></div>'
              '<button id="themetoggle" class="tbtn" type="button" '
              'aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>'
