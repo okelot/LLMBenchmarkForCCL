@@ -677,6 +677,15 @@ def render(tracks, meta):
          '<meta name="twitter:card" content="summary">',
          '<meta name="theme-color" media="(prefers-color-scheme: light)" content="#e6e5df">',
          '<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181a1c">',
+         '<!-- Google tag (gtag.js) -->',
+         '<script async src="https://www.googletagmanager.com/gtag/js?id=G-D8P8DMTDRM"></script>',
+         '<script>',
+         '  window.dataLayer = window.dataLayer || [];',
+         '  function gtag(){dataLayer.push(arguments);}',
+         "  gtag('js', new Date());",
+         '',
+         "  gtag('config', 'G-D8P8DMTDRM');",
+         '</script>',
          "<script>" + THEME_BOOT_JS + "</script>",
          "<style>" + CSS + "</style></head><body>"]
 
