@@ -1,8 +1,8 @@
 {
   "meta": {
-    "updated": "16 Jul 2026",
-    "generated": "16 Jul 2026, 13:38",
-    "models": 8,
+    "updated": "28 Jul 2026",
+    "generated": "28 Jul 2026, 13:45",
+    "models": 9,
     "tracks": 2,
     "judge_model": "qwen/qwen3-max",
     "rubric_model": "anthropic/claude-opus-4.8"
@@ -12,6 +12,49 @@
       "key": "closed",
       "label": "Closed-book (recall from case name)",
       "leaderboard": [
+        {
+          "model": "Claude Opus 5",
+          "developer": "Anthropic",
+          "n": 50,
+          "n_valid": 49,
+          "cosine": {
+            "facts": 0.8050805457094883,
+            "issue": 0.55318584634612,
+            "decision": 0.49074752628803253,
+            "reasons": 0.7648644441244553,
+            "ratio": 0.6111933555867937
+          },
+          "judge": {
+            "facts": 0.8989319148936169,
+            "issue": 0.9774291666666667,
+            "decision": 0.8663145833333333,
+            "reasons": 0.8894530612244897,
+            "ratio": 0.9148133333333334
+          },
+          "rubric": {
+            "facts": 0.7030510204081633,
+            "issue": 0.8945571428571428,
+            "decision": 0.8388489795918367,
+            "reasons": 0.7294367346938775,
+            "ratio": 0.7365163265306123
+          },
+          "cosine_overall": 0.645,
+          "judge_overall": 0.9094,
+          "rubric_overall": 0.7499,
+          "primary_overall": 0.7499,
+          "ci_lo": 0.7016,
+          "ci_hi": 0.7962,
+          "strict_overall": 0.7349,
+          "groundedness": 0.9008,
+          "format_rate": 0.98,
+          "refusal_rate": 0.02,
+          "truncation_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.09267619999999999,
+          "avg_latency": 50.376360000000005,
+          "tied_above": false,
+          "gap_above": null
+        },
         {
           "model": "Claude Opus 4.8",
           "developer": "Anthropic",
@@ -53,7 +96,13 @@
           "avg_cost": 0.0261117,
           "avg_latency": 17.15492,
           "tied_above": false,
-          "gap_above": null
+          "gap_above": {
+            "diff": 0.1295,
+            "lo": 0.0995,
+            "hi": 0.1607,
+            "n": 47,
+            "significant": true
+          }
         },
         {
           "model": "GPT-5.6",
@@ -405,6 +454,49 @@
       "label": "Open-book (brief from decision text)",
       "leaderboard": [
         {
+          "model": "Claude Opus 5",
+          "developer": "Anthropic",
+          "n": 20,
+          "n_valid": 20,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 1.0,
+            "issue": 0.9958349999999999,
+            "decision": 0.9958349999999999,
+            "reasons": 1.0,
+            "ratio": 0.9583349999999999
+          },
+          "rubric": {
+            "facts": 0.9857850000000001,
+            "issue": 1.0,
+            "decision": 0.9928549999999999,
+            "reasons": 1.0,
+            "ratio": 1.0
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.99,
+          "rubric_overall": 0.9938,
+          "primary_overall": 0.9938,
+          "ci_lo": 0.9857,
+          "ci_hi": 1.0,
+          "strict_overall": 0.9938,
+          "groundedness": 0.9925,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.16409225,
+          "avg_latency": 39.92635,
+          "tied_above": false,
+          "gap_above": null
+        },
+        {
           "model": "Claude Opus 4.8",
           "developer": "Anthropic",
           "n": 20,
@@ -445,7 +537,13 @@
           "avg_cost": 0.12469599999999999,
           "avg_latency": 25.17555,
           "tied_above": false,
-          "gap_above": null
+          "gap_above": {
+            "diff": 0.0199,
+            "lo": 0.0111,
+            "hi": 0.0297,
+            "n": 20,
+            "significant": true
+          }
         },
         {
           "model": "Claude Sonnet 4.6",

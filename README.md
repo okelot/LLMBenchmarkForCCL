@@ -20,10 +20,10 @@ The above chart shows a sample benchmark comparing different models' performance
 Any model available on OpenRouter. The default `ai_models.csv` ships with a
 curated frontier set spanning the major labs:
 
-- Anthropic — Claude Opus 4.8, Claude Sonnet 4.6
-- OpenAI — GPT-5.5, GPT-5.4
+- Anthropic — Claude Opus 5, Claude Opus 4.8, Claude Sonnet 4.6
+- OpenAI — GPT-5.6, GPT-5.5
 - Google — Gemini 2.5 Pro
-- xAI — Grok 4.20
+- xAI — Grok 4.5
 - DeepSeek — DeepSeek Chat v3.1
 - Meta — Llama 4 Maverick
 
