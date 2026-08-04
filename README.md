@@ -25,6 +25,7 @@ curated frontier set spanning the major labs:
 - Google — Gemini 2.5 Pro
 - xAI — Grok 4.5
 - DeepSeek — DeepSeek Chat v3.1
+- Moonshot AI — Kimi K3
 - Meta — Llama 4 Maverick
 
 Run `python -m llm.openrouter_models <filter>` to browse current ids and pricing,

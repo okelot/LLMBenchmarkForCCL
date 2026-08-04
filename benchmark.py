@@ -38,6 +38,13 @@ SECTIONS = ["facts", "issue", "decision", "reasons", "ratio"]
 # never silently folded into the quality score.
 MAX_TOKENS = 8192
 
+# Per-request timeout. The wrapper's 120 s default is too tight for slow
+# reasoning models — Kimi K3 averages well over two minutes on an open-book
+# case — and a timeout burns the client's retries before failing the row, which
+# would misreport a slow model as a broken one. Generous here; a genuinely hung
+# request still fails, just later.
+REQUEST_TIMEOUT = 600
+
 # Mapping from `random_cases.csv` columns to brief sections.
 HUMAN_COLUMNS = {
     "facts": "Facts",
@@ -76,6 +83,7 @@ def load_models(csv_path: str = "ai_models.csv") -> List[Dict]:
                     "api_key": api_key,
                     "temperature": 0,
                     "max_tokens": MAX_TOKENS,
+                    "timeout": REQUEST_TIMEOUT,
                 }
             )
     return models

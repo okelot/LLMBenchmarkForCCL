@@ -1,8 +1,8 @@
 {
   "meta": {
-    "updated": "28 Jul 2026",
-    "generated": "28 Jul 2026, 13:45",
-    "models": 9,
+    "updated": "04 Aug 2026",
+    "generated": "04 Aug 2026, 14:13",
+    "models": 10,
     "tracks": 2,
     "judge_model": "qwen/qwen3-max",
     "rubric_model": "anthropic/claude-opus-4.8"
@@ -105,6 +105,55 @@
           }
         },
         {
+          "model": "Kimi K3",
+          "developer": "Moonshot AI",
+          "n": 50,
+          "n_valid": 30,
+          "cosine": {
+            "facts": 0.8067192599691194,
+            "issue": 0.5730176377913048,
+            "decision": 0.49782943314519423,
+            "reasons": 0.751369313398997,
+            "ratio": 0.5971261582992695
+          },
+          "judge": {
+            "facts": 0.5977034482758621,
+            "issue": 0.7959827586206897,
+            "decision": 0.5603448275862069,
+            "reasons": 0.6472233333333334,
+            "ratio": 0.7345703703703703
+          },
+          "rubric": {
+            "facts": 0.54264,
+            "issue": 0.7777766666666667,
+            "decision": 0.68369,
+            "reasons": 0.6103166666666666,
+            "ratio": 0.5441666666666667
+          },
+          "cosine_overall": 0.6452,
+          "judge_overall": 0.6672,
+          "rubric_overall": 0.6142,
+          "primary_overall": 0.6142,
+          "ci_lo": 0.5189,
+          "ci_hi": 0.7047,
+          "strict_overall": 0.3685,
+          "groundedness": 0.64,
+          "format_rate": 0.6,
+          "refusal_rate": 0.24,
+          "truncation_rate": 0.16,
+          "error_rate": 0.16,
+          "avg_cost": 0.07407108000000001,
+          "avg_latency": 172.4239,
+          "tied_above": false,
+          "gap_above": {
+            "diff": 0.077,
+            "lo": 0.0099,
+            "hi": 0.1592,
+            "n": 29,
+            "significant": true
+          }
+        },
+        {
           "model": "GPT-5.6",
           "developer": "OpenAI",
           "n": 50,
@@ -144,13 +193,13 @@
           "error_rate": 0.08,
           "avg_cost": 0.0518288,
           "avg_latency": 57.79246000000001,
-          "tied_above": false,
+          "tied_above": true,
           "gap_above": {
-            "diff": 0.0851,
-            "lo": 0.0387,
-            "hi": 0.1346,
-            "n": 41,
-            "significant": true
+            "diff": -0.0115,
+            "lo": -0.09,
+            "hi": 0.0602,
+            "n": 25,
+            "significant": false
           }
         },
         {
@@ -497,6 +546,55 @@
           "gap_above": null
         },
         {
+          "model": "Kimi K3",
+          "developer": "Moonshot AI",
+          "n": 20,
+          "n_valid": 20,
+          "cosine": {
+            "facts": null,
+            "issue": null,
+            "decision": null,
+            "reasons": null,
+            "ratio": null
+          },
+          "judge": {
+            "facts": 0.987505,
+            "issue": 0.9958349999999999,
+            "decision": 0.9791650000000001,
+            "reasons": 0.9791700000000001,
+            "ratio": 0.9166650000000001
+          },
+          "rubric": {
+            "facts": 0.9634,
+            "issue": 1.0,
+            "decision": 0.9928549999999999,
+            "reasons": 0.99375,
+            "ratio": 1.0
+          },
+          "cosine_overall": null,
+          "judge_overall": 0.9717,
+          "rubric_overall": 0.9867,
+          "primary_overall": 0.9867,
+          "ci_lo": 0.9709,
+          "ci_hi": 0.999,
+          "strict_overall": 0.9867,
+          "groundedness": 0.9825,
+          "format_rate": 1.0,
+          "refusal_rate": 0.0,
+          "truncation_rate": 0.0,
+          "error_rate": 0.0,
+          "avg_cost": 0.07684274999999999,
+          "avg_latency": 96.63610000000001,
+          "tied_above": true,
+          "gap_above": {
+            "diff": 0.0071,
+            "lo": -0.002,
+            "hi": 0.021,
+            "n": 20,
+            "significant": false
+          }
+        },
+        {
           "model": "Claude Opus 4.8",
           "developer": "Anthropic",
           "n": 20,
@@ -536,13 +634,13 @@
           "error_rate": 0.0,
           "avg_cost": 0.12469599999999999,
           "avg_latency": 25.17555,
-          "tied_above": false,
+          "tied_above": true,
           "gap_above": {
-            "diff": 0.0199,
-            "lo": 0.0111,
-            "hi": 0.0297,
+            "diff": 0.0128,
+            "lo": -0.0054,
+            "hi": 0.0261,
             "n": 20,
-            "significant": true
+            "significant": false
           }
         },
         {

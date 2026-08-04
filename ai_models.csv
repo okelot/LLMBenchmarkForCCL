@@ -7,4 +7,5 @@ openai/gpt-5.5,GPT-5.5,OpenAI,1050000,5.00,30.00
 google/gemini-2.5-pro,Gemini 2.5 Pro,Google,1048576,1.25,10.00
 x-ai/grok-4.5,Grok 4.5,xAI,500000,2.00,6.00
 deepseek/deepseek-chat-v3.1,DeepSeek Chat v3.1,DeepSeek,163840,0.21,0.79
+moonshotai/kimi-k3,Kimi K3,Moonshot AI,1048576,3.00,15.00
 meta-llama/llama-4-maverick,Llama 4 Maverick,Meta,1048576,0.15,0.60
